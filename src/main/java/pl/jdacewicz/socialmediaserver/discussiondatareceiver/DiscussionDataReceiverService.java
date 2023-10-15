@@ -1,23 +1,22 @@
-package pl.jdacewicz.socialmediaserver.datareceiver;
+package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.jdacewicz.socialmediaserver.datareceiver.dto.PostRequest;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
 
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-class DataReceiverService {
+class DiscussionDataReceiverService {
 
-    private final DataReceiverRepository dataReceiverRepository;
+    private final DiscussionDataReceiverRepository discussionDataReceiverRepository;
 
     Post createPost(PostRequest postRequest) {
         var post = Post.builder()
-                .postId("")
                 .content(postRequest.content())
                 .creationDateTime(LocalDateTime.now())
                 .build();
-        return dataReceiverRepository.save(post);
+        return discussionDataReceiverRepository.save(post);
     }
 }
