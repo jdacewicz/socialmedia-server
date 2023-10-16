@@ -21,7 +21,7 @@ class ClaimsExtractor {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final var claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
