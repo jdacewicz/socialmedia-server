@@ -1,10 +1,10 @@
-package pl.jdacewicz.socialmediaserver.userauthenticator;
+package pl.jdacewicz.socialmediaserver.userdatareceiver;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-interface UserRepository extends MongoRepository<User, String> {
+interface UserDataReceiverRepository extends MongoRepository<User, String> {
 
     Optional<User> findByEmail(String email);
 }

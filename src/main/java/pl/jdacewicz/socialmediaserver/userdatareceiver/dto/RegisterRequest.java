@@ -1,4 +1,4 @@
-package pl.jdacewicz.socialmediaserver.userauthenticator.dto;
+package pl.jdacewicz.socialmediaserver.userdatareceiver.dto;
 
 public record RegisterRequest(String email,
                               String password,
