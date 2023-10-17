@@ -4,7 +4,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import pl.jdacewicz.socialmediaserver.userauthenticator.dto.UserDto;
 
 import java.security.Key;
 import java.util.Date;
@@ -19,18 +18,18 @@ class TokenGenerator {
 
     private final Key signInKey;
 
-    String generateToken(UserDto userDto) {
-        return generateToken(new HashMap<>(), userDto);
+    String generateToken(String username) {
+        return generateToken(new HashMap<>(), username);
     }
 
-    String generateToken(Map<String, Object> extraClaims, UserDto userDto) {
-        return buildToken(extraClaims, userDto, jwtExpiration);
+    String generateToken(Map<String, Object> extraClaims, String username) {
+        return buildToken(extraClaims, username, jwtExpiration);
     }
 
-    private String buildToken(Map<String, Object> extraClaims, UserDto userDto, long expiration) {
+    private String buildToken(Map<String, Object> extraClaims, String username, long expiration) {
         return Jwts.builder()
                 .setClaims(extraClaims)
-//                .setSubject(userDto.)
+                .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(signInKey, SignatureAlgorithm.HS256)

@@ -4,9 +4,11 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.security.Key;
 
+@Configuration
 class TokenGeneratorConfiguration {
 
     @Value("${application.security.jwt.secret-key}")
@@ -15,6 +17,11 @@ class TokenGeneratorConfiguration {
     @Bean
     TokenGenerator tokenGenerator() {
         return new TokenGenerator(getSignInKey());
+    }
+
+    @Bean
+    TokenGeneratorFacade tokenGeneratorFacade(TokenGeneratorService tokenGeneratorService) {
+        return new TokenGeneratorFacade(tokenGeneratorService);
     }
 
     private Key getSignInKey() {
