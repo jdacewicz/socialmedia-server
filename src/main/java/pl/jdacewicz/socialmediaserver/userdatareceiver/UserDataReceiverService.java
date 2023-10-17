@@ -26,7 +26,7 @@ class UserDataReceiverService implements UserDetailsService {
                 .orElseThrow(UnsupportedOperationException::new);
     }
 
-    User registerUser(RegisterRequest registerRequest) {
+    User createUser(RegisterRequest registerRequest) {
         var user = User.builder()
                 .email(registerRequest.email())
                 .password(passwordEncoder.encode(registerRequest.password()))

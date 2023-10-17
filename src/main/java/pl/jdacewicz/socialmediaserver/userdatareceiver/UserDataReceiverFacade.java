@@ -14,9 +14,8 @@ public class UserDataReceiverFacade {
         return mapToDto(user);
     }
 
-    public UserDto registerUser(RegisterRequest registerRequest) {
-        var createdUser = userDataReceiverService.registerUser(registerRequest);
-        return mapToDto(createdUser);
+    public void createUser(RegisterRequest registerRequest) {
+        userDataReceiverService.createUser(registerRequest);
     }
 
     private UserDto mapToDto(User user) {
