@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.userauthenticator;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.el.parser.Token;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import pl.jdacewicz.socialmediaserver.tokengenerator.TokenGeneratorFacade;
@@ -18,12 +19,13 @@ public class UserAuthenticatorFacade {
     private final TokenGeneratorFacade tokenGeneratorFacade;
 
     public AuthenticationResponse authenticateUser(AuthenticationRequest authenticationRequest) {
+        TokenDto tokenDto;
         var userDto = userDataReceiverFacade.getUserByEmail(authenticationRequest.email());
-        var tokenDto = tokenGeneratorFacade.createToken(authenticationRequest.email());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authenticationRequest.email(),
                 authenticationRequest.password()));
         tokenGeneratorFacade.revokeAllUserTokens(userDto.userId());
+        tokenDto = tokenGeneratorFacade.createToken(authenticationRequest.email());
         return new AuthenticationResponse(tokenDto);
     }
 
