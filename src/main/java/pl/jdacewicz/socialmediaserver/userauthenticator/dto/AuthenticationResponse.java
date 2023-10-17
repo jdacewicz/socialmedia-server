@@ -1,4 +1,6 @@
 package pl.jdacewicz.socialmediaserver.userauthenticator.dto;
 
-public record AuthenticationResponse(String accessToken) {
+import pl.jdacewicz.socialmediaserver.tokengenerator.dto.TokenDto;
+
+public record AuthenticationResponse(TokenDto accessToken) {
 }

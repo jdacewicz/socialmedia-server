@@ -1,4 +1,4 @@
-package pl.jdacewicz.socialmediaserver.userauthenticator;
+package pl.jdacewicz.socialmediaserver.configuration;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
-class ClaimsExtractor {
+class JwtClaimsExtractor {
 
     private final Key signInKey;
 

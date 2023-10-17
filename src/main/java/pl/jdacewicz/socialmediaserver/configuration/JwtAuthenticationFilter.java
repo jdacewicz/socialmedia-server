@@ -1,4 +1,4 @@
-package pl.jdacewicz.socialmediaserver.userauthenticator;
+package pl.jdacewicz.socialmediaserver.configuration;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,7 +21,7 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
     private final TokenGeneratorFacade tokenGeneratorFacade;
-    private final ClaimsExtractor claimsExtractor;
+    private final JwtClaimsExtractor jwtClaimsExtractor;
     private final JwtTokenValidator jwtTokenValidator;
 
     @Override
@@ -49,7 +49,7 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private void prepareUsername(String authenticationHeader, HttpServletRequest request) {
         var jwtToken = authenticationHeader.substring(7);
-        var userEmail = claimsExtractor.extractUsername(jwtToken);
+        var userEmail = jwtClaimsExtractor.extractUsername(jwtToken);
         if (userEmail != null) {
             authenticate(userEmail, jwtToken, request);
         }
