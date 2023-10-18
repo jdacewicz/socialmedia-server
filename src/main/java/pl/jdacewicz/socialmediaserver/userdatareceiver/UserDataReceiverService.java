@@ -17,8 +17,7 @@ class UserDataReceiverService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userDataReceiverRepository.findByEmail(username)
-                .orElseThrow(UnsupportedOperationException::new);
+        return getUserByEmail(username);
     }
 
     User getUserByEmail(String email) {
