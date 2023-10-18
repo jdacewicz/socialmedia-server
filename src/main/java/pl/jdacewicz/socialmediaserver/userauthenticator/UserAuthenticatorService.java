@@ -19,16 +19,20 @@ class UserAuthenticatorService {
     private final TokenGeneratorFacade tokenGeneratorFacade;
 
     TokenDto authenticateUser(AuthenticationRequest authenticationRequest) {
-        var userDto = userDataReceiverFacade.getUserByEmail(authenticationRequest.email());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authenticationRequest.email(),
                 authenticationRequest.password()));
-        tokenGeneratorFacade.revokeAllUserTokens(userDto.userId());
+        revokeAllUserTokensByUserEmail(authenticationRequest.email());
         return tokenGeneratorFacade.createToken(authenticationRequest.email());
     }
 
     TokenDto registerUser(RegisterRequest registerRequest) {
         userDataReceiverFacade.createUser(registerRequest);
         return tokenGeneratorFacade.createToken(registerRequest.email());
+    }
+
+    private void revokeAllUserTokensByUserEmail(String email) {
+        var userDto = userDataReceiverFacade.getUserByEmail(email);
+        tokenGeneratorFacade.revokeAllUserTokensByUserId(userDto.userId());
     }
 }

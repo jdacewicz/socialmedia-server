@@ -18,7 +18,7 @@ public class TokenGeneratorFacade {
         return mapToDto(createdToken);
     }
 
-    public void revokeAllUserTokens(String userId) {
+    public void revokeAllUserTokensByUserId(String userId) {
         tokenGeneratorService.revokeAllUserTokens(userId);
     }
 
