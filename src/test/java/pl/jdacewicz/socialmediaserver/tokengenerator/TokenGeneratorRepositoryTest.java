@@ -35,7 +35,8 @@ class TokenGeneratorRepositoryTest implements TokenGeneratorRepository {
 
     @Override
     public Token save(Token entity) {
-        return database.put(entity.code(), entity);
+        database.put(entity.code(), entity);
+        return entity;
     }
 
     @Override

@@ -57,15 +57,8 @@ class TokenGeneratorServiceTest {
                 .userId("id")
                 .build();
         var tokenCode = "token";
-        var token = Token.builder()
-                .userId(userDto.userId())
-                .code(tokenCode)
-                .expired(false)
-                .revoked(false)
-                .build();
         when(userDataReceiverFacade.getUserByEmail(username)).thenReturn(userDto);
         when(tokenGenerator.generateToken(username)).thenReturn(tokenCode);
-        tokenGeneratorRepository.save(token);
         //When
         var result = tokenGeneratorService.createToken(username);
         //Then
