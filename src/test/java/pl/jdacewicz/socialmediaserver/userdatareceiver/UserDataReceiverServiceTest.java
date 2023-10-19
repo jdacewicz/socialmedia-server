@@ -28,13 +28,13 @@ class UserDataReceiverServiceTest {
     @Test
     public void should_return_user_when_user_exist() {
         //Given
-        String email = "test@example.com";
-        User user = User.builder()
+        var email = "test@example.com";
+        var user = User.builder()
                 .email(email)
                 .build();
         when(userDataReceiverRepository.findByEmail(email)).thenReturn(Optional.of(user));
         //When
-        User result = userDataReceiverService.getUserByEmail(email);
+       var result = userDataReceiverService.getUserByEmail(email);
         //Then
         assertEquals(email, result.email());
     }
@@ -42,8 +42,7 @@ class UserDataReceiverServiceTest {
     @Test
     public void should_throw_unsupported_operation_exception_when_user_doesnt_exist() {
         //Given
-        String email = "test@example.com";
-        when(userDataReceiverRepository.findByEmail(email)).thenReturn(Optional.empty());
+        var email = "test@example.com";
         //When
         //Then
         assertThrows(UnsupportedOperationException.class,
@@ -53,8 +52,8 @@ class UserDataReceiverServiceTest {
     @Test
     public void should_return_user_when_user_created() {
         //Given
-        RegisterRequest registerRequest = new RegisterRequest("test@example.com", "password", "firstname", "lastname");
-        User user = User.builder()
+        var registerRequest = new RegisterRequest("test@example.com", "password", "firstname", "lastname");
+        var user = User.builder()
                 .email(registerRequest.email())
                 .password(passwordEncoder.encode(registerRequest.password()))
                 .firstname(registerRequest.firstname())
@@ -62,7 +61,7 @@ class UserDataReceiverServiceTest {
                 .build();
         when(userDataReceiverRepository.save(user)).thenReturn(user);
         //When
-        User result = userDataReceiverService.createUser(registerRequest);
+        var result = userDataReceiverService.createUser(registerRequest);
         //Then
         assertEquals(registerRequest.email(), result.email());
         assertEquals(registerRequest.firstname(), result.firstname());
