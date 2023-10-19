@@ -6,22 +6,20 @@ import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserDataReceiverServiceTest {
 
     UserDataReceiverService userDataReceiverService;
 
-    UserDataReceiverRepository userDataReceiverRepository;
+    UserDataReceiverRepositoryTest userDataReceiverRepository;
     PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
-        userDataReceiverRepository = Mockito.mock(UserDataReceiverRepository.class);
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
+        userDataReceiverRepository = new UserDataReceiverRepositoryTest();
         userDataReceiverService = new UserDataReceiverService(userDataReceiverRepository, passwordEncoder);
     }
 
@@ -32,7 +30,7 @@ class UserDataReceiverServiceTest {
         var user = User.builder()
                 .email(email)
                 .build();
-        when(userDataReceiverRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        userDataReceiverRepository.save(user);
         //When
        var result = userDataReceiverService.getUserByEmail(email);
         //Then
@@ -59,7 +57,7 @@ class UserDataReceiverServiceTest {
                 .firstname(registerRequest.firstname())
                 .lastname(registerRequest.lastname())
                 .build();
-        when(userDataReceiverRepository.save(user)).thenReturn(user);
+        userDataReceiverRepository.save(user);
         //When
         var result = userDataReceiverService.createUser(registerRequest);
         //Then
