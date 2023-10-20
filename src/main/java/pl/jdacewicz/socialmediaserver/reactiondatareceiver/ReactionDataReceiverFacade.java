@@ -11,6 +11,15 @@ public class ReactionDataReceiverFacade {
 
     public ReactionDto createReaction(ReactionRequest reactionRequest) {
         var createdReaction = reactionDataReceiverService.createReaction(reactionRequest);
-        return new ReactionDto(createdReaction.reactionId(), createdReaction.imageName());
+        return mapToDto(createdReaction);
+    }
+
+    public ReactionDto getReactionById(String reactionId) {
+        var foundReaction = reactionDataReceiverService.getReactionById(reactionId);
+        return mapToDto(foundReaction);
+    }
+
+    private ReactionDto mapToDto(Reaction reaction) {
+        return new ReactionDto(reaction.reactionId(), reaction.imageName());
     }
 }

@@ -10,6 +10,11 @@ class ReactionDataReceiverService {
 
     private final ReactionDataReceiverRepository reactionDataReceiverRepository;
 
+    Reaction getReactionById(String reactionId) {
+        return reactionDataReceiverRepository.findById(reactionId)
+                .orElseThrow(UnsupportedOperationException::new);
+    }
+
     Reaction createReaction(ReactionRequest reactionRequest) {
         var reaction = Reaction.builder()
                 .name(reactionRequest.name())
