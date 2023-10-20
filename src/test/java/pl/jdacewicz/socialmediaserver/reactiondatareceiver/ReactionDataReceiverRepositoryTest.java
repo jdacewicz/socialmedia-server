@@ -6,20 +6,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 @SuppressWarnings("all")
 class ReactionDataReceiverRepositoryTest implements ReactionDataReceiverRepository {
 
-    Map<String, Reaction> database = new ConcurrentHashMap<>();
+    List<Reaction> database = new LinkedList<>();
+
+    @Override
+    public Optional<Reaction> findById(String reactionId) {
+        return database.stream()
+                .filter(reaction -> reaction.reactionId().equals(reactionId))
+                .findFirst();
+    }
 
     @Override
     public Reaction save(Reaction entity) {
-        database.put(entity.name(), entity);
+        database.add(entity);
         return entity;
     }
 
@@ -71,11 +77,6 @@ class ReactionDataReceiverRepositoryTest implements ReactionDataReceiverReposito
     @Override
     public <S extends Reaction> List<S> saveAll(Iterable<S> entities) {
         return null;
-    }
-
-    @Override
-    public Optional<Reaction> findById(String s) {
-        return Optional.empty();
     }
 
     @Override
