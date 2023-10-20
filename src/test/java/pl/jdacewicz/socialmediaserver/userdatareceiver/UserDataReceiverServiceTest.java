@@ -2,12 +2,16 @@ package pl.jdacewicz.socialmediaserver.userdatareceiver;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class UserDataReceiverServiceTest {
 
@@ -18,13 +22,13 @@ class UserDataReceiverServiceTest {
 
     @BeforeEach
     void setUp() {
-        passwordEncoder = Mockito.mock(PasswordEncoder.class);
+        passwordEncoder = mock(PasswordEncoder.class);
         userDataReceiverRepository = new UserDataReceiverRepositoryTest();
         userDataReceiverService = new UserDataReceiverService(userDataReceiverRepository, passwordEncoder);
     }
 
     @Test
-    public void should_return_user_when_user_exist() {
+    public void should_return_user_when_getting_existing_user() {
         //Given
         var email = "test@example.com";
         var user = User.builder()
@@ -38,7 +42,7 @@ class UserDataReceiverServiceTest {
     }
 
     @Test
-    public void should_throw_unsupported_operation_exception_when_user_doesnt_exist() {
+    public void should_throw_unsupported_operation_exception_when_getting_not_existing_user() {
         //Given
         var email = "test@example.com";
         //When
@@ -48,7 +52,37 @@ class UserDataReceiverServiceTest {
     }
 
     @Test
-    public void should_return_user_when_user_created() {
+    public void should_return_user_when_user_is_logged_and_is_getting_logged_user() {
+        //Given
+        Authentication auth = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+
+        User user = User.builder()
+                .userId("id")
+                .build();
+        when(auth.getPrincipal()).thenReturn(user);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        //When
+        var result = userDataReceiverService.getLoggedInUser();
+        //Then
+        assertEquals(user, result);
+    }
+
+    @Test
+    public void should_throw_unsupported_operation_exception_when_user_is_not_logged_and_is_getting_logged_user() {
+        //Given
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(null);
+        //When
+        //Then
+        assertThrows(UnsupportedOperationException.class,
+                () -> userDataReceiverService.getLoggedInUser());
+    }
+
+    @Test
+    public void should_return_user_when_creating_user() {
         //Given
         var registerRequest = new RegisterRequest("test@example.com", "password", "firstname", "lastname");
         var user = User.builder()
