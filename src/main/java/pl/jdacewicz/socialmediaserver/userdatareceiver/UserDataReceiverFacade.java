@@ -9,6 +9,11 @@ public class UserDataReceiverFacade {
 
     private final UserDataReceiverService userDataReceiverService;
 
+    public UserDto getLoggedInUser() {
+        var loggedUser = userDataReceiverService.getLoggedInUser();
+        return mapToDto(loggedUser);
+    }
+
     public UserDto getUserByEmail(String email) {
         var user = userDataReceiverService.getUserByEmail(email);
         return mapToDto(user);

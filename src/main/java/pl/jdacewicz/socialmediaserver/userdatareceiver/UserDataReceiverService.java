@@ -1,12 +1,15 @@
 package pl.jdacewicz.socialmediaserver.userdatareceiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +21,17 @@ class UserDataReceiverService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return getUserByEmail(username);
+    }
+
+    User getLoggedInUser() {
+        var authentication = Optional.ofNullable(SecurityContextHolder
+                .getContext()
+                .getAuthentication());
+        if (authentication.isPresent()) {
+            return (User) authentication.get()
+                    .getPrincipal();
+        }
+        throw new UnsupportedOperationException();
     }
 
     User getUserByEmail(String email) {
