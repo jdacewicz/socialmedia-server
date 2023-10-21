@@ -1,10 +1,7 @@
 package pl.jdacewicz.socialmediaserver.infrastructure.controller.reactiondatareceiver;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.ReactionDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionDto;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionRequest;
@@ -15,6 +12,11 @@ import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionRequest;
 public class ReactionDataReceiverRestController {
 
     private final ReactionDataReceiverFacade reactionDataReceiverFacade;
+
+    @GetMapping("/{id}")
+    public ReactionDto getReactionById(@PathVariable String id) {
+        return reactionDataReceiverFacade.getReactionById(id);
+    }
 
     @PostMapping
     public ReactionDto createReaction(@RequestBody ReactionRequest reactionRequest) {
