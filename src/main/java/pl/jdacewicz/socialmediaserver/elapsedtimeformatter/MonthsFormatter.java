@@ -13,7 +13,7 @@ class MonthsFormatter extends LocalDateTimeFormatter {
     String format(LocalDateTime then, LocalDateTime now) {
         var period = Period.between(then.toLocalDate(), now.toLocalDate());
         if (period.getMonths() > 0) {
-            return String.format("%d months ago", period.getYears());
+            return String.format("%d months ago", period.getMonths());
         }
         return next.format(then, now);
     }

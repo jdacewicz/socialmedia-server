@@ -13,7 +13,7 @@ class DaysFormatter extends LocalDateTimeFormatter {
     String format(LocalDateTime then, LocalDateTime now) {
         var period = Period.between(then.toLocalDate(), now.toLocalDate());
         if (period.getDays() > 0) {
-            return String.format("%d days ago", period.getYears());
+            return String.format("%d days ago", period.getDays());
         }
         return next.format(then, now);
     }

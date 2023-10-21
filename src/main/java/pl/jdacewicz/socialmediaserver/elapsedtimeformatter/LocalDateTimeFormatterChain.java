@@ -7,8 +7,8 @@ class LocalDateTimeFormatterChain {
     private final LocalDateTimeFormatter localDateTimeFormatter;
 
     public LocalDateTimeFormatterChain() {
-        localDateTimeFormatter = new MinutesFormatter(new HoursFormatter(new DaysFormatter(
-                new MonthsFormatter(new YearsFormatter(null)))));
+        localDateTimeFormatter = new YearsFormatter(new MonthsFormatter(new DaysFormatter(new HoursFormatter(
+                new MinutesFormatter(null)))));
     }
 
     String format(LocalDateTime then, LocalDateTime now) {
