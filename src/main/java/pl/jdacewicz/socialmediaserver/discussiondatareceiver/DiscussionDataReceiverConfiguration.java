@@ -7,7 +7,8 @@ import org.springframework.context.annotation.Configuration;
 class DiscussionDataReceiverConfiguration {
 
     @Bean
-    DiscussionDataReceiverFacade dataReceiverFacade(DiscussionDataReceiverService discussionDataReceiverService) {
-        return new DiscussionDataReceiverFacade(discussionDataReceiverService);
+    DiscussionDataReceiverFacade dataReceiverFacade(DiscussionDataReceiverService discussionDataReceiverService,
+                                                    PostMapper postMapper) {
+        return new DiscussionDataReceiverFacade(discussionDataReceiverService, postMapper);
     }
 }

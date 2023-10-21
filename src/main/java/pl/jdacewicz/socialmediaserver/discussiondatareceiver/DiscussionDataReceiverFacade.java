@@ -9,26 +9,20 @@ import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
 public class DiscussionDataReceiverFacade {
 
     private final DiscussionDataReceiverService discussionDataReceiverService;
+    private final PostMapper postMapper;
 
     public PostDto getPostById(String id) {
         var foundPost = discussionDataReceiverService.getPostById(id);
-        return mapToDto(foundPost);
+        return postMapper.mapToDto(foundPost);
     }
 
     public PostDto createPost(PostRequest postRequest) {
         var createdPost = discussionDataReceiverService.createPost(postRequest);
-        return mapToDto(createdPost);
+        return postMapper.mapToDto(createdPost);
     }
 
     public PostDto reactToPost(PostReactionRequest postReactionRequest) {
         var reactedPost = discussionDataReceiverService.reactToPost(postReactionRequest);
-        return mapToDto(reactedPost);
-    }
-
-    private PostDto mapToDto(Post post) {
-        return PostDto.builder()
-                .postId(post.postId())
-                .content(post.content())
-                .build();
+        return postMapper.mapToDto(reactedPost);
     }
 }
