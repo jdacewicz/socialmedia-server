@@ -10,6 +10,11 @@ public class DiscussionDataReceiverFacade {
 
     private final DiscussionDataReceiverService discussionDataReceiverService;
 
+    public PostDto getPostById(String id) {
+        var foundPost = discussionDataReceiverService.getPostById(id);
+        return mapToDto(foundPost);
+    }
+
     public PostDto createPost(PostRequest postRequest) {
         var createdPost = discussionDataReceiverService.createPost(postRequest);
         return mapToDto(createdPost);

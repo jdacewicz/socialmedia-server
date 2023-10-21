@@ -62,7 +62,7 @@ class DiscussionDataReceiverServiceTest {
     }
 
     @Test
-    void should_return_reacted_post_reacting_to_post() {
+    void should_return_post_with_reaction_when_reacting_to_post() {
         //Given
         var postReactionRequest = PostReactionRequest.builder()
                 .reactionId("id")
