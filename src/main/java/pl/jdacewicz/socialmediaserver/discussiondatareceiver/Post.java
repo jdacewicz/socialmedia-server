@@ -2,8 +2,11 @@ package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.Builder;
 import org.springframework.data.annotation.Id;
+import pl.jdacewicz.socialmediaserver.reactionuserpreparer.dto.ReactionUser;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @Builder
 record Post(@Id
@@ -11,5 +14,11 @@ record Post(@Id
 
             String content,
 
-            LocalDateTime creationDateTime) {
+            LocalDateTime creationDateTime,
+
+            List<ReactionUser> reactionUsers) {
+
+    static class PostBuilder {
+        private List<ReactionUser> reactionUsers = new LinkedList<>();
+    }
 }
