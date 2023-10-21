@@ -6,20 +6,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 @SuppressWarnings("all")
 class DiscussionDataReceiverRepositoryTest implements DiscussionDataReceiverRepository {
 
-    Map<String, Post> database = new ConcurrentHashMap<>();
+    List<Post> database = new LinkedList<>();
+
+    @Override
+    public Optional<Post> findById(String postId) {
+        return database.stream()
+                .filter(post -> post.postId().equals(postId))
+                .findFirst();
+    }
 
     @Override
     public <S extends Post> S save(S entity) {
-        database.put(entity.content(), entity);
+        database.add(entity);
         return entity;
     }
 
@@ -71,11 +77,6 @@ class DiscussionDataReceiverRepositoryTest implements DiscussionDataReceiverRepo
     @Override
     public <S extends Post> List<S> saveAll(Iterable<S> entities) {
         return null;
-    }
-
-    @Override
-    public Optional<Post> findById(String s) {
-        return Optional.empty();
     }
 
     @Override
