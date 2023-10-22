@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionDto;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionRequest;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class ReactionDataReceiverFacade {
 
@@ -17,6 +19,13 @@ public class ReactionDataReceiverFacade {
     public ReactionDto getReactionById(String reactionId) {
         var foundReaction = reactionDataReceiverService.getReactionById(reactionId);
         return mapToDto(foundReaction);
+    }
+
+    public List<ReactionDto> getAllReactions() {
+        return reactionDataReceiverService.getAllReactions()
+                .stream()
+                .map(this::mapToDto)
+                .toList();
     }
 
     private ReactionDto mapToDto(Reaction reaction) {

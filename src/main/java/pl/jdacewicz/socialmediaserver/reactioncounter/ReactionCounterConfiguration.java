@@ -7,8 +7,12 @@ import org.springframework.context.annotation.Configuration;
 class ReactionCounterConfiguration {
 
     @Bean
-    ReactionCounterFacade reactionCounterFacade() {
-        var reactionCounter = new ReactionCounter();
-        return new ReactionCounterFacade(reactionCounter);
+    ReactionCounter reactionCounter() {
+        return new ReactionCounter();
+    }
+
+    @Bean
+    ReactionCounterFacade reactionCounterFacade(ReactionCounterService reactionCounterService) {
+        return new ReactionCounterFacade(reactionCounterService);
     }
 }
