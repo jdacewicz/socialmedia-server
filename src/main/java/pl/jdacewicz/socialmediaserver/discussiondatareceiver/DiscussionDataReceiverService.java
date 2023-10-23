@@ -5,9 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostReactionRequest;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
-import pl.jdacewicz.socialmediaserver.reactionuserpreparer.ReactionUserPreparerFacade;
-import pl.jdacewicz.socialmediaserver.reactionuserpreparer.dto.ReactionUser;
-import pl.jdacewicz.socialmediaserver.reactionuserpreparer.dto.ReactionUserRequest;
+import pl.jdacewicz.socialmediaserver.reactionuser.ReactionUserFacade;
+import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUserRequest;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
 class DiscussionDataReceiverService {
 
     private final DiscussionDataReceiverRepository discussionDataReceiverRepository;
-    private final ReactionUserPreparerFacade reactionUserPreparerFacade;
+    private final ReactionUserFacade reactionUserFacade;
 
     Post getPostById(String id) {
         return discussionDataReceiverRepository.findById(id)
@@ -33,17 +32,17 @@ class DiscussionDataReceiverService {
 
     @Transactional
     public Post reactToPost(PostReactionRequest postReactionRequest) {
-        var reactionUser = getReactionUser(postReactionRequest);
+        var reactionUserRequest = mapToReactionUserRequest(postReactionRequest);
+        var reactionUser = reactionUserFacade.createReactionUser(reactionUserRequest);
         var post = getPostById(postReactionRequest.postId());
         post.reactionUsers()
                 .add(reactionUser);
         return discussionDataReceiverRepository.save(post);
     }
 
-    private ReactionUser getReactionUser(PostReactionRequest postReactionRequest) {
-        var reactionUserRequest = ReactionUserRequest.builder()
+    private ReactionUserRequest mapToReactionUserRequest(PostReactionRequest postReactionRequest) {
+        return ReactionUserRequest.builder()
                 .reactionId(postReactionRequest.reactionId())
                 .build();
-        return reactionUserPreparerFacade.prepareReactionUser(reactionUserRequest);
     }
 }

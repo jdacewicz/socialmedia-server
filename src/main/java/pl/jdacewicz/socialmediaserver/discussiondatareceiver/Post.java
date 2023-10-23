@@ -2,7 +2,7 @@ package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.Builder;
 import org.springframework.data.annotation.Id;
-import pl.jdacewicz.socialmediaserver.reactioncounter.dto.ReactionUser;
+import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;

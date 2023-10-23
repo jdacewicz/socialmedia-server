@@ -3,7 +3,7 @@ package pl.jdacewicz.socialmediaserver.reactioncounter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.reactioncounter.dto.ReactionCount;
-import pl.jdacewicz.socialmediaserver.reactioncounter.dto.ReactionUser;
+import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.ReactionDataReceiverFacade;
 
 import java.util.List;
@@ -19,7 +19,7 @@ class ReactionCounterService {
 
     public Set<ReactionCount> countReactions(List<ReactionUser> reactionUsers) {
         var activeReactions = reactionDataReceiverFacade.getAllReactions();
-        var reactionCounts = reactionCounter.countReactions(activeReactions, reactionUsers);
+        var reactionCounts = reactionCounter.countReactionsByActiveReactions(reactionUsers, activeReactions);
         return reactionCounts.entrySet()
                 .stream()
                 .map(entry -> new ReactionCount(entry.getKey(), entry.getValue()))

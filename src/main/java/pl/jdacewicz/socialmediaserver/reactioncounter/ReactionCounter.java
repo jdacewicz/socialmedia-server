@@ -1,6 +1,6 @@
 package pl.jdacewicz.socialmediaserver.reactioncounter;
 
-import pl.jdacewicz.socialmediaserver.reactioncounter.dto.ReactionUser;
+import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionDto;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 class ReactionCounter {
 
-    Map<ReactionDto, Long> countReactions(List<ReactionDto> activeReactions, List<ReactionUser> reactionUsers) {
+    Map<ReactionDto, Long> countReactionsByActiveReactions(List<ReactionUser> reactionUsers, List<ReactionDto> activeReactions) {
         var activeReactionsMap = toMap(activeReactions);
         return reactionUsers.stream()
                 .filter(reactionUser -> activeReactionsMap.containsKey(reactionUser.reactionId()))

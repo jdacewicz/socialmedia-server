@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostReactionRequest;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
-import pl.jdacewicz.socialmediaserver.reactionuserpreparer.ReactionUserPreparerFacade;
-import pl.jdacewicz.socialmediaserver.reactionuserpreparer.dto.ReactionUser;
+import pl.jdacewicz.socialmediaserver.reactionuser.ReactionUserFacade;
+import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,14 +17,14 @@ class DiscussionDataReceiverServiceTest {
     DiscussionDataReceiverService discussionDataReceiverService;
 
     DiscussionDataReceiverRepositoryTest discussionDataReceiverRepository;
-    ReactionUserPreparerFacade reactionUserPreparerFacade;
+    ReactionUserFacade reactionUserFacade;
 
     @BeforeEach
     void setUp() {
-        reactionUserPreparerFacade = Mockito.mock(ReactionUserPreparerFacade.class);
+        reactionUserFacade = Mockito.mock(ReactionUserFacade.class);
         discussionDataReceiverRepository = new DiscussionDataReceiverRepositoryTest();
         discussionDataReceiverService = new DiscussionDataReceiverService(discussionDataReceiverRepository,
-                reactionUserPreparerFacade);
+                reactionUserFacade);
     }
 
     @Test
@@ -73,7 +73,7 @@ class DiscussionDataReceiverServiceTest {
         var post = Post.builder()
                 .postId(postReactionRequest.postId())
                 .build();
-        when(reactionUserPreparerFacade.prepareReactionUser(any())).thenReturn(reactionUser);
+        when(reactionUserFacade.createReactionUser(any())).thenReturn(reactionUser);
         discussionDataReceiverRepository.save(post);
         //When
         var result = discussionDataReceiverService.reactToPost(postReactionRequest);
