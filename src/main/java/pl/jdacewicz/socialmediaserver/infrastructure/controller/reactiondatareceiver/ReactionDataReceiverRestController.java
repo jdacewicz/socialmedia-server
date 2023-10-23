@@ -22,4 +22,24 @@ public class ReactionDataReceiverRestController {
     public ReactionDto createReaction(@RequestBody ReactionRequest reactionRequest) {
         return reactionDataReceiverFacade.createReaction(reactionRequest);
     }
+
+    @PutMapping("/{id}/activate")
+    public void activateReaction(@PathVariable String id) {
+        reactionDataReceiverFacade.activateReaction(id);
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public void deactivateReaction(@PathVariable String id) {
+        reactionDataReceiverFacade.deactivateReaction(id);
+    }
+
+    @PutMapping("/{id}/archive")
+    public void archiveReaction(@PathVariable String id) {
+        reactionDataReceiverFacade.archiveReaction(id);
+    }
+
+    @PutMapping("/{id}/unarchive")
+    public void unarchiveReaction(@PathVariable String id) {
+        reactionDataReceiverFacade.unarchiveReaction(id);
+    }
 }

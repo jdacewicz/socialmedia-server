@@ -24,7 +24,17 @@ class ReactionDataReceiverService {
     Reaction createReaction(ReactionRequest reactionRequest) {
         var reaction = Reaction.builder()
                 .name(reactionRequest.name())
+                .active(false)
+                .archived(false)
                 .build();
         return reactionDataReceiverRepository.save(reaction);
+    }
+
+    void updateReactionActivity(String reactionId, boolean active) {
+        reactionDataReceiverRepository.updateReactionActive(reactionId, active);
+    }
+
+    void updateReactionArchived(String reactionId, boolean archived) {
+        reactionDataReceiverRepository.updateReactionArchived(reactionId, archived);
     }
 }

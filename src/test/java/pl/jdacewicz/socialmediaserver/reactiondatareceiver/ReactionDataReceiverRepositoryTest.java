@@ -30,6 +30,36 @@ class ReactionDataReceiverRepositoryTest implements ReactionDataReceiverReposito
     }
 
     @Override
+    public void updateReactionActive(String id, boolean active) {
+        database.stream()
+                .filter(reaction -> reaction.reactionId().equals(id))
+                .map(reaction -> {
+                    return Reaction.builder()
+                            .reactionId(reaction.reactionId())
+                            .name(reaction.name())
+                            .imageName(reaction.imageName())
+                            .archived(reaction.archived())
+                            .active(active)
+                            .build();
+                });
+    }
+
+    @Override
+    public void updateReactionArchived(String id, boolean archived) {
+        database.stream()
+                .filter(reaction -> reaction.reactionId().equals(id))
+                .map(reaction -> {
+                    return Reaction.builder()
+                            .reactionId(reaction.reactionId())
+                            .name(reaction.name())
+                            .imageName(reaction.imageName())
+                            .active(reaction.active())
+                            .archived(archived)
+                            .build();
+                });
+    }
+
+    @Override
     public <S extends Reaction> S insert(S entity) {
         return null;
     }

@@ -9,5 +9,9 @@ record Reaction(@Id
 
                 String name,
 
-                String imageName) {
+                String imageName,
+
+                boolean active,
+
+                boolean archived) {
 }
