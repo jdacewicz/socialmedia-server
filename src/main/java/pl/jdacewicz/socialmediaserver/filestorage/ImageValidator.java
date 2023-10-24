@@ -46,7 +46,7 @@ class ImageValidator {
     private String concatValidationErrors() {
         var determiner = ",";
         return errors.stream()
-                .map(error -> error.message)
+                .map(ValidationError::getMessage)
                 .collect(Collectors.joining(determiner));
     }
 }
