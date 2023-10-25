@@ -4,7 +4,8 @@ import lombok.Getter;
 
 @Getter
 enum ValidationError {
-    EMPTY("Provided file is empty"),
+    IS_NULL("File have to be provided"),
+    EMPTY("Provided file cannot be empty"),
     MISSING_EXTENSION("Provided file is missing file extension"),
     NOT_SUPPORTED_CONTENT_TYPE("Provided file has unsupported content type");
 

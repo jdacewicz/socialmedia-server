@@ -10,7 +10,7 @@ import static pl.jdacewicz.socialmediaserver.filestorage.FileStorageActionStatus
 
 class FileStorage {
 
-    static FileStorageActionStatus  uploadFile(MultipartFile file, String filePathname){
+    static FileStorageActionStatus uploadFile(MultipartFile file, String filePathname){
         try {
             var inputStream = file.getInputStream();
             var directory = new File(filePathname);
@@ -21,7 +21,7 @@ class FileStorage {
         return UPLOAD_FILE_SUCCESS;
     }
 
-    static FileStorageActionStatus  deleteFile(String filePathname) {
+    static FileStorageActionStatus deleteFile(String filePathname) {
         try {
             var directory = new File(filePathname);
             FileUtils.delete(directory);
