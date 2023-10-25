@@ -11,6 +11,6 @@ class FileNameGenerator {
 
     private static String extractFileExtension(String originalFileName) {
         var lastDotIndex = originalFileName.lastIndexOf('.');
-        return originalFileName.substring(lastDotIndex);
+        return (lastDotIndex > -1) ? originalFileName.substring(lastDotIndex) : "";
     }
 }
