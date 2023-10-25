@@ -17,6 +17,9 @@ class ImageValidator {
     private List<ValidationError> errors = new LinkedList<>();
 
     public FileValidationResult validate(MultipartFile file) {
+        if (file == null) {
+            return validationFailed(IS_NULL.getMessage());
+        }
         if (file.isEmpty()) {
             errors.add(EMPTY);
         }
@@ -27,7 +30,7 @@ class ImageValidator {
             errors.add(NOT_SUPPORTED_CONTENT_TYPE);
         }
         if (errors.isEmpty()) {
-            validationSuccess();
+            return validationSuccess();
         }
         String message = concatValidationErrors();
         return validationFailed(message);
@@ -40,11 +43,11 @@ class ImageValidator {
 
 
     private boolean doesFileHasExtension(String originalFileName) {
-        return (originalFileName != null && originalFileName.lastIndexOf('.') >= 0);
+        return originalFileName.lastIndexOf('.') >= 0;
     }
 
     private String concatValidationErrors() {
-        var determiner = ",";
+        var determiner = ", ";
         return errors.stream()
                 .map(ValidationError::getMessage)
                 .collect(Collectors.joining(determiner));
