@@ -1,61 +1,61 @@
 package pl.jdacewicz.socialmediaserver.filestorage;
 
+import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartFile;
-import pl.jdacewicz.socialmediaserver.filestorage.dto.ImageUploadRequest;
+import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 class FileStorageFacadeTest {
 
     FileStorageFacade fileStorageFacade;
 
-    FileStorageService fileStorageService;
     ImageValidator imageValidator;
 
     @BeforeEach
     void setUp() {
-        fileStorageService = Mockito.mock(FileStorageService.class);
         imageValidator = Mockito.mock(ImageValidator.class);
-        fileStorageFacade = new FileStorageFacade(fileStorageService, imageValidator);
+        fileStorageFacade = new FileStorageFacade(imageValidator);
     }
 
     @Test
-    void should_return_file_upload_result_with_upload_result_message_and_new_file_name_when_uploading_image_validation_succeed() {
+    void should_return_file_dto_when_uploading_valid_image() throws IOException {
         //Given
         var image = new MockMultipartFile("name", "image.png", "image/png", "content".getBytes());
-        var imageUploadRequest = new ImageUploadRequest(image, "fileUploadDirectory");
+        var fileUploadRequest = FileUploadRequest.builder()
+                .fileName("name")
+                .fileUploadDirectory("directory")
+                .build();
         var fileValidationResult = FileValidationResult.validationSuccess();
-        var newFileName = "newName";
-        try (MockedStatic<FileNameGenerator> fileNameGenerator = Mockito.mockStatic(FileNameGenerator.class)) {
-            when(FileNameGenerator.generateFileName(imageUploadRequest.file().getOriginalFilename()))
-                    .thenReturn(newFileName);
-            when(imageValidator.validate(imageUploadRequest.file())).thenReturn(fileValidationResult);
-            when(fileStorageService.uploadFile(imageUploadRequest.file(), newFileName, imageUploadRequest.fileUploadDirectory()))
-                    .thenReturn(FileStorageActionStatus.UPLOAD_FILE_SUCCESS.getMessage());
+        try (MockedStatic<FileStorage> fileStorage = Mockito.mockStatic(FileStorage.class)) {
+            when(imageValidator.validate(image)).thenReturn(fileValidationResult);
             //When
-            var result = fileStorageFacade.uploadImage(imageUploadRequest);
+            var result = fileStorageFacade.uploadImage(image, fileUploadRequest);
             //Then
-            assertEquals(FileStorageActionStatus.UPLOAD_FILE_SUCCESS.getMessage(), result.message());
-            assertEquals(newFileName, result.fileName());
-            assertEquals(imageUploadRequest.fileUploadDirectory(), result.folderDirectory());
+            assertEquals(fileUploadRequest.fileName(), result.fileName());
+            assertEquals(fileUploadRequest.fileUploadDirectory(), result.fileDirectory());
         }
     }
 
     @Test
-    void should_return_file_upload_result_with_validation_message_when_uploading_image_validation_failed() {
+    void should_throw_validation_exception_when_uploading_invalid_image() {
         //Given
         var image = new MockMultipartFile("name", "content".getBytes());
-        var imageUploadRequest = new ImageUploadRequest(image, "fileUploadDirectory");
+        FileUploadRequest fileUploadRequest = FileUploadRequest.builder()
+                .build();
         var fileValidationResult = FileValidationResult.validationFailed("failed");
-        when(imageValidator.validate(imageUploadRequest.file())).thenReturn(fileValidationResult);
+        when(imageValidator.validate(image)).thenReturn(fileValidationResult);
         //When
-        var result = fileStorageFacade.uploadImage(imageUploadRequest);
         //Then
-        assertEquals(fileValidationResult.validationMessage(), result.message());
+        assertThrows(ValidationException.class,
+                () -> fileStorageFacade.uploadImage(image, fileUploadRequest));
     }
 }
