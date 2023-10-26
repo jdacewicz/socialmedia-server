@@ -43,6 +43,9 @@ class ImageValidator {
 
 
     private boolean doesFileHasExtension(String originalFileName) {
+        if (originalFileName == null) {
+            return false;
+        }
         return originalFileName.lastIndexOf('.') >= 0;
     }
 
