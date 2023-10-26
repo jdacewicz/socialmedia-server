@@ -7,6 +7,8 @@ import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -66,22 +68,55 @@ class DiscussionDataReceiverServiceTest {
     }
 
     @Test
-    void should_return_post_with_reaction_user_when_adding_reaction_user_to_post() {
+    void should_return_post_with_multiple_reactions_users_when_adding_unique_reaction_user_to_reacted_post() {
         //Given
         var postId = "id";
         var reactionUser = ReactionUser.builder()
+                .userId("id")
+                .reactionId("id")
+                .build();
+        var reactionUserTwo = ReactionUser.builder()
+                .userId("idTwo")
+                .reactionId("idTwo")
                 .build();
         var post = Post.builder()
                 .postId(postId)
+                .reactionUsers(List.of(reactionUser))
                 .build();
         discussionDataReceiverRepository.save(post);
         //When
-        var result = discussionDataReceiverService.addReactionUserToPostById(postId, reactionUser);
+        var result = discussionDataReceiverService.addReactionUserToPostById(postId, reactionUserTwo);
         //Then
         assertFalse(result.reactionUsers()
                 .isEmpty());
-        assertEquals(reactionUser, result.reactionUsers()
-                .get(0));
+        assertEquals(2, result.reactionUsers()
+                .size());
+    }
+
+    @Test
+    void should_return_post_with_single_reaction_user_when_adding_not_unique_reaction_user_to_reacted_post() {
+        //Given
+        var postId = "id";
+        var reactionUser = ReactionUser.builder()
+                .userId("id")
+                .reactionId("id")
+                .build();
+        var reactionUserTwo = ReactionUser.builder()
+                .userId("id")
+                .reactionId("id")
+                .build();
+        var post = Post.builder()
+                .postId(postId)
+                .reactionUsers(List.of(reactionUser))
+                .build();
+        discussionDataReceiverRepository.save(post);
+        //When
+        var result = discussionDataReceiverService.addReactionUserToPostById(postId, reactionUserTwo);
+        //Then
+        assertFalse(result.reactionUsers()
+                .isEmpty());
+        assertEquals(1, result.reactionUsers()
+                .size());
     }
 
 }
