@@ -1,14 +1,14 @@
 package pl.jdacewicz.socialmediaserver.infrastructure.controller.userauthenticator;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.userauthenticator.UserAuthenticatorFacade;
 import pl.jdacewicz.socialmediaserver.userauthenticator.dto.AuthenticationRequest;
 import pl.jdacewicz.socialmediaserver.userauthenticator.dto.AuthenticationResponse;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "/api/auth")
@@ -18,8 +18,9 @@ public class UserAuthenticatorRestController {
     private final UserAuthenticatorFacade userAuthenticatorFacade;
 
     @PostMapping("/register")
-    public AuthenticationResponse register(@RequestBody RegisterRequest request) {
-        return userAuthenticatorFacade.registerUser(request);
+    public AuthenticationResponse register(@RequestParam MultipartFile profileImage,
+                                           @RequestParam RegisterRequest request) throws IOException {
+        return userAuthenticatorFacade.registerUser(profileImage, request);
     }
 
     @PostMapping("/authenticate")

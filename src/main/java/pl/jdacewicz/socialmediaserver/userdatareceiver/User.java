@@ -11,12 +11,19 @@ import java.util.List;
 
 @Builder
 record User(String userId,
+
             @Indexed(unique = true)
             String email,
+
             String password,
+
             String firstname,
+
             String lastname,
+
             String profilePictureName) implements UserDetails {
+
+    private final static String MAIN_DIRECTORY = "data/users";
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -52,5 +59,13 @@ record User(String userId,
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    String getUserImageDirectory() {
+        return String.format("%s/%s", getUserFolderDirectory(), profilePictureName);
+    }
+
+    String getUserFolderDirectory() {
+        return String.format("%s/%s", MAIN_DIRECTORY, userId);
     }
 }
