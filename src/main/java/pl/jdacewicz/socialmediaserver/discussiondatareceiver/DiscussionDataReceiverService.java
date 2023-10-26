@@ -26,7 +26,7 @@ class DiscussionDataReceiverService {
                 .content(content)
                 .creator(loggedInUser)
                 .creationDateTime(LocalDateTime.now())
-                .image(mapToDiscussionImage(imageName))
+                .imageName(imageName)
                 .build();
         return discussionDataReceiverRepository.save(post);
     }
@@ -37,11 +37,5 @@ class DiscussionDataReceiverService {
         post.reactionUsers()
                 .add(reactionUser);
         return discussionDataReceiverRepository.save(post);
-    }
-
-    private DiscussionImage mapToDiscussionImage(String imageName) {
-        return DiscussionImage.builder()
-                .fileName(imageName)
-                .build();
     }
 }

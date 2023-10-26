@@ -19,16 +19,12 @@ public class FileStorageFacade {
                 .build();
     }
 
-    public FileDto uploadImage(MultipartFile image, FileUploadRequest fileUploadRequest) throws IOException {
+    public void uploadImage(MultipartFile image, FileUploadRequest fileUploadRequest) throws IOException {
         var fileValidationResult = imageValidator.validate(image);
         if (fileValidationResult.doesValidationFailed()) {
             throw new ValidationException(fileValidationResult.validationMessage());
         }
         FileStorage.uploadFile(image, fileUploadRequest.fileName(), fileUploadRequest.fileUploadDirectory());
-        return FileDto.builder()
-                .fileName(fileUploadRequest.fileName())
-                .fileDirectory(fileUploadRequest.fileUploadDirectory())
-                .build();
     }
 
     public void deleteFile(FileDeleteRequest fileDeleteRequest) throws IOException {

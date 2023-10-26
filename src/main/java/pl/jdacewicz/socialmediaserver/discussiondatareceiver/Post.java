@@ -17,7 +17,7 @@ record Post(@Id
 
             UserDto creator,
 
-            DiscussionImage image,
+            String imageName,
 
             LocalDateTime creationDateTime,
 
@@ -30,7 +30,7 @@ record Post(@Id
     }
 
     String getPostImageDirectory() {
-        return String.format("%s/%s", getPostFolderDirectory(), image.fileName());
+        return String.format("%s/%s", getPostFolderDirectory(), imageName);
     }
 
     String getPostFolderDirectory() {

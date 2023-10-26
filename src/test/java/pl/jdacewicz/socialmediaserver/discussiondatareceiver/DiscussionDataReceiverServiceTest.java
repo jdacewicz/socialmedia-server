@@ -61,8 +61,7 @@ class DiscussionDataReceiverServiceTest {
         var result = discussionDataReceiverService.createPost(content, imageName);
         //Then
         assertEquals(content, result.content());
-        assertEquals(imageName, result.image()
-                .fileName());
+        assertEquals(imageName, result.imageName());
         assertEquals(loggedUserDto, result.creator());
     }
 
