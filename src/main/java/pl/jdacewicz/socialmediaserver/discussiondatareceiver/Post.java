@@ -23,7 +23,7 @@ record Post(@Id
 
             List<ReactionUser> reactionUsers) {
 
-    private final static String MAIN_DIRECTORY = "data/posts";
+    private final static String MAIN_DIRECTORY = "data/users";
 
     static class PostBuilder {
         private List<ReactionUser> reactionUsers = new LinkedList<>();

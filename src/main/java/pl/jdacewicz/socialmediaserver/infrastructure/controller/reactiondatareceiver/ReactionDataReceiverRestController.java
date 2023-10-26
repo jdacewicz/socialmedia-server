@@ -2,9 +2,12 @@ package pl.jdacewicz.socialmediaserver.infrastructure.controller.reactiondatarec
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.ReactionDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionDto;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionRequest;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "/api/reactions")
@@ -19,8 +22,9 @@ public class ReactionDataReceiverRestController {
     }
 
     @PostMapping
-    public ReactionDto createReaction(@RequestBody ReactionRequest reactionRequest) {
-        return reactionDataReceiverFacade.createReaction(reactionRequest);
+    public ReactionDto createReaction(@RequestParam MultipartFile reactionImage,
+                                      @RequestParam ReactionRequest reactionRequest) throws IOException {
+        return reactionDataReceiverFacade.createReaction(reactionImage, reactionRequest);
     }
 
     @PutMapping("/{id}/activate")
