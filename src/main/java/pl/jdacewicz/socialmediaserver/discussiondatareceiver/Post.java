@@ -25,6 +25,19 @@ record Post(@Id
 
     private final static String MAIN_DIRECTORY = "data/users";
 
+    Post withReactionUser(ReactionUser reactionUser) {
+        var newReactionUsers = new LinkedList<>(this.reactionUsers());
+        newReactionUsers.add(reactionUser);
+        return Post.builder()
+                .postId(postId)
+                .content(content)
+                .creator(creator)
+                .imageName(imageName)
+                .creationDateTime(creationDateTime)
+                .reactionUsers(newReactionUsers)
+                .build();
+    }
+
     static class PostBuilder {
         private List<ReactionUser> reactionUsers = new LinkedList<>();
     }

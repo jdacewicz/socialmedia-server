@@ -34,8 +34,9 @@ class DiscussionDataReceiverService {
     @Transactional
     public Post addReactionUserToPostById(String postId, ReactionUser reactionUser) {
         var post = getPostById(postId);
-        post.reactionUsers()
-                .add(reactionUser);
+        if (!post.reactionUsers().contains(reactionUser)) {
+            post = post.withReactionUser(reactionUser);
+        }
         return discussionDataReceiverRepository.save(post);
     }
 }
