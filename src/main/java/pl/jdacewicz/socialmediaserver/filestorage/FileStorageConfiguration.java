@@ -1,12 +1,14 @@
 package pl.jdacewicz.socialmediaserver.filestorage;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 class FileStorageConfiguration {
 
-    FileStorageFacade fileStorageFacade(FileStorageService fileStorageService) {
+    @Bean
+    FileStorageFacade fileStorageFacade() {
         var imageValidator = new ImageValidator();
-        return new FileStorageFacade(fileStorageService, imageValidator);
+        return new FileStorageFacade(imageValidator);
     }
 }
