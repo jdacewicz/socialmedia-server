@@ -15,6 +15,7 @@ class PostMapper {
         return PostDto.builder()
                 .postId(post.postId())
                 .content(post.content())
+                .creator(post.creator())
                 .reactionCounts(reactionCounterFacade.countReactions(post.reactionUsers()))
                 .build();
     }
