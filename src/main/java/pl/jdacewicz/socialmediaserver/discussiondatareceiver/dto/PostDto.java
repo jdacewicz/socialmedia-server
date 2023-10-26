@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto;
 
 import lombok.Builder;
+import pl.jdacewicz.socialmediaserver.elapsedtimeformatter.dto.ElapsedDateTime;
 import pl.jdacewicz.socialmediaserver.reactioncounter.dto.ReactionCount;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
@@ -11,5 +12,6 @@ public record PostDto(String postId,
                       String content,
                       UserDto creator,
                       String imageUrl,
+                      ElapsedDateTime elapsedDateTime,
                       Set<ReactionCount> reactionCounts) {
 }
