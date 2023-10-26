@@ -34,10 +34,8 @@ class DiscussionDataReceiverService {
     }
 
     @Transactional
-    public Post reactToPost(PostReactionRequest postReactionRequest) {
-        var reactionUserRequest = mapToReactionUserRequest(postReactionRequest);
-        var reactionUser = reactionUserFacade.createReactionUser(reactionUserRequest);
-        var post = getPostById(postReactionRequest.postId());
+    public Post addReactionUserToPostById(String postId, ReactionUser reactionUser) {
+        var post = getPostById(postId);
         post.reactionUsers()
                 .add(reactionUser);
         return discussionDataReceiverRepository.save(post);

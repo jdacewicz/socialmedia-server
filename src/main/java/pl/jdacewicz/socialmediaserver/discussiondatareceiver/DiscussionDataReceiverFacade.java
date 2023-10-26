@@ -22,7 +22,15 @@ public class DiscussionDataReceiverFacade {
     }
 
     public PostDto reactToPost(PostReactionRequest postReactionRequest) {
-        var reactedPost = discussionDataReceiverService.reactToPost(postReactionRequest);
+        var reactionUserRequest = mapToReactionUserRequest(postReactionRequest);
+        var reactionUser = reactionUserFacade.createReactionUser(reactionUserRequest);
+        var reactedPost = discussionDataReceiverService.addReactionUserToPostById(postReactionRequest.postId(), reactionUser);
         return postMapper.mapToDto(reactedPost);
+    }
+
+    private ReactionUserRequest mapToReactionUserRequest(PostReactionRequest postReactionRequest) {
+        return ReactionUserRequest.builder()
+                .reactionId(postReactionRequest.reactionId())
+                .build();
     }
 }
