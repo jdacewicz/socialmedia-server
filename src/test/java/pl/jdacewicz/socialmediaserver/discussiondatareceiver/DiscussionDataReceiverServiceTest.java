@@ -7,6 +7,8 @@ import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostReactionReq
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
 import pl.jdacewicz.socialmediaserver.reactionuser.ReactionUserFacade;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,14 +19,16 @@ class DiscussionDataReceiverServiceTest {
     DiscussionDataReceiverService discussionDataReceiverService;
 
     DiscussionDataReceiverRepositoryTest discussionDataReceiverRepository;
+    UserDataReceiverFacade userDataReceiverFacade;
     ReactionUserFacade reactionUserFacade;
 
     @BeforeEach
     void setUp() {
+        userDataReceiverFacade = Mockito.mock(UserDataReceiverFacade.class);
         reactionUserFacade = Mockito.mock(ReactionUserFacade.class);
         discussionDataReceiverRepository = new DiscussionDataReceiverRepositoryTest();
         discussionDataReceiverService = new DiscussionDataReceiverService(discussionDataReceiverRepository,
-                reactionUserFacade);
+                userDataReceiverFacade, reactionUserFacade);
     }
 
     @Test
@@ -55,10 +59,14 @@ class DiscussionDataReceiverServiceTest {
     void should_return_created_post_when_creating_post() {
         //Given
         var postRequest = new PostRequest("content");
+        var loggedUserDto = UserDto.builder()
+                .build();
+        when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
         //When
         var result = discussionDataReceiverService.createPost(postRequest);
         //Then
         assertEquals(postRequest.content(), result.content());
+        assertEquals(loggedUserDto, result.creator());
     }
 
     @Test
