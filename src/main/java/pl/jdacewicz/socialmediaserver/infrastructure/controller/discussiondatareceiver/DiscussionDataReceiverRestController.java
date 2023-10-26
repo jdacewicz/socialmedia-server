@@ -2,10 +2,13 @@ package pl.jdacewicz.socialmediaserver.infrastructure.controller.discussiondatar
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.DiscussionDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostReactionRequest;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "/api/discussions")
@@ -20,8 +23,9 @@ public class DiscussionDataReceiverRestController {
     }
 
     @PostMapping("/posts")
-    public PostDto createPost(@RequestBody PostRequest postRequest) {
-        return discussionDataReceiverFacade.createPost(postRequest);
+    public PostDto createPost(@RequestPart MultipartFile postImage,
+                              @RequestPart PostRequest postRequest) throws IOException {
+        return discussionDataReceiverFacade.createPost(postImage, postRequest);
     }
 
     @PutMapping("/posts/{postId}/react/{reactionId}")

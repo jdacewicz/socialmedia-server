@@ -17,11 +17,23 @@ record Post(@Id
 
             UserDto creator,
 
+            DiscussionImage image,
+
             LocalDateTime creationDateTime,
 
             List<ReactionUser> reactionUsers) {
 
+    private final static String MAIN_DIRECTORY = "data/posts";
+
     static class PostBuilder {
         private List<ReactionUser> reactionUsers = new LinkedList<>();
+    }
+
+    String getPostImageDirectory() {
+        return String.format("%s/%s", getPostFolderDirectory(), image.fileName());
+    }
+
+    String getPostFolderDirectory() {
+        return String.format("%s/%s/%s", MAIN_DIRECTORY, creator.userId(), postId);
     }
 }

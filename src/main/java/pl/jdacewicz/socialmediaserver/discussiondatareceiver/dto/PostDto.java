@@ -10,5 +10,6 @@ import java.util.Set;
 public record PostDto(String postId,
                       String content,
                       UserDto creator,
+                      String imageUrl,
                       Set<ReactionCount> reactionCounts) {
 }

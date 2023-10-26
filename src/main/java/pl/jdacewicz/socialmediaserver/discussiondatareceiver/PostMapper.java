@@ -16,6 +16,7 @@ class PostMapper {
                 .postId(post.postId())
                 .content(post.content())
                 .creator(post.creator())
+                .imageUrl(post.getPostImageDirectory())
                 .reactionCounts(reactionCounterFacade.countReactions(post.reactionUsers()))
                 .build();
     }

@@ -1,14 +1,24 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostReactionRequest;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
+import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
+import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
+import pl.jdacewicz.socialmediaserver.reactionuser.ReactionUserFacade;
+import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUserRequest;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 public class DiscussionDataReceiverFacade {
 
     private final DiscussionDataReceiverService discussionDataReceiverService;
+    private final ReactionUserFacade reactionUserFacade;
+    private final FileStorageFacade fileStorageFacade;
     private final PostMapper postMapper;
 
     public PostDto getPostById(String id) {
@@ -16,8 +26,16 @@ public class DiscussionDataReceiverFacade {
         return postMapper.mapToDto(foundPost);
     }
 
-    public PostDto createPost(PostRequest postRequest) {
-        var createdPost = discussionDataReceiverService.createPost(postRequest);
+    @Transactional
+    public PostDto createPost(MultipartFile postImage, PostRequest postRequest) throws IOException {
+        var newFileName = fileStorageFacade.generateFilename(postImage)
+                .fileName();
+        var createdPost = discussionDataReceiverService.createPost(postRequest.content(), newFileName);
+        var imageUploadRequest = FileUploadRequest.builder()
+                .fileName(newFileName)
+                .fileUploadDirectory(createdPost.getPostFolderDirectory())
+                .build();
+        fileStorageFacade.uploadImage(postImage, imageUploadRequest);
         return postMapper.mapToDto(createdPost);
     }
 
