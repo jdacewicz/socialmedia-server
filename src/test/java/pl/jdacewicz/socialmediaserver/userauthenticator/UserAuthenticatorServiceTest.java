@@ -4,6 +4,7 @@ import com.mongodb.DuplicateKeyException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,8 @@ import pl.jdacewicz.socialmediaserver.userauthenticator.dto.AuthenticationReques
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -72,28 +75,31 @@ class UserAuthenticatorServiceTest {
     }
 
     @Test
-    public void should_register_successfully_when_valid_data_provided() {
+    public void should_register_successfully_when_valid_data_provided() throws IOException {
         //Given
+        var profileImage = new MockMultipartFile("name", "content".getBytes());
         var registerRequest = new RegisterRequest("test@example.com", "password", "firstname", "lastname");
         var tokenDto = new TokenDto("code", true);
         when(tokenGeneratorFacade.createToken(registerRequest.email())).thenReturn(tokenDto);
         //When
-        var result = userAuthenticatorService.registerUser(registerRequest);
+        var result = userAuthenticatorService.registerUser(profileImage, registerRequest);
         //Then
         assertEquals(tokenDto, result);
-        verify(userDataReceiverFacade, times(1)).createUser(registerRequest);
+        verify(userDataReceiverFacade, times(1)).createUser(profileImage, registerRequest);
         verify(tokenGeneratorFacade, times(1)).createToken(registerRequest.email());
     }
 
     @Test
-    public void should_fail_to_register_when_not_unique_email_provided() {
+    public void should_fail_to_register_when_not_unique_email_provided() throws IOException {
         // Arrange
+        var profileImage = new MockMultipartFile("name", "content".getBytes());
         var registerRequest = new RegisterRequest("invalid email", "password", "firstname", "lastname");
-        when(userDataReceiverFacade.createUser(registerRequest)).thenThrow(DuplicateKeyException.class);
+        when(userDataReceiverFacade.createUser(profileImage, registerRequest)).thenThrow(DuplicateKeyException.class);
         //When
         //Then
-        assertThrows(DuplicateKeyException.class, () -> userAuthenticatorService.registerUser(registerRequest));
-        verify(userDataReceiverFacade, times(1)).createUser(registerRequest);
+        assertThrows(DuplicateKeyException.class,
+                () -> userAuthenticatorService.registerUser(profileImage, registerRequest));
+        verify(userDataReceiverFacade, times(1)).createUser(profileImage, registerRequest);
         verify(tokenGeneratorFacade, never()).createToken(anyString());
     }
 }
