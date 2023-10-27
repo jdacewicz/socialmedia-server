@@ -68,16 +68,12 @@ class DiscussionDataReceiverServiceTest {
     }
 
     @Test
-    void should_return_post_with_multiple_reactions_users_when_adding_unique_reaction_user_to_reacted_post() {
+    void should_return_post_without_reactions_users_when_reacting_by_already_reacted_reaction_user() {
         //Given
         var postId = "id";
         var reactionUser = ReactionUser.builder()
                 .userId("id")
                 .reactionId("id")
-                .build();
-        var reactionUserTwo = ReactionUser.builder()
-                .userId("idTwo")
-                .reactionId("idTwo")
                 .build();
         var post = Post.builder()
                 .postId(postId)
@@ -85,38 +81,31 @@ class DiscussionDataReceiverServiceTest {
                 .build();
         discussionDataReceiverRepository.save(post);
         //When
-        var result = discussionDataReceiverService.addReactionUserToPostById(postId, reactionUserTwo);
+        var result = discussionDataReceiverService.reactToPostById(postId, reactionUser);
         //Then
-        assertFalse(result.reactionUsers()
+        assertTrue(result.reactionUsers()
                 .isEmpty());
-        assertEquals(2, result.reactionUsers()
-                .size());
     }
 
     @Test
-    void should_return_post_with_single_reaction_user_when_adding_not_unique_reaction_user_to_reacted_post() {
+    void should_return_post_with_reaction_user_when_reacting_by_unique_reaction_user() {
         //Given
         var postId = "id";
         var reactionUser = ReactionUser.builder()
                 .userId("id")
                 .reactionId("id")
                 .build();
-        var reactionUserTwo = ReactionUser.builder()
-                .userId("id")
-                .reactionId("id")
-                .build();
         var post = Post.builder()
                 .postId(postId)
-                .reactionUsers(List.of(reactionUser))
+                .reactionUsers(List.of())
                 .build();
         discussionDataReceiverRepository.save(post);
         //When
-        var result = discussionDataReceiverService.addReactionUserToPostById(postId, reactionUserTwo);
+        var result = discussionDataReceiverService.reactToPostById(postId, reactionUser);
         //Then
         assertFalse(result.reactionUsers()
                 .isEmpty());
         assertEquals(1, result.reactionUsers()
                 .size());
     }
-
 }
