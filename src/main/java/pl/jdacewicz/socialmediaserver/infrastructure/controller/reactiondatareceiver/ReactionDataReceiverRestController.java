@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.ReactionDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionDto;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionRequest;
+import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionUpdateRequest;
 
 import java.io.IOException;
 
@@ -22,9 +23,16 @@ public class ReactionDataReceiverRestController {
     }
 
     @PostMapping
-    public ReactionDto createReaction(@RequestParam MultipartFile reactionImage,
-                                      @RequestParam ReactionRequest reactionRequest) throws IOException {
+    public ReactionDto createReaction(@RequestPart MultipartFile reactionImage,
+                                      @RequestPart ReactionRequest reactionRequest) throws IOException {
         return reactionDataReceiverFacade.createReaction(reactionImage, reactionRequest);
+    }
+
+    @PutMapping("/{id}")
+    public void updateReaction(@PathVariable String id,
+                               @RequestPart MultipartFile reactionImage,
+                               @RequestPart ReactionUpdateRequest reactionUpdateRequest) throws IOException {
+        reactionDataReceiverFacade.updateReaction(id, reactionImage, reactionUpdateRequest);
     }
 
     @PutMapping("/{id}/activate")

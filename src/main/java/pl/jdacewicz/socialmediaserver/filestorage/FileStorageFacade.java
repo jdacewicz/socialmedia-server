@@ -20,10 +20,7 @@ public class FileStorageFacade {
     }
 
     public void uploadImage(MultipartFile image, FileUploadRequest fileUploadRequest) throws IOException {
-        var fileValidationResult = imageValidator.validate(image);
-        if (fileValidationResult.doesValidationFailed()) {
-            throw new ValidationException(fileValidationResult.validationMessage());
-        }
+        checkImageValidation(image);
         FileStorage.uploadFile(image, fileUploadRequest.fileName(), fileUploadRequest.fileUploadDirectory());
     }
 
@@ -33,5 +30,12 @@ public class FileStorageFacade {
 
     public void deleteDirectory(DirectoryDeleteRequest directoryDeleteRequest) throws IOException {
         FileStorage.deleteDirectory(directoryDeleteRequest.directory());
+    }
+
+    private void checkImageValidation(MultipartFile image) {
+        var fileValidationResult = imageValidator.validate(image);
+        if (fileValidationResult.doesValidationFailed()) {
+            throw new ValidationException(fileValidationResult.validationMessage());
+        }
     }
 }

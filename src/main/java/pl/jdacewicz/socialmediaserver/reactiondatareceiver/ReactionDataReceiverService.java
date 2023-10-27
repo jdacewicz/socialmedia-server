@@ -3,6 +3,7 @@ package pl.jdacewicz.socialmediaserver.reactiondatareceiver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionRequest;
+import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionUpdateRequest;
 
 import java.util.List;
 
@@ -28,6 +29,10 @@ class ReactionDataReceiverService {
                 .archived(false)
                 .build();
         return reactionDataReceiverRepository.save(reaction);
+    }
+
+    void updateReactionName(String id, ReactionUpdateRequest reactionUpdateRequest) {
+        reactionDataReceiverRepository.updateReactionName(id, reactionUpdateRequest.name());
     }
 
     void updateReactionActivity(String reactionId, boolean active) {

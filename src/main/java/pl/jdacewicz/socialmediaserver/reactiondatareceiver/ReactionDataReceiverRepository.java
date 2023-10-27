@@ -7,6 +7,10 @@ import org.springframework.data.mongodb.repository.Update;
 interface ReactionDataReceiverRepository extends MongoRepository<Reaction, String> {
 
     @Query("{'reactionId' : ?0}")
+    @Update("{'$set': {'name': ?1}}")
+    void updateReactionName(String id, String name);
+
+    @Query("{'reactionId' : ?0}")
     @Update("{'$set': {'active': ?1}}")
     void updateReactionActive(String id, boolean active);
 

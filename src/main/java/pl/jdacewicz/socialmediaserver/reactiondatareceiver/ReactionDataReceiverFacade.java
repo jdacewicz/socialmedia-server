@@ -7,6 +7,7 @@ import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionDto;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionRequest;
+import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionUpdateRequest;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,15 +32,23 @@ public class ReactionDataReceiverFacade {
 
     @Transactional
     public ReactionDto createReaction(MultipartFile reactionImage, ReactionRequest reactionRequest) throws IOException {
+        var createdReaction = reactionDataReceiverService.createReaction(reactionRequest);
         var newFileName = fileStorageFacade.generateFilename(reactionImage)
                 .fileName();
-        var createdReaction = reactionDataReceiverService.createReaction(reactionRequest);
-        var imageUploadRequest = FileUploadRequest.builder()
-                .fileName(newFileName)
-                .fileUploadDirectory(createdReaction.getReactionFolderDirectory())
-                .build();
-        fileStorageFacade.uploadImage(reactionImage, imageUploadRequest);
+        var fileUploadRequest = mapToFileUploadRequest(newFileName, createdReaction.getReactionFolderDirectory());
+        fileStorageFacade.uploadImage(reactionImage, fileUploadRequest);
         return mapToDto(createdReaction);
+    }
+
+    @Transactional
+    public void updateReaction(String reactionId, MultipartFile reactionImage, ReactionUpdateRequest reactionUpdateRequest)
+            throws IOException {
+        reactionDataReceiverService.updateReactionName(reactionId, reactionUpdateRequest);
+        if (reactionImage != null) {
+            var reaction = reactionDataReceiverService.getReactionById(reactionId);
+            var fileUploadRequest = mapToFileUploadRequest(reaction.imageName(), reaction.getReactionFolderDirectory());
+            fileStorageFacade.uploadImage(reactionImage, fileUploadRequest);
+        }
     }
 
     public void activateReaction(String reactionId) {
@@ -60,5 +69,13 @@ public class ReactionDataReceiverFacade {
 
     private ReactionDto mapToDto(Reaction reaction) {
         return new ReactionDto(reaction.reactionId(), reaction.getReactionImageDirectory());
+    }
+
+    private FileUploadRequest mapToFileUploadRequest(String imageName, String folderDirectory) {
+        return FileUploadRequest.builder()
+                .fileName(imageName)
+                .fileUploadDirectory(folderDirectory)
+                .build();
+
     }
 }
