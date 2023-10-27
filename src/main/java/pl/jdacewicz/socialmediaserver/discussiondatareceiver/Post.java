@@ -25,6 +25,10 @@ record Post(@Id
 
     private final static String MAIN_DIRECTORY = "data/users";
 
+    static class PostBuilder {
+        private List<ReactionUser> reactionUsers = new LinkedList<>();
+    }
+
     Post withReactionUser(ReactionUser reactionUser) {
         var newReactionUsers = new LinkedList<>(this.reactionUsers());
         newReactionUsers.add(reactionUser);
@@ -38,8 +42,17 @@ record Post(@Id
                 .build();
     }
 
-    static class PostBuilder {
-        private List<ReactionUser> reactionUsers = new LinkedList<>();
+    Post withoutReactionUser(ReactionUser reactionUser) {
+        var newReactionUsers = new LinkedList<>(this.reactionUsers());
+        newReactionUsers.remove(reactionUser);
+        return Post.builder()
+                .postId(postId)
+                .content(content)
+                .creator(creator)
+                .imageName(imageName)
+                .creationDateTime(creationDateTime)
+                .reactionUsers(newReactionUsers)
+                .build();
     }
 
     String getPostImageDirectory() {
@@ -48,5 +61,9 @@ record Post(@Id
 
     String getPostFolderDirectory() {
         return String.format("%s/%s/%s", MAIN_DIRECTORY, creator.userId(), postId);
+    }
+
+    boolean isReactionUserStored(ReactionUser reactionUser) {
+        return reactionUsers().contains(reactionUser);
     }
 }

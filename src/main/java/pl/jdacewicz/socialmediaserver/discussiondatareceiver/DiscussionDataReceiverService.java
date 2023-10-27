@@ -32,9 +32,11 @@ class DiscussionDataReceiverService {
     }
 
     @Transactional
-    public Post addReactionUserToPostById(String postId, ReactionUser reactionUser) {
+    public Post reactToPostById(String postId, ReactionUser reactionUser) {
         var post = getPostById(postId);
-        if (!post.reactionUsers().contains(reactionUser)) {
+        if (post.isReactionUserStored(reactionUser)) {
+            post = post.withoutReactionUser(reactionUser);
+        } else {
             post = post.withReactionUser(reactionUser);
         }
         return discussionDataReceiverRepository.save(post);

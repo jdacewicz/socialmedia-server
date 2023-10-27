@@ -43,7 +43,7 @@ public class DiscussionDataReceiverFacade {
     public PostDto reactToPost(PostReactionRequest postReactionRequest) {
         var reactionUserRequest = mapToReactionUserRequest(postReactionRequest);
         var reactionUser = reactionUserFacade.createReactionUser(reactionUserRequest);
-        var reactedPost = discussionDataReceiverService.addReactionUserToPostById(postReactionRequest.postId(), reactionUser);
+        var reactedPost = discussionDataReceiverService.reactToPostById(postReactionRequest.postId(), reactionUser);
         return postMapper.mapToDto(reactedPost);
     }
 
