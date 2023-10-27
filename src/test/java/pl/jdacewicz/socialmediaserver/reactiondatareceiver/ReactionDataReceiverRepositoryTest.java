@@ -30,33 +30,63 @@ class ReactionDataReceiverRepositoryTest implements ReactionDataReceiverReposito
     }
 
     @Override
+    public void updateReactionName(String id, String name) {
+        int index = database.indexOf(id);
+        if (index >= 0) {
+            database.stream()
+                    .filter(reaction -> reaction.reactionId().equals(id))
+                    .findFirst()
+                    .ifPresent(reaction -> {
+                        var updatedReaction = Reaction.builder()
+                                .reactionId(reaction.reactionId())
+                                .name(name)
+                                .imageName(reaction.imageName())
+                                .active(reaction.active())
+                                .archived(reaction.archived())
+                                .build();
+                        database.set(index, updatedReaction);
+                    });
+        }
+    }
+
+    @Override
     public void updateReactionActive(String id, boolean active) {
-        database.stream()
-                .filter(reaction -> reaction.reactionId().equals(id))
-                .map(reaction -> {
-                    return Reaction.builder()
-                            .reactionId(reaction.reactionId())
-                            .name(reaction.name())
-                            .imageName(reaction.imageName())
-                            .archived(reaction.archived())
-                            .active(active)
-                            .build();
-                });
+        int index = database.indexOf(id);
+        if (index >= 0) {
+            database.stream()
+                    .filter(reaction -> reaction.reactionId().equals(id))
+                    .findFirst()
+                    .ifPresent(reaction -> {
+                        var updatedReaction = Reaction.builder()
+                                .reactionId(reaction.reactionId())
+                                .name(reaction.name())
+                                .imageName(reaction.imageName())
+                                .archived(reaction.archived())
+                                .active(active)
+                                .build();
+                        database.set(index, reaction);
+                    });
+        }
     }
 
     @Override
     public void updateReactionArchived(String id, boolean archived) {
-        database.stream()
-                .filter(reaction -> reaction.reactionId().equals(id))
-                .map(reaction -> {
-                    return Reaction.builder()
-                            .reactionId(reaction.reactionId())
-                            .name(reaction.name())
-                            .imageName(reaction.imageName())
-                            .active(reaction.active())
-                            .archived(archived)
-                            .build();
-                });
+        int index = database.indexOf(id);
+        if (index >= 0) {
+            database.stream()
+                    .filter(reaction -> reaction.reactionId().equals(id))
+                    .findFirst()
+                    .ifPresent(reaction -> {
+                        var updatedReaction = Reaction.builder()
+                                .reactionId(reaction.reactionId())
+                                .name(reaction.name())
+                                .imageName(reaction.imageName())
+                                .active(reaction.active())
+                                .archived(archived)
+                                .build();
+                        database.set(index, reaction);
+                    });
+        }
     }
 
     @Override
