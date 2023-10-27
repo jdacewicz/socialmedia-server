@@ -34,7 +34,7 @@ public class DiscussionDataReceiverFacade {
         var createdPost = discussionDataReceiverService.createPost(postRequest.content(), newFileName);
         var imageUploadRequest = FileUploadRequest.builder()
                 .fileName(newFileName)
-                .fileUploadDirectory(createdPost.getPostFolderDirectory())
+                .fileUploadDirectory(createdPost.getFolderDirectory())
                 .build();
         fileStorageFacade.uploadImage(postImage, imageUploadRequest);
         return postMapper.mapToDto(createdPost);
@@ -50,7 +50,7 @@ public class DiscussionDataReceiverFacade {
     @Transactional
     public void deletePost(String postId) throws IOException {
         var foundPost = discussionDataReceiverService.getPostById(postId);
-        var directoryDeleteRequest = new DirectoryDeleteRequest(foundPost.getPostFolderDirectory());
+        var directoryDeleteRequest = new DirectoryDeleteRequest(foundPost.getFolderDirectory());
         discussionDataReceiverService.deletePost(foundPost);
         fileStorageFacade.deleteDirectory(directoryDeleteRequest);
     }

@@ -15,12 +15,12 @@ class PostMapper {
 
     PostDto mapToDto(Post post) {
         return PostDto.builder()
-                .postId(post.postId())
-                .content(post.content())
-                .creator(post.creator())
-                .imageUrl(post.getPostImageDirectory())
-                .elapsedDateTime(elapsedDateTimeFormatterFacade.formatDateTime(post.creationDateTime()))
-                .reactionCounts(reactionCounterFacade.countReactions(post.reactionUsers()))
+                .postId(post.getPostId())
+                .content(post.getContent())
+                .creator(post.getCreator())
+                .imageUrl(post.getImageDirectory())
+                .elapsedDateTime(elapsedDateTimeFormatterFacade.formatDateTime(post.getCreationDateTime()))
+                .reactionCounts(reactionCounterFacade.countReactions(post.getReactionUsers()))
                 .build();
     }
 }
