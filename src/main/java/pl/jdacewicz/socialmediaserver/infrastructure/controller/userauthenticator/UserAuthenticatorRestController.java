@@ -18,8 +18,8 @@ public class UserAuthenticatorRestController {
     private final UserAuthenticatorFacade userAuthenticatorFacade;
 
     @PostMapping("/register")
-    public AuthenticationResponse register(@RequestParam MultipartFile profileImage,
-                                           @RequestParam RegisterRequest request) throws IOException {
+    public AuthenticationResponse register(@RequestPart MultipartFile profileImage,
+                                           @RequestPart RegisterRequest request) throws IOException {
         return userAuthenticatorFacade.registerUser(profileImage, request);
     }
 

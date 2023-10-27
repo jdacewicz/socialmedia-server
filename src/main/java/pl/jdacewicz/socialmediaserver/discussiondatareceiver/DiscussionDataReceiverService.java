@@ -39,4 +39,8 @@ class DiscussionDataReceiverService {
         }
         return discussionDataReceiverRepository.save(post);
     }
+
+    void deletePost(Post post) {
+        discussionDataReceiverRepository.delete(post);
+    }
 }

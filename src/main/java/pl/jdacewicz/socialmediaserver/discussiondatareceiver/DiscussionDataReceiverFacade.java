@@ -7,6 +7,7 @@ import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostReactionRequest;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
+import pl.jdacewicz.socialmediaserver.filestorage.dto.DirectoryDeleteRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
 import pl.jdacewicz.socialmediaserver.reactionuser.ReactionUserFacade;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUserRequest;
@@ -21,8 +22,8 @@ public class DiscussionDataReceiverFacade {
     private final FileStorageFacade fileStorageFacade;
     private final PostMapper postMapper;
 
-    public PostDto getPostById(String id) {
-        var foundPost = discussionDataReceiverService.getPostById(id);
+    public PostDto getPostById(String postId) {
+        var foundPost = discussionDataReceiverService.getPostById(postId);
         return postMapper.mapToDto(foundPost);
     }
 
@@ -44,6 +45,14 @@ public class DiscussionDataReceiverFacade {
         var reactionUser = reactionUserFacade.createReactionUser(reactionUserRequest);
         var reactedPost = discussionDataReceiverService.addReactionUserToPostById(postReactionRequest.postId(), reactionUser);
         return postMapper.mapToDto(reactedPost);
+    }
+
+    @Transactional
+    public void deletePost(String postId) throws IOException {
+        var foundPost = discussionDataReceiverService.getPostById(postId);
+        var directoryDeleteRequest = new DirectoryDeleteRequest(foundPost.getPostFolderDirectory());
+        discussionDataReceiverService.deletePost(foundPost);
+        fileStorageFacade.deleteDirectory(directoryDeleteRequest);
     }
 
     private ReactionUserRequest mapToReactionUserRequest(PostReactionRequest postReactionRequest) {

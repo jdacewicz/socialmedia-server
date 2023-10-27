@@ -37,4 +37,9 @@ public class DiscussionDataReceiverRestController {
                 .build();
         return discussionDataReceiverFacade.reactToPost(postReactionRequest);
     }
+
+    @DeleteMapping("/{id}")
+    public void deletePost(@PathVariable String id) throws IOException {
+        discussionDataReceiverFacade.deletePost(id);
+    }
 }
