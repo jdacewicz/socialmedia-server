@@ -19,7 +19,8 @@ class DiscussionDataReceiverRepositoryTest implements DiscussionDataReceiverRepo
     @Override
     public Optional<Post> findById(String postId) {
         return database.stream()
-                .filter(post -> post.postId().equals(postId))
+                .filter(post -> post.getPostId()
+                        .equals(postId))
                 .findFirst();
     }
 

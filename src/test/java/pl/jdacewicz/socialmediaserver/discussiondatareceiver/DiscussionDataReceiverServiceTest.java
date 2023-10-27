@@ -38,7 +38,7 @@ class DiscussionDataReceiverServiceTest {
         //When
         var result = discussionDataReceiverService.getPostById(postId);
         //Then
-        assertEquals(postId, result.postId());
+        assertEquals(postId, result.getPostId());
     }
 
     @Test
@@ -62,9 +62,9 @@ class DiscussionDataReceiverServiceTest {
         //When
         var result = discussionDataReceiverService.createPost(content, imageName);
         //Then
-        assertEquals(content, result.content());
-        assertEquals(imageName, result.imageName());
-        assertEquals(loggedUserDto, result.creator());
+        assertEquals(content, result.getContent());
+        assertEquals(imageName, result.getImageName());
+        assertEquals(loggedUserDto, result.getCreator());
     }
 
     @Test
@@ -83,7 +83,7 @@ class DiscussionDataReceiverServiceTest {
         //When
         var result = discussionDataReceiverService.reactToPostById(postId, reactionUser);
         //Then
-        assertTrue(result.reactionUsers()
+        assertTrue(result.getReactionUsers()
                 .isEmpty());
     }
 
@@ -103,9 +103,9 @@ class DiscussionDataReceiverServiceTest {
         //When
         var result = discussionDataReceiverService.reactToPostById(postId, reactionUser);
         //Then
-        assertFalse(result.reactionUsers()
+        assertFalse(result.getReactionUsers()
                 .isEmpty());
-        assertEquals(1, result.reactionUsers()
+        assertEquals(1, result.getReactionUsers()
                 .size());
     }
 }
