@@ -11,7 +11,7 @@ import java.util.Set;
 public record PostDto(String postId,
                       String content,
                       UserDto creator,
-                      String imageUrl,
+                      DiscussionImage image,
                       ElapsedDateTime elapsedDateTime,
                       Set<ReactionCount> reactionCounts) {
 }

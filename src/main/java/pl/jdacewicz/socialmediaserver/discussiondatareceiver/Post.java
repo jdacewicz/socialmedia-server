@@ -13,8 +13,6 @@ import java.util.LinkedList;
 @SuperBuilder
 class Post extends Discussion<Post> {
 
-    private final static String MAIN_DIRECTORY = "data/users";
-
     @Id
     private String postId;
 
@@ -27,6 +25,7 @@ class Post extends Discussion<Post> {
                 .content(getContent())
                 .creator(getCreator())
                 .imageName(getImageName())
+                .imageMainDirectory(getImageDirectory())
                 .creationDateTime(getCreationDateTime())
                 .reactionUsers(newReactionUsers)
                 .build();
@@ -41,18 +40,14 @@ class Post extends Discussion<Post> {
                 .content(getContent())
                 .creator(getCreator())
                 .imageName(getImageName())
+                .imageMainDirectory(getImageDirectory())
                 .creationDateTime(getCreationDateTime())
                 .reactionUsers(newReactionUsers)
                 .build();
     }
 
     @Override
-    String getImageDirectory() {
-        return String.format("%s/%s", getFolderDirectory(), super.getImageName());
-    }
-
-    @Override
     String getFolderDirectory() {
-        return String.format("%s/%s/%s", MAIN_DIRECTORY, super.getCreator().userId(), postId);
+        return String.format("%s/%s", getImageMainDirectory(), postId);
     }
 }

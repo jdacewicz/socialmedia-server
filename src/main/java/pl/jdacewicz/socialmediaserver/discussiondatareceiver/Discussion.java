@@ -20,6 +20,8 @@ abstract class Discussion<T> {
 
     private String imageName;
 
+    private String imageMainDirectory;
+
     @Builder.Default
     private LocalDateTime creationDateTime = LocalDateTime.now();
 
@@ -30,7 +32,9 @@ abstract class Discussion<T> {
 
     abstract T withoutReactionUser(ReactionUser reactionUser);
 
-    abstract String getImageDirectory();
+    String getImageDirectory() {
+        return String.format("%s/%s", getFolderDirectory(), imageName);
+    }
 
     abstract String getFolderDirectory();
 

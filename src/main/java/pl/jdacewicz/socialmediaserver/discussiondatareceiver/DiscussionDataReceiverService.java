@@ -27,6 +27,8 @@ class DiscussionDataReceiverService {
                 .creator(loggedInUser)
                 .creationDateTime(LocalDateTime.now())
                 .imageName(imageName)
+                .imageMainDirectory(loggedInUser.profilePicture()
+                        .folderDirectory())
                 .build();
         return discussionDataReceiverRepository.save(post);
     }

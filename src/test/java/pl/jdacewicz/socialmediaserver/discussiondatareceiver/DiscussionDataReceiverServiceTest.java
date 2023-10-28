@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserProfilePicture;
 
 import java.util.List;
 
@@ -57,6 +58,7 @@ class DiscussionDataReceiverServiceTest {
         var content = "content";
         var imageName = "name";
         var loggedUserDto = UserDto.builder()
+                .profilePicture(new UserProfilePicture("fileName", "directory"))
                 .build();
         when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
         //When
