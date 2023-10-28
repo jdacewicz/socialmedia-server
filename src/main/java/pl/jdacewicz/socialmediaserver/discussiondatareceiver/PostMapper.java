@@ -13,16 +13,21 @@ class PostMapper {
 
     private final ReactionCounterFacade reactionCounterFacade;
     private final ElapsedDateTimeFormatterFacade elapsedDateTimeFormatterFacade;
+    private final CommentMapper commentMapper;
 
     PostDto mapToDto(Post post) {
         var discussionImage = new DiscussionImage(post.getImageName(), post.getImageMainDirectory());
+        var elapsedDateTime = elapsedDateTimeFormatterFacade.formatDateTime(post.getCreationDateTime());
+        var reactionCounts = reactionCounterFacade.countReactions(post.getReactionUsers());
+        var comments = commentMapper.mapToDto(post.getComments());
         return PostDto.builder()
                 .postId(post.getPostId())
                 .content(post.getContent())
                 .creator(post.getCreator())
                 .image(discussionImage)
-                .elapsedDateTime(elapsedDateTimeFormatterFacade.formatDateTime(post.getCreationDateTime()))
-                .reactionCounts(reactionCounterFacade.countReactions(post.getReactionUsers()))
+                .elapsedDateTime(elapsedDateTime)
+                .reactionCounts(reactionCounts)
+                .comments(comments)
                 .build();
     }
 }

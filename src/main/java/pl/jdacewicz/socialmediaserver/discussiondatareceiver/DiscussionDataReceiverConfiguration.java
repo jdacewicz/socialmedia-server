@@ -12,8 +12,9 @@ class DiscussionDataReceiverConfiguration {
     DiscussionDataReceiverFacade dataReceiverFacade(DiscussionDataReceiverService discussionDataReceiverService,
                                                     ReactionUserFacade reactionUserFacade,
                                                     FileStorageFacade fileStorageFacade,
-                                                    PostMapper postMapper) {
+                                                    PostMapper postMapper,
+                                                    CommentMapper commentMapper) {
         return new DiscussionDataReceiverFacade(discussionDataReceiverService, reactionUserFacade,
-                fileStorageFacade, postMapper);
+                fileStorageFacade, postMapper, commentMapper);
     }
 }

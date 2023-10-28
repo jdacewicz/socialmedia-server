@@ -8,11 +8,10 @@ import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 import java.util.Set;
 
 @Builder
-public record PostDto(String postId,
-                      String content,
-                      UserDto creator,
-                      DiscussionImage image,
-                      ElapsedDateTime elapsedDateTime,
-                      Set<ReactionCount> reactionCounts,
-                      Set<CommentDto> comments) {
+public record CommentDto(String commentId,
+                         String content,
+                         UserDto creator,
+                         DiscussionImage image,
+                         ElapsedDateTime elapsedDateTime,
+                         Set<ReactionCount> reactionCounts) {
 }

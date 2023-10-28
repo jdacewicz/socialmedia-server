@@ -56,6 +56,21 @@ class Post extends Discussion<Post> {
                 .build();
     }
 
+    Post withComment(Comment comment) {
+        var newComments = new HashSet<>(this.comments);
+        newComments.add(comment);
+        return Post.builder()
+                .postId(postId)
+                .comments(newComments)
+                .content(getContent())
+                .creator(getCreator())
+                .imageName(getImageName())
+                .imageMainDirectory(getImageDirectory())
+                .creationDateTime(getCreationDateTime())
+                .reactionUsers(getReactionUsers())
+                .build();
+    }
+
     @Override
     String getFolderDirectory() {
         return String.format("%s/%s", getImageMainDirectory(), postId);
