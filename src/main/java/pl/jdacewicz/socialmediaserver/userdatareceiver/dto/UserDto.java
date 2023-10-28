@@ -6,5 +6,5 @@ import lombok.Builder;
 public record UserDto(String userId,
                       String firstname,
                       String lastname,
-                      String profilePictureUrl) {
+                      UserProfilePicture profilePicture) {
 }

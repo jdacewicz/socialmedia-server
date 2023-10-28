@@ -23,7 +23,12 @@ record User(String userId,
 
             String profilePictureName) implements UserDetails {
 
-    private final static String MAIN_DIRECTORY = "data/users";
+    final static String DEFAULT_USER_PROFILE_PICTURE_NAME = "default_user.png";
+    final static String MAIN_DIRECTORY = "data/users";
+
+    static class UserBuilder {
+        private String profilePictureName = DEFAULT_USER_PROFILE_PICTURE_NAME;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -61,11 +66,10 @@ record User(String userId,
         return true;
     }
 
-    String getUserImageDirectory() {
-        return String.format("%s/%s", getUserFolderDirectory(), profilePictureName);
-    }
-
-    String getUserFolderDirectory() {
+    String getFolderDirectory() {
+        if (profilePictureName.equals(DEFAULT_USER_PROFILE_PICTURE_NAME)) {
+            return MAIN_DIRECTORY;
+        }
         return String.format("%s/%s", MAIN_DIRECTORY, userId);
     }
 }

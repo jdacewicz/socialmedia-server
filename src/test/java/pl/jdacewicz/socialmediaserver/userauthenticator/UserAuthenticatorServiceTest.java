@@ -15,6 +15,7 @@ import pl.jdacewicz.socialmediaserver.userauthenticator.dto.AuthenticationReques
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserProfilePicture;
 
 import java.io.IOException;
 
@@ -43,7 +44,8 @@ class UserAuthenticatorServiceTest {
     public void should_authenticate_successfully_when_valid_credentials_provided() {
         //Given
         var authenticationRequest = new AuthenticationRequest("test@example.com", "password");
-        var userDto = new UserDto("id", "firstname", "lastname", "profilePictureUrl");
+        var userDto = new UserDto("id", "firstname", "lastname",
+                new UserProfilePicture("fileName", "directory"));
         var tokenDto = new TokenDto("code", true);
         when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(new UsernamePasswordAuthenticationToken(
                 authenticationRequest.email(),
