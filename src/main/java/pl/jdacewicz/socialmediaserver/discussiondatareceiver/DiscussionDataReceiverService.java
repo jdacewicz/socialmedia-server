@@ -12,15 +12,21 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 class DiscussionDataReceiverService {
 
-    private final DiscussionDataReceiverRepository discussionDataReceiverRepository;
+    private final PostDataReceiverRepository postDataReceiverRepository;
+    private final CommentDataReceiverRepository commentDataReceiverRepository;
     private final UserDataReceiverFacade userDataReceiverFacade;
 
-    Post getPostById(String id) {
-        return discussionDataReceiverRepository.findById(id)
+    Post getPostById(String postId) {
+        return postDataReceiverRepository.findById(postId)
                 .orElseThrow(UnsupportedOperationException::new);
     }
 
-    public Post createPost(String content, String imageName) {
+    Comment getCommentById(String commentId) {
+        return commentDataReceiverRepository.findById(commentId)
+                .orElseThrow(UnsupportedOperationException::new);
+    }
+
+    Post createPost(String content, String imageName) {
         var loggedInUser = userDataReceiverFacade.getLoggedInUser();
         var post = Post.builder()
                 .content(content)
@@ -30,21 +36,27 @@ class DiscussionDataReceiverService {
                 .imageMainDirectory(loggedInUser.profilePicture()
                         .folderDirectory())
                 .build();
-        return discussionDataReceiverRepository.save(post);
+        return postDataReceiverRepository.save(post);
     }
 
     @Transactional
     public Post reactToPostById(String postId, ReactionUser reactionUser) {
         var post = getPostById(postId);
-        if (post.isReactionUserStored(reactionUser)) {
-            post = post.withoutReactionUser(reactionUser);
-        } else {
-            post = post.withReactionUser(reactionUser);
-        }
-        return discussionDataReceiverRepository.save(post);
+        post = react(post, reactionUser);
+        return postDataReceiverRepository.save(post);
     }
 
     void deletePost(Post post) {
-        discussionDataReceiverRepository.delete(post);
+        postDataReceiverRepository.delete(post);
+    }
+
+    void deleteComment(Comment comment) {
+        commentDataReceiverRepository.delete(comment);
+    }
+
+    private  <T extends Discussion<T>> T react(T discussion, ReactionUser reactionUser) {
+        return (discussion.isReactionUserStored(reactionUser))
+                ? discussion.withoutReactionUser(reactionUser)
+                : discussion.withReactionUser(reactionUser);
     }
 }

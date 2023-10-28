@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @SuppressWarnings("all")
-class DiscussionDataReceiverRepositoryTest implements DiscussionDataReceiverRepository {
+class PostDataReceiverRepositoryTest implements PostDataReceiverRepository {
 
     List<Post> database = new LinkedList<>();
 

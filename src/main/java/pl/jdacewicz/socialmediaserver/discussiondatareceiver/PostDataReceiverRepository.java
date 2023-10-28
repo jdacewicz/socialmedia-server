@@ -1,7 +1,6 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
-interface DiscussionDataReceiverRepository extends MongoRepository<Post, String> {
+interface PostDataReceiverRepository extends MongoRepository<Post, String> {
 }
