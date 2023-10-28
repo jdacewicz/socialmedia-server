@@ -26,18 +26,9 @@ public class DiscussionDataReceiverFacade {
         return postMapper.mapToDto(foundPost);
     }
 
-    @Transactional
-    public CommentDto createComment(MultipartFile commentImage, CommentRequest commentRequest) throws IOException {
-        var newFileName = fileStorageFacade.generateFilename(commentImage)
-                .fileName();
-        var createdComment = discussionDataReceiverService.createComment(commentRequest.postId(),
-                commentRequest.content(), newFileName);
-        var imageUploadRequest = FileUploadRequest.builder()
-                .fileName(newFileName)
-                .fileUploadDirectory(createdComment.getFolderDirectory())
-                .build();
-        fileStorageFacade.uploadImage(commentImage, imageUploadRequest);
-        return commentMapper.mapToDto(createdComment);
+    public CommentDto getCommentById(String commentId) {
+        var foundComment = discussionDataReceiverService.getCommentById(commentId);
+        return commentMapper.mapToDto(foundComment);
     }
 
     @Transactional
@@ -51,6 +42,20 @@ public class DiscussionDataReceiverFacade {
                 .build();
         fileStorageFacade.uploadImage(postImage, imageUploadRequest);
         return postMapper.mapToDto(createdPost);
+    }
+
+    @Transactional
+    public CommentDto createComment(MultipartFile commentImage, CommentRequest commentRequest) throws IOException {
+        var newFileName = fileStorageFacade.generateFilename(commentImage)
+                .fileName();
+        var createdComment = discussionDataReceiverService.createComment(commentRequest.postId(),
+                commentRequest.content(), newFileName);
+        var imageUploadRequest = FileUploadRequest.builder()
+                .fileName(newFileName)
+                .fileUploadDirectory(createdComment.getFolderDirectory())
+                .build();
+        fileStorageFacade.uploadImage(commentImage, imageUploadRequest);
+        return commentMapper.mapToDto(createdComment);
     }
 
     public PostDto reactToPost(PostReactionRequest postReactionRequest) {
@@ -72,6 +77,14 @@ public class DiscussionDataReceiverFacade {
         var foundPost = discussionDataReceiverService.getPostById(postId);
         var directoryDeleteRequest = new DirectoryDeleteRequest(foundPost.getFolderDirectory());
         discussionDataReceiverService.deletePost(foundPost);
+        fileStorageFacade.deleteDirectory(directoryDeleteRequest);
+    }
+
+    @Transactional
+    public void deleteComment(String commentId) throws IOException {
+        var foundComment = discussionDataReceiverService.getCommentById(commentId);
+        var directoryDeleteRequest = new DirectoryDeleteRequest(foundComment.getFolderDirectory());
+        discussionDataReceiverService.deleteComment(foundComment);
         fileStorageFacade.deleteDirectory(directoryDeleteRequest);
     }
 

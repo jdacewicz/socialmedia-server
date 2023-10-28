@@ -15,6 +15,11 @@ public class CommentDataReceiverRestController {
 
     private final DiscussionDataReceiverFacade discussionDataReceiverFacade;
 
+    @GetMapping("/{id}")
+    public CommentDto getCommentById(@PathVariable String id) {
+        return discussionDataReceiverFacade.getCommentById(id);
+    }
+
     @PostMapping
     public CommentDto createComment(@RequestPart MultipartFile commentImage,
                                     @RequestPart CommentRequest commentRequest) throws IOException {
@@ -29,5 +34,10 @@ public class CommentDataReceiverRestController {
                 .reactionId(reactionId)
                 .build();
         return discussionDataReceiverFacade.reactToComment(commentReactionRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteComment(@PathVariable String id) throws IOException {
+        discussionDataReceiverFacade.deleteComment(id);
     }
 }
