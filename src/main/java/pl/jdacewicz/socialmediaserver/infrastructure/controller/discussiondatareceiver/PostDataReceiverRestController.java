@@ -11,24 +11,24 @@ import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
 import java.io.IOException;
 
 @RestController
-@RequestMapping(value = "/api/discussions")
+@RequestMapping(value = "/api/posts")
 @RequiredArgsConstructor
-public class DiscussionDataReceiverRestController {
+public class PostDataReceiverRestController {
 
     private final DiscussionDataReceiverFacade discussionDataReceiverFacade;
 
-    @GetMapping("/posts/{id}")
+    @GetMapping("/{id}")
     public PostDto getPostById(@PathVariable String id) {
         return discussionDataReceiverFacade.getPostById(id);
     }
 
-    @PostMapping("/posts")
+    @PostMapping
     public PostDto createPost(@RequestPart MultipartFile postImage,
                               @RequestPart PostRequest postRequest) throws IOException {
         return discussionDataReceiverFacade.createPost(postImage, postRequest);
     }
 
-    @PutMapping("/posts/{postId}/react/{reactionId}")
+    @PutMapping("/{postId}/react/{reactionId}")
     public PostDto reactToPost(@PathVariable String postId,
                                @PathVariable String reactionId) {
         var postReactionRequest = PostReactionRequest.builder()
