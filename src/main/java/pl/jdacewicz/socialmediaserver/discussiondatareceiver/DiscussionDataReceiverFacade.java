@@ -58,17 +58,17 @@ public class DiscussionDataReceiverFacade {
         return commentMapper.mapToDto(createdComment);
     }
 
-    public PostDto reactToPost(PostReactionRequest postReactionRequest) {
-        var reactionUserRequest = new ReactionUserRequest(postReactionRequest.reactionId());
+    public PostDto reactToPost(String reactionId, String postId) {
+        var reactionUserRequest = new ReactionUserRequest(reactionId);
         var reactionUser = reactionUserFacade.createReactionUser(reactionUserRequest);
-        var reactedPost = discussionDataReceiverService.reactToPostById(postReactionRequest.postId(), reactionUser);
+        var reactedPost = discussionDataReceiverService.reactToPostById(postId, reactionUser);
         return postMapper.mapToDto(reactedPost);
     }
 
-    public CommentDto reactToComment(CommentReactionRequest commentReactionRequest) {
-        var reactionUserRequest = new ReactionUserRequest(commentReactionRequest.reactionId());
+    public CommentDto reactToComment(String reactionId, String commentId) {
+        var reactionUserRequest = new ReactionUserRequest(reactionId);
         var reactionUser = reactionUserFacade.createReactionUser(reactionUserRequest);
-        var reactedComment = discussionDataReceiverService.reactToCommentById(commentReactionRequest.commentId(), reactionUser);
+        var reactedComment = discussionDataReceiverService.reactToCommentById(commentId, reactionUser);
         return commentMapper.mapToDto(reactedComment);
     }
 

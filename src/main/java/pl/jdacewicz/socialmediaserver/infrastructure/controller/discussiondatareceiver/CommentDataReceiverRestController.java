@@ -1,5 +1,7 @@
 package pl.jdacewicz.socialmediaserver.infrastructure.controller.discussiondatareceiver;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,28 +18,24 @@ public class CommentDataReceiverRestController {
     private final DiscussionDataReceiverFacade discussionDataReceiverFacade;
 
     @GetMapping("/{id}")
-    public CommentDto getCommentById(@PathVariable String id) {
+    public CommentDto getCommentById(@PathVariable @NotBlank String id) {
         return discussionDataReceiverFacade.getCommentById(id);
     }
 
     @PostMapping
     public CommentDto createComment(@RequestPart MultipartFile commentImage,
-                                    @RequestPart CommentRequest commentRequest) throws IOException {
+                                    @RequestPart @Valid CommentRequest commentRequest) throws IOException {
         return discussionDataReceiverFacade.createComment(commentImage, commentRequest);
     }
 
     @PutMapping("/{commentId}/react/{reactionId}")
-    public CommentDto reactToPost(@PathVariable String commentId,
-                                  @PathVariable String reactionId) {
-        var commentReactionRequest = CommentReactionRequest.builder()
-                .commentId(commentId)
-                .reactionId(reactionId)
-                .build();
-        return discussionDataReceiverFacade.reactToComment(commentReactionRequest);
+    public CommentDto reactToPost(@PathVariable @NotBlank String commentId,
+                                  @PathVariable @NotBlank String reactionId) {
+        return discussionDataReceiverFacade.reactToComment(reactionId, commentId);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteComment(@PathVariable String id) throws IOException {
+    public void deleteComment(@PathVariable @NotBlank String id) throws IOException {
         discussionDataReceiverFacade.deleteComment(id);
     }
 }

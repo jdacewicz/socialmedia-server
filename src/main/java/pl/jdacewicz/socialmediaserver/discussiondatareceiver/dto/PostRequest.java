@@ -1,4 +1,9 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto;
 
-public record PostRequest(String content) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record PostRequest(@NotBlank
+                          @Size(max = 255)
+                          String content) {
 }

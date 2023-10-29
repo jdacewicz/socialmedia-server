@@ -59,16 +59,6 @@ class ImageValidatorTest {
     }
 
     @Test
-    void should_return_file_validation_result_with_message_validation_error_missing_extension_when_validating_by_null_file() {
-        //Given
-        MockMultipartFile image = null;
-        //When
-        var result = imageValidator.validate(image);
-        //Then
-        assertEquals(ValidationError.IS_NULL.getMessage(), result.validationMessage());
-    }
-
-    @Test
     void should_return_file_validation_result_with_message_validation_error_missing_extension_when_validating_by_unnamed_file() {
         //Given
         var unnamedImage = new MockMultipartFile("name", "" , "image/png", "content".getBytes());

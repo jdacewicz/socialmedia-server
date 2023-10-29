@@ -31,9 +31,7 @@ class ReactionUserServiceTest {
         //Given
         var reactionId = "id";
         var userId = "id";
-        var reactionUserRequest = ReactionUserRequest.builder()
-                .reactionId(reactionId)
-                .build();
+        var reactionUserRequest = new ReactionUserRequest(reactionId);
         var reactionDto = ReactionDto.builder()
                 .reactionId(reactionId)
                 .build();
