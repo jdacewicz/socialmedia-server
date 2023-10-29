@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.infrastructure.controller.reactiondatareceiver;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class ReactionDataReceiverRestController {
     private final ReactionDataReceiverFacade reactionDataReceiverFacade;
 
     @GetMapping("/{id}")
-    public ReactionDto getReactionById(@PathVariable String id) {
+    public ReactionDto getReactionById(@PathVariable @NotBlank String id) {
         return reactionDataReceiverFacade.getReactionById(id);
     }
 
@@ -31,29 +32,29 @@ public class ReactionDataReceiverRestController {
     }
 
     @PutMapping("/{id}")
-    public void updateReaction(@PathVariable String id,
+    public void updateReaction(@PathVariable @NotBlank String id,
                                @RequestPart MultipartFile reactionImage,
                                @RequestPart @Valid ReactionUpdateRequest reactionUpdateRequest) throws IOException {
         reactionDataReceiverFacade.updateReaction(id, reactionImage, reactionUpdateRequest);
     }
 
     @PutMapping("/{id}/activate")
-    public void activateReaction(@PathVariable String id) {
+    public void activateReaction(@PathVariable @NotBlank String id) {
         reactionDataReceiverFacade.activateReaction(id);
     }
 
     @PutMapping("/{id}/deactivate")
-    public void deactivateReaction(@PathVariable String id) {
+    public void deactivateReaction(@PathVariable @NotBlank String id) {
         reactionDataReceiverFacade.deactivateReaction(id);
     }
 
     @PutMapping("/{id}/archive")
-    public void archiveReaction(@PathVariable String id) {
+    public void archiveReaction(@PathVariable @NotBlank String id) {
         reactionDataReceiverFacade.archiveReaction(id);
     }
 
     @PutMapping("/{id}/unarchive")
-    public void unarchiveReaction(@PathVariable String id) {
+    public void unarchiveReaction(@PathVariable @NotBlank String id) {
         reactionDataReceiverFacade.unarchiveReaction(id);
     }
 }
