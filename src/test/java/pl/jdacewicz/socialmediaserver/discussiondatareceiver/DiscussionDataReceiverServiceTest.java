@@ -17,15 +17,17 @@ class DiscussionDataReceiverServiceTest {
 
     DiscussionDataReceiverService discussionDataReceiverService;
 
-    DiscussionDataReceiverRepositoryTest discussionDataReceiverRepository;
+    PostDataReceiverRepositoryTest postDataReceiverRepositoryTest;
+    CommentDataReceiverRepositoryTest commentDataReceiverRepositoryTest;
     UserDataReceiverFacade userDataReceiverFacade;
 
     @BeforeEach
     void setUp() {
         userDataReceiverFacade = Mockito.mock(UserDataReceiverFacade.class);
-        discussionDataReceiverRepository = new DiscussionDataReceiverRepositoryTest();
-        discussionDataReceiverService = new DiscussionDataReceiverService(discussionDataReceiverRepository,
-                userDataReceiverFacade);
+        postDataReceiverRepositoryTest = new PostDataReceiverRepositoryTest();
+        commentDataReceiverRepositoryTest = new CommentDataReceiverRepositoryTest();
+        discussionDataReceiverService = new DiscussionDataReceiverService(postDataReceiverRepositoryTest,
+                commentDataReceiverRepositoryTest, userDataReceiverFacade);
     }
 
     @Test
@@ -35,7 +37,7 @@ class DiscussionDataReceiverServiceTest {
         var post = Post.builder()
                 .postId(postId)
                 .build();
-        discussionDataReceiverRepository.save(post);
+        postDataReceiverRepositoryTest.save(post);
         //When
         var result = discussionDataReceiverService.getPostById(postId);
         //Then
@@ -50,6 +52,30 @@ class DiscussionDataReceiverServiceTest {
         //Then
         assertThrows(UnsupportedOperationException.class,
                 () -> discussionDataReceiverService.getPostById(postId));
+    }
+
+    @Test
+    public void should_return_comment_when_getting_existing_comment() {
+        //Given
+        var commentId = "id";
+        var comment = Comment.builder()
+                .commentId(commentId)
+                .build();
+        commentDataReceiverRepositoryTest.save(comment);
+        //When
+        var result = discussionDataReceiverService.getCommentById(commentId);
+        //Then
+        assertEquals(commentId, result.getCommentId());
+    }
+
+    @Test
+    public void should_throw_unsupported_operation_exception_when_getting_not_existing_comment() {
+        //Given
+        var commentId = "id";
+        //When
+        //Then
+        assertThrows(UnsupportedOperationException.class,
+                () -> discussionDataReceiverService.getCommentById(commentId));
     }
 
     @Test
@@ -70,6 +96,28 @@ class DiscussionDataReceiverServiceTest {
     }
 
     @Test
+    void should_return_created_comment_when_creating_comment() {
+        //Given
+        var content = "content";
+        var imageName = "name";
+        var postId = "id";
+        var post = Post.builder()
+                .postId(postId)
+                .build();
+        var loggedUserDto = UserDto.builder()
+                .profilePicture(new UserProfilePicture("fileName", "directory"))
+                .build();
+        postDataReceiverRepositoryTest.save(post);
+        when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
+        //When
+        var result = discussionDataReceiverService.createComment(postId, content, imageName);
+        //Then
+        assertEquals(content, result.getContent());
+        assertEquals(imageName, result.getImageName());
+        assertEquals(loggedUserDto, result.getCreator());
+    }
+
+    @Test
     void should_return_post_without_reactions_users_when_reacting_by_already_reacted_reaction_user() {
         //Given
         var postId = "id";
@@ -81,7 +129,7 @@ class DiscussionDataReceiverServiceTest {
                 .postId(postId)
                 .reactionUsers(List.of(reactionUser))
                 .build();
-        discussionDataReceiverRepository.save(post);
+        postDataReceiverRepositoryTest.save(post);
         //When
         var result = discussionDataReceiverService.reactToPostById(postId, reactionUser);
         //Then
@@ -101,9 +149,51 @@ class DiscussionDataReceiverServiceTest {
                 .postId(postId)
                 .reactionUsers(List.of())
                 .build();
-        discussionDataReceiverRepository.save(post);
+        postDataReceiverRepositoryTest.save(post);
         //When
         var result = discussionDataReceiverService.reactToPostById(postId, reactionUser);
+        //Then
+        assertFalse(result.getReactionUsers()
+                .isEmpty());
+        assertEquals(1, result.getReactionUsers()
+                .size());
+    }
+
+    @Test
+    void should_return_comment_without_reactions_users_when_reacting_by_already_reacted_reaction_user() {
+        //Given
+        var commentId = "id";
+        var reactionUser = ReactionUser.builder()
+                .userId("id")
+                .reactionId("id")
+                .build();
+        var comment = Comment.builder()
+                .commentId(commentId)
+                .reactionUsers(List.of(reactionUser))
+                .build();
+        commentDataReceiverRepositoryTest.save(comment);
+        //When
+        var result = discussionDataReceiverService.reactToCommentById(commentId, reactionUser);
+        //Then
+        assertTrue(result.getReactionUsers()
+                .isEmpty());
+    }
+
+    @Test
+    void should_return_comment_with_reaction_user_when_reacting_by_unique_reaction_user() {
+        //Given
+        var commentId = "id";
+        var reactionUser = ReactionUser.builder()
+                .userId("id")
+                .reactionId("id")
+                .build();
+        var comment = Comment.builder()
+                .commentId(commentId)
+                .reactionUsers(List.of())
+                .build();
+        commentDataReceiverRepositoryTest.save(comment);
+        //When
+        var result = discussionDataReceiverService.reactToCommentById(commentId, reactionUser);
         //Then
         assertFalse(result.getReactionUsers()
                 .isEmpty());

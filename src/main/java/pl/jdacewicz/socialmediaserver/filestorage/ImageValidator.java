@@ -17,9 +17,6 @@ class ImageValidator {
     private List<ValidationError> errors = new LinkedList<>();
 
     public FileValidationResult validate(MultipartFile file) {
-        if (file == null) {
-            return validationFailed(IS_NULL.getMessage());
-        }
         if (file.isEmpty()) {
             errors.add(EMPTY);
         }
