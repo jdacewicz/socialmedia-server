@@ -1,5 +1,7 @@
 package pl.jdacewicz.socialmediaserver.infrastructure.controller.reactiondatareceiver;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,15 +25,15 @@ public class ReactionDataReceiverRestController {
     }
 
     @PostMapping
-    public ReactionDto createReaction(@RequestPart MultipartFile reactionImage,
-                                      @RequestPart ReactionRequest reactionRequest) throws IOException {
+    public ReactionDto createReaction(@RequestPart @NotNull MultipartFile reactionImage,
+                                      @RequestPart @Valid ReactionRequest reactionRequest) throws IOException {
         return reactionDataReceiverFacade.createReaction(reactionImage, reactionRequest);
     }
 
     @PutMapping("/{id}")
     public void updateReaction(@PathVariable String id,
                                @RequestPart MultipartFile reactionImage,
-                               @RequestPart ReactionUpdateRequest reactionUpdateRequest) throws IOException {
+                               @RequestPart @Valid ReactionUpdateRequest reactionUpdateRequest) throws IOException {
         reactionDataReceiverFacade.updateReaction(id, reactionImage, reactionUpdateRequest);
     }
 
