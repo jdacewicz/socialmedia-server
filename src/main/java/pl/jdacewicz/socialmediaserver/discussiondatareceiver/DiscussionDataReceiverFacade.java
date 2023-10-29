@@ -59,14 +59,14 @@ public class DiscussionDataReceiverFacade {
     }
 
     public PostDto reactToPost(PostReactionRequest postReactionRequest) {
-        var reactionUserRequest = mapToReactionUserRequest(postReactionRequest);
+        var reactionUserRequest = new ReactionUserRequest(postReactionRequest.reactionId());
         var reactionUser = reactionUserFacade.createReactionUser(reactionUserRequest);
         var reactedPost = discussionDataReceiverService.reactToPostById(postReactionRequest.postId(), reactionUser);
         return postMapper.mapToDto(reactedPost);
     }
 
     public CommentDto reactToComment(CommentReactionRequest commentReactionRequest) {
-        var reactionUserRequest = mapToReactionUserRequest(commentReactionRequest);
+        var reactionUserRequest = new ReactionUserRequest(commentReactionRequest.reactionId());
         var reactionUser = reactionUserFacade.createReactionUser(reactionUserRequest);
         var reactedComment = discussionDataReceiverService.reactToCommentById(commentReactionRequest.commentId(), reactionUser);
         return commentMapper.mapToDto(reactedComment);
@@ -86,17 +86,5 @@ public class DiscussionDataReceiverFacade {
         var directoryDeleteRequest = new DirectoryDeleteRequest(foundComment.getFolderDirectory());
         discussionDataReceiverService.deleteComment(foundComment);
         fileStorageFacade.deleteDirectory(directoryDeleteRequest);
-    }
-
-    private ReactionUserRequest mapToReactionUserRequest(PostReactionRequest postReactionRequest) {
-        return ReactionUserRequest.builder()
-                .reactionId(postReactionRequest.reactionId())
-                .build();
-    }
-
-    private ReactionUserRequest mapToReactionUserRequest(CommentReactionRequest commentReactionRequest) {
-        return ReactionUserRequest.builder()
-                .reactionId(commentReactionRequest.reactionId())
-                .build();
     }
 }
