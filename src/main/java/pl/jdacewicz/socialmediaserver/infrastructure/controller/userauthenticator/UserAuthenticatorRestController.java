@@ -1,5 +1,6 @@
 package pl.jdacewicz.socialmediaserver.infrastructure.controller.userauthenticator;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,12 +20,12 @@ public class UserAuthenticatorRestController {
 
     @PostMapping("/register")
     public AuthenticationResponse register(@RequestPart MultipartFile profileImage,
-                                           @RequestPart RegisterRequest request) throws IOException {
+                                           @RequestPart @Valid RegisterRequest request) throws IOException {
         return userAuthenticatorFacade.registerUser(profileImage, request);
     }
 
     @PostMapping("/authenticate")
-    public AuthenticationResponse authenticate(@RequestBody AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(@RequestBody @Valid AuthenticationRequest request) {
         return userAuthenticatorFacade.authenticateUser(request);
     }
 }
