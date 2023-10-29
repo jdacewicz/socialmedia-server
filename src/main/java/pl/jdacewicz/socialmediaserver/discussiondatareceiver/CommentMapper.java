@@ -1,5 +1,6 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
+import com.vdurmont.emoji.EmojiParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.CommentDto;
@@ -27,9 +28,10 @@ class CommentMapper {
         var discussionImage = new DiscussionImage(comment.getImageName(), comment.getImageMainDirectory());
         var elapsedDateTime = elapsedDateTimeFormatterFacade.formatDateTime(comment.getCreationDateTime());
         var reactionCounts = reactionCounterFacade.countReactions(comment.getReactionUsers());
+        var parsedContent = EmojiParser.parseToUnicode(comment.getContent());
         return CommentDto.builder()
                 .commentId(comment.getCommentId())
-                .content(comment.getContent())
+                .content(parsedContent)
                 .creator(comment.getCreator())
                 .image(discussionImage)
                 .elapsedDateTime(elapsedDateTime)
