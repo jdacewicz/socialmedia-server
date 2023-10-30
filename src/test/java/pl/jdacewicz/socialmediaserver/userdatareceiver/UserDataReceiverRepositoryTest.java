@@ -6,28 +6,35 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 @SuppressWarnings("all")
 public class UserDataReceiverRepositoryTest implements UserDataReceiverRepository {
 
-    Map<String, User> database = new ConcurrentHashMap<>();
+    List<User> database = new LinkedList<>();
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return database.values()
-                .stream()
+        return database.stream()
                 .filter(user -> user.email().equals(email))
                 .findFirst();
     }
 
     @Override
+    public List<User> findAllByFirstnameAndLastname(String firstname, String lastname) {
+        return database.stream()
+                .filter(user -> user.lastname().equals(lastname))
+                .filter(user -> user.firstname().equals(firstname))
+                .toList();
+    }
+
+    @Override
     public User save(User entity) {
-        return database.put(entity.getUsername(), entity);
+        database.add(entity);
+        return entity;
     }
 
     @Override

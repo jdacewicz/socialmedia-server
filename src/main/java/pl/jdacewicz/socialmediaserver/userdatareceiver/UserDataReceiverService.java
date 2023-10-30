@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,16 +28,20 @@ class UserDataReceiverService implements UserDetailsService {
         var authentication = Optional.ofNullable(SecurityContextHolder
                 .getContext()
                 .getAuthentication());
-        if (authentication.isPresent()) {
-            return (User) authentication.get()
-                    .getPrincipal();
+        if (authentication.isEmpty()) {
+            throw new UnsupportedOperationException();
         }
-        throw new UnsupportedOperationException();
+        return (User) authentication.get()
+                .getPrincipal();
     }
 
     User getUserByEmail(String email) {
         return userDataReceiverRepository.findByEmail(email)
                 .orElseThrow(UnsupportedOperationException::new);
+    }
+
+    List<User> getUsersByFirstnameAndLastname(String firstname, String lastname) {
+        return userDataReceiverRepository.findAllByFirstnameAndLastname(firstname, lastname);
     }
 
     User createUser(RegisterRequest registerRequest) {

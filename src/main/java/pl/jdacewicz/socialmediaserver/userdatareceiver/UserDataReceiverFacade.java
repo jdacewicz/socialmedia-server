@@ -10,6 +10,8 @@ import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserProfilePicture;
 
 import java.io.IOException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class UserDataReceiverFacade {
@@ -25,6 +27,13 @@ public class UserDataReceiverFacade {
     public UserDto getUserByEmail(String email) {
         var user = userDataReceiverService.getUserByEmail(email);
         return mapToDto(user);
+    }
+
+    public Set<UserDto> getUsersByFirstnameAndLastname(String firstname, String lastname) {
+        return userDataReceiverService.getUsersByFirstnameAndLastname(firstname, lastname)
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toSet());
     }
 
     @Transactional
