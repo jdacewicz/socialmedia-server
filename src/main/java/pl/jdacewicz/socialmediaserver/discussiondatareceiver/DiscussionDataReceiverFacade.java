@@ -3,7 +3,10 @@ package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.*;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.CommentDto;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.CommentRequest;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostDto;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.DirectoryDeleteRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
@@ -11,6 +14,7 @@ import pl.jdacewicz.socialmediaserver.reactionuser.ReactionUserFacade;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUserRequest;
 
 import java.io.IOException;
+import java.util.Set;
 
 @RequiredArgsConstructor
 public class DiscussionDataReceiverFacade {
@@ -29,6 +33,16 @@ public class DiscussionDataReceiverFacade {
     public CommentDto getCommentById(String commentId) {
         var foundComment = discussionDataReceiverService.getCommentById(commentId);
         return commentMapper.mapToDto(foundComment);
+    }
+
+    public Set<PostDto> getPostsByContentContaining(String phrase) {
+        var foundPosts = discussionDataReceiverService.getPostsByContentContaining(phrase);
+        return postMapper.mapToDto(foundPosts);
+    }
+
+    public Set<CommentDto> getCommentsByContentContaining(String phrase) {
+        var foundComments = discussionDataReceiverService.getCommentsByContentContaining(phrase);
+        return commentMapper.mapToDto(foundComments);
     }
 
     @Transactional

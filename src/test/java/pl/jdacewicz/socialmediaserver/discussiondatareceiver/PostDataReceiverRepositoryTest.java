@@ -9,7 +9,9 @@ import org.springframework.data.repository.query.FluentQuery;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("all")
 class PostDataReceiverRepositoryTest implements PostDataReceiverRepository {
@@ -28,6 +30,14 @@ class PostDataReceiverRepositoryTest implements PostDataReceiverRepository {
     public <S extends Post> S save(S entity) {
         database.add(entity);
         return entity;
+    }
+
+    @Override
+    public Set<Post> findByContentContaining(String phrase) {
+        return database.stream()
+                .filter(post -> post.getContent()
+                        .contains(phrase))
+                .collect(Collectors.toSet());
     }
 
     @Override

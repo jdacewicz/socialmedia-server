@@ -8,6 +8,9 @@ import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.elapsedtimeformatter.ElapsedDateTimeFormatterFacade;
 import pl.jdacewicz.socialmediaserver.reactioncounter.ReactionCounterFacade;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 class PostMapper {
@@ -15,6 +18,12 @@ class PostMapper {
     private final ReactionCounterFacade reactionCounterFacade;
     private final ElapsedDateTimeFormatterFacade elapsedDateTimeFormatterFacade;
     private final CommentMapper commentMapper;
+
+    public Set<PostDto> mapToDto(Set<Post> foundPosts) {
+        return foundPosts.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toSet());
+    }
 
     PostDto mapToDto(Post post) {
         var discussionImage = new DiscussionImage(post.getImageName(), post.getImageMainDirectory());

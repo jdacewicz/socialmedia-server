@@ -7,6 +7,8 @@ import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 class DiscussionDataReceiverService {
@@ -45,6 +47,14 @@ class DiscussionDataReceiverService {
     Comment getCommentById(String commentId) {
         return commentDataReceiverRepository.findById(commentId)
                 .orElseThrow(UnsupportedOperationException::new);
+    }
+
+    Set<Post> getPostsByContentContaining(String phrase) {
+        return postDataReceiverRepository.findByContentContaining(phrase);
+    }
+
+    Set<Comment> getCommentsByContentContaining(String phrase) {
+        return commentDataReceiverRepository.findByContentContaining(phrase);
     }
 
     Post createPost(String content, String imageName) {
