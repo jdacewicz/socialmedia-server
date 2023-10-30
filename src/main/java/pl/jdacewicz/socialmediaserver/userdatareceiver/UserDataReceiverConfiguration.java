@@ -9,7 +9,8 @@ class UserDataReceiverConfiguration {
 
     @Bean
     UserDataReceiverFacade userDataReceiverFacade(UserDataReceiverService userDataReceiverService,
+                                                  UserMapper userMapper,
                                                   FileStorageFacade fileStorageFacade) {
-        return new UserDataReceiverFacade(userDataReceiverService, fileStorageFacade);
+        return new UserDataReceiverFacade(userDataReceiverService, userMapper, fileStorageFacade);
     }
 }

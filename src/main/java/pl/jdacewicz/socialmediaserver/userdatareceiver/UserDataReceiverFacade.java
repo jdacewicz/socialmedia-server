@@ -7,33 +7,30 @@ import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserProfilePicture;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class UserDataReceiverFacade {
 
     private final UserDataReceiverService userDataReceiverService;
+    private final UserMapper userMapper;
     private final FileStorageFacade fileStorageFacade;
 
     public UserDto getLoggedInUser() {
         var loggedUser = userDataReceiverService.getLoggedInUser();
-        return mapToDto(loggedUser);
+        return userMapper.mapToDto(loggedUser);
     }
 
     public UserDto getUserByEmail(String email) {
         var user = userDataReceiverService.getUserByEmail(email);
-        return mapToDto(user);
+        return userMapper.mapToDto(user);
     }
 
-    public Set<UserDto> getUsersByFirstnameAndLastname(String firstname, String lastname) {
-        return userDataReceiverService.getUsersByFirstnameAndLastname(firstname, lastname)
-                .stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toSet());
+    public Set<UserDto> getUsersByFirstnamesAndLastnames(Set<String> firstnames, Set<String> lastnames) {
+        var users = userDataReceiverService.getUsersByFirstnamesAndLastnames(firstnames, lastnames);
+        return userMapper.mapToDto(users);
     }
 
     @Transactional
@@ -46,16 +43,6 @@ public class UserDataReceiverFacade {
                 .fileUploadDirectory(createdUser.getFolderDirectory())
                 .build();
         fileStorageFacade.uploadImage(profileImage, imageUploadRequest);
-        return mapToDto(createdUser);
-    }
-
-    private UserDto mapToDto(User user) {
-        var profilePicture = new UserProfilePicture(user.profilePictureName(), user.getFolderDirectory());
-        return UserDto.builder()
-                .userId(user.userId())
-                .firstname(user.firstname())
-                .lastname(user.lastname())
-                .profilePicture(profilePicture)
-                .build();
+        return userMapper.mapToDto(createdUser);
     }
 }

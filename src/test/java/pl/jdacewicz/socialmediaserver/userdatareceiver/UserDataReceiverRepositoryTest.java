@@ -9,7 +9,9 @@ import org.springframework.data.repository.query.FluentQuery;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("all")
 public class UserDataReceiverRepositoryTest implements UserDataReceiverRepository {
@@ -24,11 +26,11 @@ public class UserDataReceiverRepositoryTest implements UserDataReceiverRepositor
     }
 
     @Override
-    public List<User> findAllByFirstnameAndLastname(String firstname, String lastname) {
+    public Set<User> findAllByFirstnameInAndLastnameIn(Set<String> firstnames, Set<String> lastnames) {
         return database.stream()
-                .filter(user -> user.lastname().equals(lastname))
-                .filter(user -> user.firstname().equals(firstname))
-                .toList();
+                .filter(user -> lastnames.contains(user.lastname()))
+                .filter(user -> firstnames.contains(user.firstname()))
+                .collect(Collectors.toSet());
     }
 
     @Override
