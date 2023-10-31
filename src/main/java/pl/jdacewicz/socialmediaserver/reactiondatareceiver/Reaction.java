@@ -2,7 +2,9 @@ package pl.jdacewicz.socialmediaserver.reactiondatareceiver;
 
 import lombok.Builder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "reactions")
 @Builder
 record Reaction(@Id
                 String reactionId,
