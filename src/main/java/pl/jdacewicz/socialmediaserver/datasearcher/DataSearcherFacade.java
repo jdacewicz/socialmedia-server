@@ -9,8 +9,9 @@ public class DataSearcherFacade {
 
     private final SearchStrategy searchStrategy;
 
-    public SearchResult search(SearchRequest searchRequest) {
-        return switch (searchRequest.type()) {
+    public SearchResult searchData(String scope, SearchRequest searchRequest) {
+        var searchRequestScope = SearchRequestScope.getScope(scope);
+        return switch (searchRequestScope) {
             case ALL -> searchStrategy.searchAll(searchRequest);
             case USERS -> searchStrategy.searchUsers(searchRequest);
             case POSTS -> searchStrategy.searchPosts(searchRequest);

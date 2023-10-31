@@ -11,8 +11,7 @@ class DataSearcherConfiguration {
     @Bean
     DataSearcherFacade dataSearcherFacade(UserDataReceiverFacade userDataReceiverFacade,
                                           DiscussionDataReceiverFacade discussionDataReceiverFacade) {
-        DefaultSearchStrategy defaultSearchStrategy = new DefaultSearchStrategy(userDataReceiverFacade,
-                discussionDataReceiverFacade);
+        var defaultSearchStrategy = new DefaultSearchStrategy(userDataReceiverFacade, discussionDataReceiverFacade);
         return new DataSearcherFacade(defaultSearchStrategy);
     }
 }
