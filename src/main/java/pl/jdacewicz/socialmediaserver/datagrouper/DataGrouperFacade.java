@@ -7,6 +7,7 @@ import pl.jdacewicz.socialmediaserver.datagrouper.dto.GroupImage;
 import pl.jdacewicz.socialmediaserver.datagrouper.dto.PostGroupDto;
 import pl.jdacewicz.socialmediaserver.datagrouper.dto.PostGroupRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
+import pl.jdacewicz.socialmediaserver.filestorage.dto.DirectoryDeleteRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
 
 import java.io.IOException;
@@ -34,6 +35,14 @@ public class DataGrouperFacade {
         fileStorageFacade.uploadImage(groupImage, imageUploadRequest);
         return mapToDto(createdGroup);
 
+    }
+
+    @Transactional
+    public void deletePostGroup(String groupId) throws IOException {
+        var foundGroup = dataGrouperService.getPostGroupById(groupId);
+        var directoryDeleteRequest = new DirectoryDeleteRequest(foundGroup.getFolderDirectory());
+        dataGrouperService.deletePostGroup(foundGroup);
+        fileStorageFacade.deleteDirectory(directoryDeleteRequest);
     }
 
     private PostGroupDto mapToDto(PostGroup postGroup) {

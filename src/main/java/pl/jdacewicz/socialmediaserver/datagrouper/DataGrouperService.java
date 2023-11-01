@@ -29,4 +29,8 @@ class DataGrouperService {
                 .build();
         return postGroupRepository.save(postGroup);
     }
+
+    public void deletePostGroup(PostGroup postGroup) {
+        postGroupRepository.delete(postGroup);
+    }
 }
