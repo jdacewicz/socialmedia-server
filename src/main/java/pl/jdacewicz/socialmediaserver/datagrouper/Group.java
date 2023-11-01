@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
+import pl.jdacewicz.socialmediaserver.datagrouper.dto.GroupParticipator;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,16 +18,16 @@ abstract class Group {
 
     private String imageName;
 
-    private UserDto owner;
+    private GroupParticipator owner;
 
     @Builder.Default
-    private Set<UserDto> participants = new HashSet<>();
+    private Set<GroupParticipator> participants = Set.of(owner);
 
     @Builder.Default
-    private Set<UserDto> admins = new HashSet<>();
+    private Set<GroupParticipator> admins = Set.of(owner);
 
     @Builder.Default
-    private Set<UserDto> bannedUsers = new HashSet<>();
+    private Set<GroupParticipator> bannedUsers = new HashSet<>();
 
     @Builder.Default
     private boolean active = true;
