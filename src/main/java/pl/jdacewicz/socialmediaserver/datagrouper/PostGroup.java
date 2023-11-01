@@ -13,7 +13,7 @@ class PostGroup extends Group {
     @Id
     private String groupId;
 
-    private final static String MAIN_DIRECTORY = "data/groups";
+    private final static String MAIN_DIRECTORY = "data/groups/post-groups";
 
     @Override
     String getFolderDirectory() {
