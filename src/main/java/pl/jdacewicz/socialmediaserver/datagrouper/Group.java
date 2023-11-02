@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Id;
 import pl.jdacewicz.socialmediaserver.datagrouper.dto.GroupParticipator;
 
 import java.util.HashSet;
@@ -14,17 +15,18 @@ import java.util.Set;
 @AllArgsConstructor
 abstract class Group {
 
+    @Id
+    private String groupId;
+
     private String name;
 
     private String imageName;
 
     private GroupParticipator owner;
 
-    @Builder.Default
-    private Set<GroupParticipator> participants = Set.of(owner);
+    private Set<GroupParticipator> participants;
 
-    @Builder.Default
-    private Set<GroupParticipator> admins = Set.of(owner);
+    private Set<GroupParticipator> admins;
 
     @Builder.Default
     private Set<GroupParticipator> bannedUsers = new HashSet<>();
