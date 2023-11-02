@@ -1,4 +1,4 @@
 package pl.jdacewicz.socialmediaserver.datagrouper.dto;
 
-public record PostGroupRequest(String name) {
+public record GroupRequest(String name) {
 }
