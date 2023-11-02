@@ -8,7 +8,9 @@ import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
 class DataGrouperConfiguration {
 
     @Bean
-    DataGrouperFacade dataGrouperFacade(DataGrouperService dataGrouperService, FileStorageFacade fileStorageFacade) {
-        return new DataGrouperFacade(dataGrouperService, fileStorageFacade);
+    DataGrouperFacade dataGrouperFacade(FileStorageFacade fileStorageFacade,
+                                        DataGrouperServiceFactory dataGrouperServiceFactory,
+                                        GroupMapper groupMapper) {
+        return new DataGrouperFacade(fileStorageFacade, dataGrouperServiceFactory, groupMapper);
     }
 }
