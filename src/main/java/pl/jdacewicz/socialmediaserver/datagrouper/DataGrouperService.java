@@ -1,36 +1,12 @@
 package pl.jdacewicz.socialmediaserver.datagrouper;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import pl.jdacewicz.socialmediaserver.datagrouper.dto.GroupParticipator;
-import pl.jdacewicz.socialmediaserver.datagrouper.dto.PostGroupRequest;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
+import pl.jdacewicz.socialmediaserver.datagrouper.dto.GroupRequest;
 
-@Service
-@RequiredArgsConstructor
-class DataGrouperService {
+interface DataGrouperService<T extends Group> {
 
-    private final UserDataReceiverFacade userDataReceiverFacade;
-    private final PostGroupRepository postGroupRepository;
+    T getGroupById(String groupId);
 
-    PostGroup getPostGroupById(String groupId) {
-        return postGroupRepository.findById(groupId)
-                .orElseThrow(UnsupportedOperationException::new);
-    }
+    T createGroup(GroupRequest groupRequest, String groupImageName);
 
-    PostGroup createPostGroup(PostGroupRequest postGroupRequest, String imageName) {
-        var loggedUserId = userDataReceiverFacade.getLoggedInUser()
-                .userId();
-        var owner = new GroupParticipator(loggedUserId);
-        var postGroup = PostGroup.builder()
-                .name(postGroupRequest.name())
-                .imageName(imageName)
-                .owner(owner)
-                .build();
-        return postGroupRepository.save(postGroup);
-    }
-
-    public void deletePostGroup(PostGroup postGroup) {
-        postGroupRepository.delete(postGroup);
-    }
+    void deleteGroupById(String groupId);
 }
