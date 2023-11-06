@@ -35,6 +35,22 @@ public class BanGiverFacade {
         return mapToTemporaryBanResponse(createdTempBan);
     }
 
+    @Transactional
+    public void revokeBansByUserId(String userId) {
+        banGiverService.revokeAllBansByUserId(userId);
+        userDataReceiverFacade.unbanUser(userId);
+    }
+
+    @Transactional
+    public void checkTemporaryBansExpiration() {
+        var expiredBanUserIds = temporaryBanGiverService.getNewExpiredBans()
+                .stream()
+                .map(expiredBan -> expiredBan.getBannedUser()
+                        .userId())
+                .collect(Collectors.toSet());
+        userDataReceiverFacade.unbanUsers(expiredBanUserIds);
+    }
+
     private PermanentBanResponse mapToPermanentBanResponse(Ban ban) {
         return PermanentBanResponse.builder()
                 .banId(ban.getBanId())
