@@ -7,10 +7,7 @@ import pl.jdacewicz.socialmediaserver.bangiver.dto.BannedUser;
 import pl.jdacewicz.socialmediaserver.bangiver.dto.UserTemporaryBanRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +33,7 @@ class TemporaryBanGiverService {
 
     List<TemporaryBan> getNewExpiredBans() {
         var tempBans = temporaryBanRepository.findAllByExpiredAndRevoked(false, false);
-        var checkedBans = checkBansExpiredFlag(tempBans);
+        var checkedBans = BanFilter.filterNotExpiredBans(tempBans);
         return temporaryBanRepository.saveAll(checkedBans);
     }
 
@@ -51,14 +48,5 @@ class TemporaryBanGiverService {
                 .bannedUser(bannedUser)
                 .blockingUser(blockingUser)
                 .build();
-    }
-
-    private Set<TemporaryBan> checkBansExpiredFlag(List<TemporaryBan> tempBans) {
-        var now = LocalDateTime.now();
-        return tempBans.stream()
-                .filter(tempBan -> tempBan.getTo()
-                        .isBefore(now))
-                .peek(TemporaryBan::setBanExpired)
-                .collect(Collectors.toSet());
     }
 }
