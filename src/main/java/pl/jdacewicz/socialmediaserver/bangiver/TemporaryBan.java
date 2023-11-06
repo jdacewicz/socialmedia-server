@@ -16,4 +16,8 @@ class TemporaryBan extends Ban {
 
     @Builder.Default
     private boolean expired = false;
+
+    void setBanExpired() {
+        this.expired = true;
+    }
 }

@@ -2,26 +2,63 @@ package pl.jdacewicz.socialmediaserver.bangiver;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.jdacewicz.socialmediaserver.bangiver.dto.BlockingUser;
+import org.springframework.transaction.annotation.Transactional;
+import pl.jdacewicz.socialmediaserver.bangiver.dto.BannedUser;
 import pl.jdacewicz.socialmediaserver.bangiver.dto.UserTemporaryBanRequest;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 class TemporaryBanGiverService {
 
     private final TemporaryBanRepository temporaryBanRepository;
+    private final UserDataReceiverFacade userDataReceiverFacade;
+
+    @Transactional
+    public void revokeAllTemporaryBansByUserId(String userId) {
+        var bannedUser = new BannedUser(userId);
+        var revokedTempBans = temporaryBanRepository.findAllByBannedUserAndRevoked(bannedUser, false)
+                .stream()
+                .peek(TemporaryBan::revokeBan)
+                .toList();
+        temporaryBanRepository.saveAll(revokedTempBans);
+    }
 
     TemporaryBan createBan(String userId, UserTemporaryBanRequest userTemporaryBanRequest) {
-        var blocker = new BlockingUser(userId);
-        var tempBan = TemporaryBan.builder()
-                .to(userTemporaryBanRequest.to())
-                .reason(userTemporaryBanRequest.reason())
-                .blockingUser(blocker)
-                .build();
+        var tempBan = prepareBan(userId, userTemporaryBanRequest);
         return temporaryBanRepository.save(tempBan);
     }
 
-    void setBanExpired(String banId) {
-        temporaryBanRepository.updateByBanId(banId, true);
+    List<TemporaryBan> getNewExpiredBans() {
+        var tempBans = temporaryBanRepository.findAllByExpiredAndRevoked(false, false);
+        var checkedBans = checkBansExpiredFlag(tempBans);
+        return temporaryBanRepository.saveAll(checkedBans);
+    }
+
+    private TemporaryBan prepareBan(String userId, UserTemporaryBanRequest userTemporaryBanRequest) {
+        var loggedUserId = userDataReceiverFacade.getLoggedInUser()
+                .userId();
+        var blockingUser = new BlockingUser(loggedUserId);
+        var bannedUser = new BannedUser(userId);
+        return TemporaryBan.builder()
+                .to(userTemporaryBanRequest.to())
+                .reason(userTemporaryBanRequest.reason())
+                .bannedUser(bannedUser)
+                .blockingUser(blockingUser)
+                .build();
+    }
+
+    private Set<TemporaryBan> checkBansExpiredFlag(List<TemporaryBan> tempBans) {
+        var now = LocalDateTime.now();
+        return tempBans.stream()
+                .filter(tempBan -> tempBan.getTo()
+                        .isBefore(now))
+                .peek(TemporaryBan::setBanExpired)
+                .collect(Collectors.toSet());
     }
 }
