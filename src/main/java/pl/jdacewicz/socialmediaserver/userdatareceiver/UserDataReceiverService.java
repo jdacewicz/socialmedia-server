@@ -7,8 +7,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserBan;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,6 +25,27 @@ class UserDataReceiverService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return getUserByEmail(username);
+    }
+
+    @Transactional
+    public void banUser(String userId, String banId) {
+        var userBan = new UserBan(banId);
+        var bannedUser = getUserById(userId).banUser(userBan);
+        userDataReceiverRepository.save(bannedUser);
+    }
+
+    @Transactional
+    public void unbanUser(String userId) {
+        var unbannedUser = getUserById(userId).unbanUser();
+        userDataReceiverRepository.save(unbannedUser);
+    }
+
+    @Transactional
+    public void unbanUsers(Set<String> userIds) {
+        var unbannedUsers = getUsersByIds(userIds).stream()
+                .map(User::unbanUser)
+                .toList();
+        userDataReceiverRepository.saveAll(unbannedUsers);
     }
 
     User getLoggedInUser() {
@@ -38,6 +62,15 @@ class UserDataReceiverService implements UserDetailsService {
     User getUserByEmail(String email) {
         return userDataReceiverRepository.findByEmail(email)
                 .orElseThrow(UnsupportedOperationException::new);
+    }
+
+    User getUserById(String userId) {
+        return userDataReceiverRepository.findById(userId)
+                .orElseThrow(UnsupportedOperationException::new);
+    }
+
+    List<User> getUsersByIds(Set<String> userIds) {
+        return userDataReceiverRepository.findAllById(userIds);
     }
 
     Set<User> getUsersByFirstnamesAndLastnames(Set<String> firstnames, Set<String> lastnames) {

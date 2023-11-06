@@ -10,39 +10,76 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserBan;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 @Document(collection = "users")
 @Builder
 record User(
-            @Id
+        @Id
             String userId,
 
-            @NotBlank
+        @NotBlank
             @Email
             @Indexed(unique = true)
             String email,
 
-            @NotBlank
+        @NotBlank
             String password,
 
-            @NotBlank
+        @NotBlank
             @Size(min = 2, max = 16)
             String firstname,
 
-            @NotBlank
+        @NotBlank
             @Size(min = 2, max = 16)
             String lastname,
 
-            String profilePictureName) implements UserDetails {
+        String profilePictureName,
+
+        boolean banned,
+
+        List<UserBan> bans) implements UserDetails {
 
     final static String DEFAULT_USER_PROFILE_PICTURE_NAME = "default_user.png";
     final static String MAIN_DIRECTORY = "data/users";
 
+    @SuppressWarnings("unused")
     static class UserBuilder {
         private String profilePictureName = DEFAULT_USER_PROFILE_PICTURE_NAME;
+        private boolean banned = false;
+        private List<UserBan> bans = new LinkedList<>();
+    }
+
+    User banUser(UserBan userBan) {
+        var newUserBans = new LinkedList<>(this.bans);
+        newUserBans.add(userBan);
+        return User.builder()
+                .userId(this.userId)
+                .email(this.email)
+                .password(this.password)
+                .firstname(this.firstname)
+                .lastname(this.lastname)
+                .profilePictureName(this.profilePictureName)
+                .banned(true)
+                .bans(newUserBans)
+                .build();
+    }
+
+    User unbanUser() {
+        return User.builder()
+                .userId(this.userId)
+                .email(this.email)
+                .password(this.password)
+                .firstname(this.firstname)
+                .lastname(this.lastname)
+                .profilePictureName(this.profilePictureName)
+                .bans(this.bans)
+                .banned(false)
+                .build();
     }
 
     @Override
@@ -68,7 +105,7 @@ record User(
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !banned;
     }
 
     @Override

@@ -45,4 +45,16 @@ public class UserDataReceiverFacade {
         fileStorageFacade.uploadImage(profileImage, imageUploadRequest);
         return userMapper.mapToDto(createdUser);
     }
+
+    public void banUser(String userId, String banId) {
+        userDataReceiverService.banUser(userId, banId);
+    }
+
+    public void unbanUser(String userId) {
+        userDataReceiverService.unbanUser(userId);
+    }
+
+    public void unbanUsers(Set<String> userIds) {
+        userDataReceiverService.unbanUsers(userIds);
+    }
 }
