@@ -43,7 +43,7 @@ public class BanGiverFacade {
 
     @Transactional
     public void checkTemporaryBansExpiration() {
-        var expiredBanUserIds = temporaryBanGiverService.getNewExpiredBans()
+        var expiredBanUserIds = temporaryBanGiverService.checkNewExpiredBans()
                 .stream()
                 .map(expiredBan -> expiredBan.getBannedUser()
                         .userId())
