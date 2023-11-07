@@ -76,12 +76,12 @@ class TemporaryBanGiverServiceTest {
                 .revoked(false)
                 .build();
         temporaryBanRepositoryTest.save(tempBan);
-        try (MockedStatic<BanFilter> banFilter = Mockito.mockStatic(BanFilter.class)) {
-            banFilter.when(() -> BanFilter.filterNotExpiredBans(List.of(tempBan)))
+        try (MockedStatic<BanChecker> banFilter = Mockito.mockStatic(BanChecker.class)) {
+            banFilter.when(() -> BanChecker.getNewExpiredBans(List.of(tempBan)))
                     .thenReturn(Set.of(tempBan));
             tempBan.setBanExpired();
             //When
-            var result = temporaryBanGiverService.getNewExpiredBans();
+            var result = temporaryBanGiverService.checkNewExpiredBans();
             //Then
             assertFalse(result.isEmpty());
             assertTrue(result.get(0)

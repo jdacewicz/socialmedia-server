@@ -31,9 +31,9 @@ class TemporaryBanGiverService {
         return temporaryBanRepository.save(tempBan);
     }
 
-    List<TemporaryBan> getNewExpiredBans() {
+    List<TemporaryBan> checkNewExpiredBans() {
         var tempBans = temporaryBanRepository.findAllByExpiredAndRevoked(false, false);
-        var checkedBans = BanFilter.filterNotExpiredBans(tempBans);
+        var checkedBans = BanChecker.getNewExpiredBans(tempBans);
         return temporaryBanRepository.saveAll(checkedBans);
     }
 

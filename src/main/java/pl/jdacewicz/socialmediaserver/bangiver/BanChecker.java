@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-class BanFilter {
+class BanChecker {
 
-    static Set<TemporaryBan> filterNotExpiredBans(List<TemporaryBan> tempBans) {
+    static Set<TemporaryBan> getNewExpiredBans(List<TemporaryBan> tempBans) {
         var now = LocalDateTime.now();
         return tempBans.stream()
                 .filter(tempBan -> tempBan.getTo()
