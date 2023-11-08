@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.DiscussionDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.*;
+import pl.jdacewicz.socialmediaserver.reportdatareceiver.ReportDataReceiverFacade;
+import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportRequest;
 
 import java.io.IOException;
 
@@ -16,6 +18,7 @@ import java.io.IOException;
 public class CommentDataReceiverRestController {
 
     private final DiscussionDataReceiverFacade discussionDataReceiverFacade;
+    private final ReportDataReceiverFacade reportDataReceiverFacade;
 
     @GetMapping("/{id}")
     public CommentDto getCommentById(@PathVariable @NotBlank String id) {
@@ -26,6 +29,12 @@ public class CommentDataReceiverRestController {
     public CommentDto createComment(@RequestPart MultipartFile commentImage,
                                     @RequestPart @Valid CommentRequest commentRequest) throws IOException {
         return discussionDataReceiverFacade.createComment(commentImage, commentRequest);
+    }
+
+    @PostMapping("/{id}/report")
+    public void reportComment(@PathVariable String id,
+                              @RequestBody ReportRequest reportRequest) {
+        reportDataReceiverFacade.report(id, reportRequest, "COMMENT");
     }
 
     @PutMapping("/{commentId}/react/{reactionId}")

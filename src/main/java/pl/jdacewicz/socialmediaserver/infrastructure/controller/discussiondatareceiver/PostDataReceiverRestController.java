@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.DiscussionDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
+import pl.jdacewicz.socialmediaserver.reportdatareceiver.ReportDataReceiverFacade;
+import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportRequest;
 
 import java.io.IOException;
 
@@ -17,6 +19,7 @@ import java.io.IOException;
 public class PostDataReceiverRestController {
 
     private final DiscussionDataReceiverFacade discussionDataReceiverFacade;
+    private final ReportDataReceiverFacade reportDataReceiverFacade;
 
     @GetMapping("/{id}")
     public PostDto getPostById(@PathVariable @NotBlank String id) {
@@ -27,6 +30,12 @@ public class PostDataReceiverRestController {
     public PostDto createPost(@RequestPart MultipartFile postImage,
                               @RequestPart @Valid PostRequest postRequest) throws IOException {
         return discussionDataReceiverFacade.createPost(postImage, postRequest);
+    }
+
+    @PostMapping("/{id}/report")
+    public void reportPost(@PathVariable String id,
+                           @RequestBody ReportRequest reportRequest) {
+        reportDataReceiverFacade.report(id, reportRequest, "POST");
     }
 
     @PutMapping("/{postId}/react/{reactionId}")
