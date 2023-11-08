@@ -3,18 +3,27 @@ package pl.jdacewicz.socialmediaserver.reportdatareceiver;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
+@Document(collection = "reports")
 @Getter
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 class Report {
 
-    private String reportingUserId;
+    @Id
+    private String reportId;
 
-    private ReportType type;
+    private ReportType reportType;
+
+    private String reportedDataId;
+
+    private DataType dataType;
+
+    private String reportingUserId;
 
     private String content;
 
