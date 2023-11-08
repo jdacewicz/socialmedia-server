@@ -8,5 +8,9 @@ enum ReportType {
     SELF_HARM,
     PERSECUTE,
     DRASTIC_CONTENT,
-    ILLEGAL_CONTENT
+    ILLEGAL_CONTENT;
+
+    static ReportType getType(String type) {
+        return valueOf(type.toUpperCase());
+    }
 }
