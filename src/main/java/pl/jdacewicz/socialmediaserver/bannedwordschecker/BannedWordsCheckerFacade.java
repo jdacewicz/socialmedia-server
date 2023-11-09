@@ -12,7 +12,7 @@ public class BannedWordsCheckerFacade {
     private final BannedWordService bannedWordService;
     private final BannedWordMapper bannedWordMapper;
 
-    public void check(String text) {
+    public void checkForBannedWords(String text) {
         var bannedWords = bannedWordService.getAllBannedWords();
         if (BannedWordsChecker.doesTextContainBannedWords(text, bannedWords)) {
             throw new UnsupportedOperationException();
