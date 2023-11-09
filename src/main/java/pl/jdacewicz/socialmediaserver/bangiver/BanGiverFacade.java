@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.bangiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jdacewicz.socialmediaserver.bangiver.dto.PermanentBanResponse;
 import pl.jdacewicz.socialmediaserver.bangiver.dto.TemporaryBanResponse;
@@ -41,8 +42,9 @@ public class BanGiverFacade {
         userDataReceiverFacade.unbanUser(userId);
     }
 
+    @Scheduled(cron = "${application.scheduled-tasks.checking-temporary-bans-expiration.cron}")
     @Transactional
-    public void checkTemporaryBansExpiration() {
+    public void checkAndUnbanUsersWithExpiredBans() {
         var expiredBanUserIds = temporaryBanGiverService.checkNewExpiredBans()
                 .stream()
                 .map(expiredBan -> expiredBan.getBannedUser()

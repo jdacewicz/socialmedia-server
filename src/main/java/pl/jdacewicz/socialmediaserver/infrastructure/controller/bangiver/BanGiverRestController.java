@@ -15,6 +15,6 @@ public class BanGiverRestController {
 
     @PutMapping("/check")
     public void checkTemporaryBansExpiration() {
-        banGiverFacade.checkTemporaryBansExpiration();
+        banGiverFacade.checkAndUnbanUsersWithExpiredBans();
     }
 }
