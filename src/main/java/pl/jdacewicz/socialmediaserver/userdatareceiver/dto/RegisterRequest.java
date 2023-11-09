@@ -19,4 +19,8 @@ public record RegisterRequest(@NotBlank
                               @NotBlank
                               @Size(min = 2, max = 16)
                               String lastname) {
+
+    public String getFirstAndLastName() {
+        return this.firstname + " " + this.lastname;
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
 import pl.jdacewicz.socialmediaserver.tokengenerator.TokenGeneratorFacade;
 import pl.jdacewicz.socialmediaserver.tokengenerator.dto.TokenDto;
 import pl.jdacewicz.socialmediaserver.userauthenticator.dto.AuthenticationRequest;
@@ -20,6 +21,7 @@ class UserAuthenticatorService {
     private final AuthenticationManager authenticationManager;
     private final UserDataReceiverFacade userDataReceiverFacade;
     private final TokenGeneratorFacade tokenGeneratorFacade;
+    private final BannedWordsCheckerFacade bannedWordsCheckerFacade;
 
     TokenDto authenticateUser(AuthenticationRequest authenticationRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -30,6 +32,7 @@ class UserAuthenticatorService {
     }
 
     TokenDto registerUser(MultipartFile profileImage, RegisterRequest registerRequest) throws IOException {
+        bannedWordsCheckerFacade.checkForBannedWords(registerRequest.getFirstAndLastName());
         userDataReceiverFacade.createUser(profileImage, registerRequest);
         return tokenGeneratorFacade.createToken(registerRequest.email());
     }

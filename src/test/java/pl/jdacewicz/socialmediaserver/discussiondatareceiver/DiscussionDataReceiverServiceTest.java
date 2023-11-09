@@ -3,6 +3,7 @@ package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
@@ -20,14 +21,16 @@ class DiscussionDataReceiverServiceTest {
     PostDataReceiverRepositoryTest postDataReceiverRepositoryTest;
     CommentDataReceiverRepositoryTest commentDataReceiverRepositoryTest;
     UserDataReceiverFacade userDataReceiverFacade;
+    BannedWordsCheckerFacade bannedWordsCheckerFacade;
 
     @BeforeEach
     void setUp() {
         userDataReceiverFacade = Mockito.mock(UserDataReceiverFacade.class);
+        bannedWordsCheckerFacade = Mockito.mock(BannedWordsCheckerFacade.class);
         postDataReceiverRepositoryTest = new PostDataReceiverRepositoryTest();
         commentDataReceiverRepositoryTest = new CommentDataReceiverRepositoryTest();
         discussionDataReceiverService = new DiscussionDataReceiverService(postDataReceiverRepositoryTest,
-                commentDataReceiverRepositoryTest, userDataReceiverFacade);
+                commentDataReceiverRepositoryTest, userDataReceiverFacade, bannedWordsCheckerFacade);
     }
 
     @Test

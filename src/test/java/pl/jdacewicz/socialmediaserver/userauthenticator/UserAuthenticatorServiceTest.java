@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
 import pl.jdacewicz.socialmediaserver.tokengenerator.TokenGeneratorFacade;
 import pl.jdacewicz.socialmediaserver.tokengenerator.dto.TokenDto;
 import pl.jdacewicz.socialmediaserver.userauthenticator.dto.AuthenticationRequest;
@@ -30,14 +31,16 @@ class UserAuthenticatorServiceTest {
     AuthenticationManager authenticationManager;
     UserDataReceiverFacade userDataReceiverFacade;
     TokenGeneratorFacade tokenGeneratorFacade;
+    BannedWordsCheckerFacade bannedWordsCheckerFacade;
 
     @BeforeEach
     void setUp() {
         authenticationManager = Mockito.mock(AuthenticationManager.class);
         userDataReceiverFacade = Mockito.mock(UserDataReceiverFacade.class);
         tokenGeneratorFacade = Mockito.mock(TokenGeneratorFacade.class);
+        bannedWordsCheckerFacade = Mockito.mock(BannedWordsCheckerFacade.class);
         userAuthenticatorService = new UserAuthenticatorService(authenticationManager, userDataReceiverFacade,
-                tokenGeneratorFacade);
+                tokenGeneratorFacade, bannedWordsCheckerFacade);
     }
 
     @Test

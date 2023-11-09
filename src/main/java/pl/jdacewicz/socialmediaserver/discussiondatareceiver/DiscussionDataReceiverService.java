@@ -3,6 +3,7 @@ package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
@@ -16,9 +17,11 @@ class DiscussionDataReceiverService {
     private final PostDataReceiverRepository postDataReceiverRepository;
     private final CommentDataReceiverRepository commentDataReceiverRepository;
     private final UserDataReceiverFacade userDataReceiverFacade;
+    private final BannedWordsCheckerFacade bannedWordsCheckerFacade;
 
     @Transactional
     public Comment createComment(String postId, String content, String imageName) {
+        bannedWordsCheckerFacade.checkForBannedWords(content);
         var loggedUser = userDataReceiverFacade.getLoggedInUser();
         var foundPost = getPostById(postId);
         var comment = commentPost(content, imageName, loggedUser, foundPost);
@@ -58,6 +61,7 @@ class DiscussionDataReceiverService {
     }
 
     Post createPost(String content, String imageName) {
+        bannedWordsCheckerFacade.checkForBannedWords(content);
         var loggedInUser = userDataReceiverFacade.getLoggedInUser();
         var post = Post.builder()
                 .content(content)
