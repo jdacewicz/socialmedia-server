@@ -1,6 +1,8 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
@@ -97,5 +99,17 @@ class DiscussionDataReceiverService {
         var commentedPost = foundPost.withComment(comment);
         postDataReceiverRepository.save(commentedPost);
         return comment;
+    }
+
+    @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
+    @Profile("demo")
+    void deleteAllPosts() {
+        postDataReceiverRepository.deleteAll();
+    }
+
+    @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
+    @Profile("demo")
+    void deleteAllComments() {
+        commentDataReceiverRepository.deleteAll();
     }
 }

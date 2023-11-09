@@ -1,6 +1,8 @@
 package pl.jdacewicz.socialmediaserver.tokengenerator;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 
@@ -28,6 +30,12 @@ class TokenGeneratorService {
         var userTokens = tokenGeneratorRepository.findByUserId(userId);
         var revokedTokens = revokeTokens(userTokens);
         tokenGeneratorRepository.saveAll(revokedTokens);
+    }
+
+    @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
+    @Profile("demo")
+    void deleteAllTokens() {
+        tokenGeneratorRepository.deleteAll();
     }
 
     private Token prepareToken(String username) {

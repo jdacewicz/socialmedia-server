@@ -9,10 +9,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @SuperBuilder
 class PostGroup extends Group {
 
-    private final static String MAIN_DIRECTORY = "data/groups/post-groups";
+    final static String MAIN_DIRECTORY = "post-groups";
 
     @Override
     String getFolderDirectory() {
-        return String.format("%s/%s", MAIN_DIRECTORY, getGroupId());
+        return String.format("%s/%s/%s", Group.MAIN_DIRECTORY, MAIN_DIRECTORY, getGroupId());
     }
 }

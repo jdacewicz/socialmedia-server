@@ -17,7 +17,7 @@ record Reaction(@Id
 
                 boolean archived) {
 
-    private final static String MAIN_DIRECTORY = "data/reactions";
+    final static String MAIN_DIRECTORY = "data/reactions";
 
     String getReactionImageDirectory() {
         return String.format("%s/%s", getReactionFolderDirectory(), imageName);

@@ -86,4 +86,8 @@ class UserDataReceiverService implements UserDetailsService {
                 .build();
         return userDataReceiverRepository.save(user);
     }
+
+    void deleteAllUsers() {
+        userDataReceiverRepository.deleteAll();
+    }
 }

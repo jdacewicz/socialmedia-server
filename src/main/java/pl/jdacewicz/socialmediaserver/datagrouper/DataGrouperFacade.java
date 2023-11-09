@@ -1,6 +1,8 @@
 package pl.jdacewicz.socialmediaserver.datagrouper;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.datagrouper.dto.GroupDto;
@@ -45,6 +47,18 @@ public class DataGrouperFacade {
         var foundGroup = dataGrouperService.getGroupById(groupId);
         var directoryDeleteRequest = new DirectoryDeleteRequest(foundGroup.getFolderDirectory());
         dataGrouperService.deleteGroupById(groupId);
+        fileStorageFacade.deleteDirectory(directoryDeleteRequest);
+    }
+
+    @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
+    @Profile("demo")
+    private void deleteGroupsData() throws IOException {
+        var directoryDeleteRequest = new DirectoryDeleteRequest(Group.MAIN_DIRECTORY);
+        var types = GroupType.values();
+        for (GroupType type: types) {
+            var dataGrouperService = dataGrouperServiceFactory.getDataGrouperService(type.name());
+            dataGrouperService.deleteAllGroups();
+        }
         fileStorageFacade.deleteDirectory(directoryDeleteRequest);
     }
 }

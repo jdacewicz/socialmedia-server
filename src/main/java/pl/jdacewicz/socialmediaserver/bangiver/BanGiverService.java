@@ -1,6 +1,8 @@
 package pl.jdacewicz.socialmediaserver.bangiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jdacewicz.socialmediaserver.bangiver.dto.BannedUser;
@@ -32,6 +34,12 @@ class BanGiverService {
     Ban createBan(String userId, UserPermanentBanRequest userPermanentBanRequest) {
         var ban = prepareBan(userId, userPermanentBanRequest);
         return banRepository.save(ban);
+    }
+
+    @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
+    @Profile("demo")
+    void deleteAllBans() {
+        banRepository.deleteAll();
     }
 
     private Ban prepareBan(String userId, UserPermanentBanRequest userPermanentBanRequest) {

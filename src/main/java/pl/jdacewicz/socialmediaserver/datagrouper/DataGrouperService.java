@@ -9,4 +9,6 @@ interface DataGrouperService<T extends Group> {
     T createGroup(GroupRequest groupRequest, String groupImageName);
 
     void deleteGroupById(String groupId);
+
+    void deleteAllGroups();
 }

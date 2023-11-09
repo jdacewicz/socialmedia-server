@@ -1,6 +1,8 @@
 package pl.jdacewicz.socialmediaserver.reportdatareceiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
@@ -36,5 +38,11 @@ class ReportDataService {
 
     void deleteReport(String reportedDataId) {
         reportRepository.deleteById(reportedDataId);
+    }
+
+    @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
+    @Profile("demo")
+    void deleteAllReports() {
+        reportRepository.deleteAll();
     }
 }

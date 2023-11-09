@@ -9,6 +9,8 @@ spring:
 application:
   scheduled-tasks:
     checking-temporary-bans-expiration:
+      cron: 0 0 12 * * ?
+    delete-all-data:
       cron: 0 0 0 * * ?
   security:
     jwt:

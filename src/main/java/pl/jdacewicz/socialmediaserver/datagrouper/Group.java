@@ -40,6 +40,8 @@ abstract class Group {
     @Builder.Default
     private boolean invitationRevoked = true;
 
+    final static String MAIN_DIRECTORY = "data/groups";
+
     String getImageDirectory() {
         return String.format("%s/%s", getFolderDirectory(), imageName);
     }

@@ -40,4 +40,9 @@ class PostGrouperService implements DataGrouperService<PostGroup> {
     public void deleteGroupById(String groupId) {
         postGroupRepository.deleteById(groupId);
     }
+
+    @Override
+    public void deleteAllGroups() {
+        postGroupRepository.deleteAll();
+    }
 }

@@ -42,4 +42,8 @@ class ReactionDataReceiverService {
     void updateReactionArchived(String reactionId, boolean archived) {
         reactionDataReceiverRepository.updateReactionArchived(reactionId, archived);
     }
+
+    void deleteAllReactions() {
+        reactionDataReceiverRepository.deleteAll();
+    }
 }

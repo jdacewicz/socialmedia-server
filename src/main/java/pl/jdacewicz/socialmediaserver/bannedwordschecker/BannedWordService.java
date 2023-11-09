@@ -1,6 +1,8 @@
 package pl.jdacewicz.socialmediaserver.bannedwordschecker;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.dto.BanWordRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
@@ -30,5 +32,11 @@ class BannedWordService {
 
     void deleteBannedWordsById(String id) {
         bannedWordRepository.deleteById(id);
+    }
+
+    @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
+    @Profile("demo")
+    void deleteAllBannedWords() {
+        bannedWordRepository.deleteAll();
     }
 }

@@ -1,9 +1,12 @@
 package pl.jdacewicz.socialmediaserver.userdatareceiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
+import pl.jdacewicz.socialmediaserver.filestorage.dto.DirectoryDeleteRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
@@ -56,5 +59,13 @@ public class UserDataReceiverFacade {
 
     public void unbanUsers(Set<String> userIds) {
         userDataReceiverService.unbanUsers(userIds);
+    }
+
+    @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
+    @Profile("demo")
+    private void deleteAllUsersData() throws IOException {
+        var directoryDeleteRequest = new DirectoryDeleteRequest(User.MAIN_DIRECTORY);
+        userDataReceiverService.deleteAllUsers();
+        fileStorageFacade.deleteDirectory(directoryDeleteRequest);
     }
 }

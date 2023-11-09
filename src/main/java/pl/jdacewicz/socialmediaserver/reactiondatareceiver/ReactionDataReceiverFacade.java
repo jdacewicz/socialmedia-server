@@ -1,9 +1,12 @@
 package pl.jdacewicz.socialmediaserver.reactiondatareceiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
+import pl.jdacewicz.socialmediaserver.filestorage.dto.DirectoryDeleteRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionDto;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionRequest;
@@ -77,5 +80,13 @@ public class ReactionDataReceiverFacade {
                 .fileUploadDirectory(folderDirectory)
                 .build();
 
+    }
+
+    @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
+    @Profile("demo")
+    private void deleteAllReactionsData() throws IOException {
+        var deleteDirectoryRequest = new DirectoryDeleteRequest(Reaction.MAIN_DIRECTORY);
+        reactionDataReceiverService.deleteAllReactions();
+        fileStorageFacade.deleteDirectory(deleteDirectoryRequest);
     }
 }
