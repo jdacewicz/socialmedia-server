@@ -1,0 +1,16 @@
+server:
+  port: 0
+spring:
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/socialmedia-app?authSource=admin
+      auto-index-creation: true
+
+application:
+  scheduled-tasks:
+    checking-temporary-bans-expiration:
+      cron: 0 0 0 * * ?
+  security:
+    jwt:
+      secret-key: 4337786E56516674686144666C55626C6C39642B325662564A593037507473437A5957595A526F5042324E372F546551464B536F4F34737650424352455A2B310A
+      expiration: 86400000
