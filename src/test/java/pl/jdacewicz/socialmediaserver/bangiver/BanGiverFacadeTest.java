@@ -18,13 +18,18 @@ class BanGiverFacadeTest {
     BanGiverService banGiverService;
     TemporaryBanGiverService temporaryBanGiverService;
     UserDataReceiverFacade userDataReceiverFacade;
+    BanMapper banMapper;
+    TemporaryBanMapper temporaryBanMapper;
 
     @BeforeEach
     void setUp() {
         banGiverService = Mockito.mock(BanGiverService.class);
         temporaryBanGiverService = Mockito.mock(TemporaryBanGiverService.class);
         userDataReceiverFacade = Mockito.mock(UserDataReceiverFacade.class);
-        banGiverFacade = new BanGiverFacade(banGiverService, temporaryBanGiverService, userDataReceiverFacade);
+        banMapper = Mockito.mock(BanMapper.class);
+        temporaryBanMapper = Mockito.mock(TemporaryBanMapper.class);
+        banGiverFacade = new BanGiverFacade(banGiverService, temporaryBanGiverService, userDataReceiverFacade,
+                banMapper, temporaryBanMapper);
     }
 
     @Test

@@ -10,7 +10,10 @@ class BanGiverConfiguration {
     @Bean
     BanGiverFacade banGiverFacade(BanGiverService banGiverService,
                                   TemporaryBanGiverService temporaryBanGiverService,
-                                  UserDataReceiverFacade userDataReceiverFacade) {
-        return new BanGiverFacade(banGiverService, temporaryBanGiverService, userDataReceiverFacade);
+                                  UserDataReceiverFacade userDataReceiverFacade,
+                                  BanMapper banMapper,
+                                  TemporaryBanMapper temporaryBanMapper) {
+        return new BanGiverFacade(banGiverService, temporaryBanGiverService, userDataReceiverFacade,
+                banMapper, temporaryBanMapper);
     }
 }
