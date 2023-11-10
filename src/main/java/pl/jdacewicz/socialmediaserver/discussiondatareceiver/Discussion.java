@@ -1,5 +1,8 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
@@ -14,12 +17,16 @@ import java.util.List;
 @AllArgsConstructor
 abstract class Discussion<T> {
 
+    @NotBlank
+    @Size(max = 255)
     private String content;
 
+    @NotNull
     private UserDto creator;
 
     private String imageName;
 
+    @NotBlank
     private String imageMainDirectory;
 
     @Builder.Default

@@ -1,5 +1,8 @@
 package pl.jdacewicz.socialmediaserver.datagrouper;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,14 +21,19 @@ abstract class Group {
     @Id
     private String groupId;
 
+    @NotBlank
+    @Size(max = 32)
     private String name;
 
     private String imageName;
 
+    @NotNull
     private GroupParticipator owner;
 
+    @NotNull
     private Set<GroupParticipator> participants;
 
+    @NotNull
     private Set<GroupParticipator> admins;
 
     @Builder.Default

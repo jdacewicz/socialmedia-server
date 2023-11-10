@@ -1,5 +1,7 @@
 package pl.jdacewicz.socialmediaserver.infrastructure.controller.userdatareceiver;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.jdacewicz.socialmediaserver.bangiver.BanGiverFacade;
@@ -19,26 +21,26 @@ public class UserDataReceiverRestController {
     private final BanGiverFacade banGiverFacade;
 
     @PostMapping("/{id}/report")
-    public void reportUser(@PathVariable String id,
-                           @RequestBody ReportRequest reportRequest) {
+    public void reportUser(@PathVariable @NotBlank String id,
+                           @RequestBody @Valid ReportRequest reportRequest) {
         reportDataReceiverFacade.report(id, reportRequest, "USER");
     }
 
 
     @PutMapping("/{id}/ban/permanent")
-    public PermanentBanResponse banUserPermanently(@PathVariable String id,
-                                                   @RequestBody UserPermanentBanRequest userPermanentBanRequest) {
+    public PermanentBanResponse banUserPermanently(@PathVariable @NotBlank String id,
+                                                   @RequestBody @Valid UserPermanentBanRequest userPermanentBanRequest) {
         return banGiverFacade.banUserPermanently(id, userPermanentBanRequest);
     }
 
     @PutMapping("/{id}/ban/temporary")
-    public TemporaryBanResponse banUserTemporary(@PathVariable String id,
-                                                 @RequestBody UserTemporaryBanRequest userTemporaryBanRequest) {
+    public TemporaryBanResponse banUserTemporary(@PathVariable @NotBlank String id,
+                                                 @RequestBody @Valid UserTemporaryBanRequest userTemporaryBanRequest) {
         return banGiverFacade.banUserTemporary(id, userTemporaryBanRequest);
     }
 
     @PutMapping("/{id}/ban/revoke")
-    public void revokeUserBans(@PathVariable String id) {
+    public void revokeUserBans(@PathVariable @NotBlank String id) {
         banGiverFacade.revokeBansByUserId(id);
     }
 }

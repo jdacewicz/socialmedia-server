@@ -18,13 +18,13 @@ class ReportMapper {
 
     ReportDto mapToDto(Report report) {
         return ReportDto.builder()
-                .reportId(report.getReportId())
-                .reportType(report.getReportType()
+                .reportId(report.reportId())
+                .reportType(report.reportType()
                         .name())
-                .reportDataType(report.getDataType()
+                .reportDataType(report.dataType()
                         .name())
-                .reportedDataId(report.getReportedDataId())
-                .content(report.getContent())
+                .reportedDataId(report.reportedDataId())
+                .content(report.content())
                 .build();
     }
 }

@@ -1,4 +1,7 @@
 package pl.jdacewicz.socialmediaserver.reactionuser.dto;
 
-public record ReactionUserRequest(String reactionId) {
+import jakarta.validation.constraints.NotBlank;
+
+public record ReactionUserRequest(@NotBlank
+                                  String reactionId) {
 }

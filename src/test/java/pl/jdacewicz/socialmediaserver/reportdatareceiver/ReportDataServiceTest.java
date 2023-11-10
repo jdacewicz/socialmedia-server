@@ -47,11 +47,11 @@ class ReportDataServiceTest {
             //Then
             assertFalse(result.isEmpty());
             assertEquals(reportRequest.content(), result.get(0)
-                    .getContent());
+                    .content());
             assertEquals(loggedUserDto.userId(), result.get(0)
-                    .getReportingUserId());
+                    .reportingUserId());
             assertEquals(reportedDataId, result.get(0)
-                    .getReportedDataId());
+                    .reportedDataId());
         }
     }
 }

@@ -19,24 +19,25 @@ import java.util.List;
 @Document(collection = "users")
 @Builder
 record User(
+
         @Id
-            String userId,
+        String userId,
 
         @NotBlank
-            @Email
-            @Indexed(unique = true)
-            String email,
+        @Email
+        @Indexed(unique = true)
+        String email,
 
         @NotBlank
-            String password,
+        String password,
 
         @NotBlank
-            @Size(min = 2, max = 16)
-            String firstname,
+        @Size(min = 2, max = 16)
+        String firstname,
 
         @NotBlank
-            @Size(min = 2, max = 16)
-            String lastname,
+        @Size(min = 2, max = 16)
+        String lastname,
 
         String profilePictureName,
 

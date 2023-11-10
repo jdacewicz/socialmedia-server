@@ -1,32 +1,40 @@
 package pl.jdacewicz.socialmediaserver.reportdatareceiver;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
-import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
 @Document(collection = "reports")
-@Getter
 @Builder
-@AllArgsConstructor
-class Report {
+record Report(@Id
+              String reportId,
 
-    @Id
-    private String reportId;
+              @NotNull
+              ReportType reportType,
 
-    private ReportType reportType;
+              @NotBlank
+              String reportedDataId,
 
-    private String reportedDataId;
+              @NotNull
+              DataType dataType,
 
-    private DataType dataType;
+              @NotBlank
+              String reportingUserId,
 
-    private String reportingUserId;
+              @NotEmpty
+              @Size(max = 255)
+              String content,
 
-    private String content;
+              LocalDateTime reportDateTime) {
 
-    @Builder.Default
-    private LocalDateTime reportDateTime = LocalDateTime.now();
+    @SuppressWarnings("unused")
+    static class ReportBuilder {
+        private LocalDateTime reportDateTime = LocalDateTime.now();
+    }
 }

@@ -1,4 +1,9 @@
 package pl.jdacewicz.socialmediaserver.bangiver.dto;
 
-public record UserPermanentBanRequest(String reason) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record UserPermanentBanRequest(@NotBlank
+                                      @Size(max = 255)
+                                      String reason) {
 }

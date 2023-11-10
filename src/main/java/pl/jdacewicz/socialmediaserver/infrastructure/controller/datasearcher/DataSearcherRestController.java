@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.infrastructure.controller.datasearcher;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.jdacewicz.socialmediaserver.datasearcher.DataSearcherFacade;
@@ -15,7 +16,7 @@ public class DataSearcherRestController {
     private final DataSearcherFacade dataSearcherFacade;
 
     @GetMapping
-    public SearchResult searchData(@RequestParam String scope,
+    public SearchResult searchData(@RequestParam @NotBlank String scope,
                                    @RequestBody @Valid SearchRequest searchRequest) {
         return dataSearcherFacade.searchData(scope, searchRequest);
     }

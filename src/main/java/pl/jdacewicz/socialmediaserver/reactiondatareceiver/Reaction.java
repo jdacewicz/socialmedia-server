@@ -1,7 +1,10 @@
 package pl.jdacewicz.socialmediaserver.reactiondatareceiver;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "reactions")
@@ -9,6 +12,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 record Reaction(@Id
                 String reactionId,
 
+                @NotBlank
+                @Indexed(unique = true)
+                @Size(min = 2, max = 32)
                 String name,
 
                 String imageName,
