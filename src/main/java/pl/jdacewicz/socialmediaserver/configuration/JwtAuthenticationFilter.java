@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.jdacewicz.socialmediaserver.tokengenerator.TokenGeneratorFacade;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.UserNotFoundException;
 
 import java.io.IOException;
 
@@ -28,9 +30,16 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        var authenticationHeader = request.getHeader("Authorization");
-        checkAuthentication(authenticationHeader, request);
-        filterChain.doFilter(request, response);
+        try {
+            var authenticationHeader = request.getHeader("Authorization");
+            checkAuthentication(authenticationHeader, request);
+            filterChain.doFilter(request, response);
+        } catch (UserNotFoundException exception) {
+            var status = HttpStatus.NOT_FOUND;
+            response.setStatus(status.value());
+            response.getWriter()
+                    .write("Provided username or password is invalid");
+        }
     }
 
     private void checkAuthentication(String authenticationHeader, HttpServletRequest request) {

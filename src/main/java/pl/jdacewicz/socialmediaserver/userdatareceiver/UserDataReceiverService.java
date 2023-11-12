@@ -23,7 +23,7 @@ class UserDataReceiverService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         return getUserByEmail(username);
     }
 
@@ -61,12 +61,12 @@ class UserDataReceiverService implements UserDetailsService {
 
     User getUserByEmail(String email) {
         return userDataReceiverRepository.findByEmail(email)
-                .orElseThrow(UnsupportedOperationException::new);
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with username: " + email));
     }
 
     User getUserById(String userId) {
         return userDataReceiverRepository.findById(userId)
-                .orElseThrow(UnsupportedOperationException::new);
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with id: " + userId));
     }
 
     List<User> getUsersByIds(Set<String> userIds) {
