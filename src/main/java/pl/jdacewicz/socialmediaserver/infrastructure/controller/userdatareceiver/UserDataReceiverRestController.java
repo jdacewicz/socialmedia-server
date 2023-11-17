@@ -11,14 +11,22 @@ import pl.jdacewicz.socialmediaserver.bangiver.dto.UserPermanentBanRequest;
 import pl.jdacewicz.socialmediaserver.bangiver.dto.UserTemporaryBanRequest;
 import pl.jdacewicz.socialmediaserver.reportdatareceiver.ReportDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportRequest;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
 @RestController
 @RequestMapping(value = "/api/users")
 @RequiredArgsConstructor
 public class UserDataReceiverRestController {
 
+    private final UserDataReceiverFacade userDataReceiverFacade;
     private final ReportDataReceiverFacade reportDataReceiverFacade;
     private final BanGiverFacade banGiverFacade;
+
+    @GetMapping
+    public UserDto getLoggedInUser() {
+        return userDataReceiverFacade.getLoggedInUser();
+    }
 
     @PostMapping("/{id}/report")
     public void reportUser(@PathVariable @NotBlank String id,
