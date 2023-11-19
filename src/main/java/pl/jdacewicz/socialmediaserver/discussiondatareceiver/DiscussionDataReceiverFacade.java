@@ -14,6 +14,7 @@ import pl.jdacewicz.socialmediaserver.reactionuser.ReactionUserFacade;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUserRequest;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -24,6 +25,11 @@ public class DiscussionDataReceiverFacade {
     private final FileStorageFacade fileStorageFacade;
     private final PostMapper postMapper;
     private final CommentMapper commentMapper;
+
+    public List<PostDto> getRandomPosts() {
+        var randomPosts = discussionDataReceiverService.getRandomPosts();
+        return postMapper.mapToDto(randomPosts);
+    }
 
     public PostDto getPostById(String postId) {
         var foundPost = discussionDataReceiverService.getPostById(postId);

@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,6 +12,7 @@ import java.util.LinkedList;
 @Document(collection = "comments")
 @Getter
 @SuperBuilder
+@NoArgsConstructor
 class Comment extends Discussion<Comment> {
 
     @Id

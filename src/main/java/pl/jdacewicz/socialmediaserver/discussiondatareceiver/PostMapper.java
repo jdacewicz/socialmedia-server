@@ -8,6 +8,7 @@ import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.elapsedtimeformatter.ElapsedDateTimeFormatterFacade;
 import pl.jdacewicz.socialmediaserver.reactioncounter.ReactionCounterFacade;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,12 @@ class PostMapper {
     private final ReactionCounterFacade reactionCounterFacade;
     private final ElapsedDateTimeFormatterFacade elapsedDateTimeFormatterFacade;
     private final CommentMapper commentMapper;
+
+    public List<PostDto> mapToDto(List<Post> randomPosts) {
+        return randomPosts.stream()
+                .map(this::mapToDto)
+                .toList();
+    }
 
     public Set<PostDto> mapToDto(Set<Post> foundPosts) {
         return foundPosts.stream()

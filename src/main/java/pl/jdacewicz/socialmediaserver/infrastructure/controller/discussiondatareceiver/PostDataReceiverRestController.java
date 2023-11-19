@@ -12,6 +12,7 @@ import pl.jdacewicz.socialmediaserver.reportdatareceiver.ReportDataReceiverFacad
 import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportRequest;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/posts")
@@ -20,6 +21,11 @@ public class PostDataReceiverRestController {
 
     private final DiscussionDataReceiverFacade discussionDataReceiverFacade;
     private final ReportDataReceiverFacade reportDataReceiverFacade;
+
+    @GetMapping
+    public List<PostDto> getRandomPosts() {
+        return discussionDataReceiverFacade.getRandomPosts();
+    }
 
     @GetMapping("/{id}")
     public PostDto getPostById(@PathVariable @NotBlank String id) {

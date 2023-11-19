@@ -2,6 +2,7 @@ package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Document(collection = "posts")
 @Getter
 @SuperBuilder
+@NoArgsConstructor
 class Post extends Discussion<Post> {
 
     @Id

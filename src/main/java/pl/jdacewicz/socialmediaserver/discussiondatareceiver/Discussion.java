@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 @SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor
 abstract class Discussion<T> {
 
     @NotBlank

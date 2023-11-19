@@ -2,6 +2,8 @@ package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +12,7 @@ import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -20,6 +23,7 @@ class DiscussionDataReceiverService {
     private final CommentDataReceiverRepository commentDataReceiverRepository;
     private final UserDataReceiverFacade userDataReceiverFacade;
     private final BannedWordsCheckerFacade bannedWordsCheckerFacade;
+    private final MongoTemplate mongoTemplate;
 
     @Transactional
     public Comment createComment(String postId, String content, String imageName) {
@@ -42,6 +46,13 @@ class DiscussionDataReceiverService {
         var comment = getCommentById(commentId);
         comment = react(comment, reactionUser);
         return commentDataReceiverRepository.save(comment);
+    }
+
+    List<Post> getRandomPosts() {
+        var aggregation = Aggregation.newAggregation(
+                Aggregation.sample(5));
+        return mongoTemplate.aggregate(aggregation, "posts", Post.class)
+                .getMappedResults();
     }
 
     Post getPostById(String postId) {
