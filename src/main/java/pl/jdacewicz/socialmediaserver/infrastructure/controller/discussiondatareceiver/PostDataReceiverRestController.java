@@ -22,14 +22,14 @@ public class PostDataReceiverRestController {
     private final DiscussionDataReceiverFacade discussionDataReceiverFacade;
     private final ReportDataReceiverFacade reportDataReceiverFacade;
 
-    @GetMapping
-    public List<PostDto> getRandomPosts() {
-        return discussionDataReceiverFacade.getRandomPosts();
-    }
-
     @GetMapping("/{id}")
     public PostDto getPostById(@PathVariable @NotBlank String id) {
         return discussionDataReceiverFacade.getPostById(id);
+    }
+
+    @GetMapping
+    public List<PostDto> getRandomPosts() {
+        return discussionDataReceiverFacade.getRandomPosts();
     }
 
     @PostMapping

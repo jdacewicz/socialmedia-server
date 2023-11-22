@@ -47,7 +47,7 @@ class UserDataReceiverServiceTest {
         var email = "test@example.com";
         //When
         //Then
-        assertThrows(UnsupportedOperationException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> userDataReceiverService.loadUserByUsername(email));
     }
 

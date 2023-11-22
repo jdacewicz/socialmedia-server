@@ -26,11 +26,6 @@ public class DiscussionDataReceiverFacade {
     private final PostMapper postMapper;
     private final CommentMapper commentMapper;
 
-    public List<PostDto> getRandomPosts() {
-        var randomPosts = discussionDataReceiverService.getRandomPosts();
-        return postMapper.mapToDto(randomPosts);
-    }
-
     public PostDto getPostById(String postId) {
         var foundPost = discussionDataReceiverService.getPostById(postId);
         return postMapper.mapToDto(foundPost);
@@ -39,6 +34,11 @@ public class DiscussionDataReceiverFacade {
     public CommentDto getCommentById(String commentId) {
         var foundComment = discussionDataReceiverService.getCommentById(commentId);
         return commentMapper.mapToDto(foundComment);
+    }
+
+    public List<PostDto> getRandomPosts() {
+        var randomPosts = discussionDataReceiverService.getRandomPosts();
+        return postMapper.mapToDto(randomPosts);
     }
 
     public Set<PostDto> getPostsByContentContaining(String phrase) {

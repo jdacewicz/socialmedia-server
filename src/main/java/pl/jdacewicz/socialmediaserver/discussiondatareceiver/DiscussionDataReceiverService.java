@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -18,6 +19,9 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 class DiscussionDataReceiverService {
+
+    @Value("${posts.random.count}")
+    private int randomPostsCount;
 
     private final PostDataReceiverRepository postDataReceiverRepository;
     private final CommentDataReceiverRepository commentDataReceiverRepository;
@@ -50,7 +54,7 @@ class DiscussionDataReceiverService {
 
     List<Post> getRandomPosts() {
         var aggregation = Aggregation.newAggregation(
-                Aggregation.sample(5));
+                Aggregation.sample(randomPostsCount));
         return mongoTemplate.aggregate(aggregation, "posts", Post.class)
                 .getMappedResults();
     }

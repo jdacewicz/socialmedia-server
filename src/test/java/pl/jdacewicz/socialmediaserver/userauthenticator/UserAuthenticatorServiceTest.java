@@ -47,7 +47,7 @@ class UserAuthenticatorServiceTest {
     public void should_authenticate_successfully_when_valid_credentials_provided() {
         //Given
         var authenticationRequest = new AuthenticationRequest("test@example.com", "password");
-        var userDto = new UserDto("id", "firstname", "lastname",
+        var userDto = new UserDto("id", "fullname",
                 new UserProfilePicture("fileName", "directory"));
         var tokenDto = new TokenDto("code", true);
         when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(new UsernamePasswordAuthenticationToken(
