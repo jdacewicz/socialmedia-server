@@ -20,8 +20,7 @@ class UserMapper {
         var profilePicture = new UserProfilePicture(user.profilePictureName(), user.getFolderDirectory());
         return UserDto.builder()
                 .userId(user.userId())
-                .firstname(user.firstname())
-                .lastname(user.lastname())
+                .fullName(user.getFullName())
                 .profilePicture(profilePicture)
                 .build();
     }

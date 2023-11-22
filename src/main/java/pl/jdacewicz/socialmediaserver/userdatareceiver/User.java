@@ -45,7 +45,7 @@ record User(
 
         List<UserBan> bans) implements UserDetails {
 
-    final static String DEFAULT_USER_PROFILE_PICTURE_NAME = "default_user.png";
+    final static String DEFAULT_USER_PROFILE_PICTURE_NAME = "default_user.jpg";
     final static String MAIN_DIRECTORY = "data/users";
 
     @SuppressWarnings("unused")
@@ -117,6 +117,10 @@ record User(
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    String getFullName() {
+        return String.format("%s %s", firstname, lastname);
     }
 
     String getFolderDirectory() {

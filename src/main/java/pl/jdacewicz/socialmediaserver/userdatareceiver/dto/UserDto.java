@@ -4,7 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record UserDto(String userId,
-                      String firstname,
-                      String lastname,
+                      String fullName,
                       UserProfilePicture profilePicture) {
 }
