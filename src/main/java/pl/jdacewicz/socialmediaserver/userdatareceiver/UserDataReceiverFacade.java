@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.DirectoryDeleteRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
@@ -21,9 +22,9 @@ public class UserDataReceiverFacade {
     private final UserMapper userMapper;
     private final FileStorageFacade fileStorageFacade;
 
-    public UserDto getLoggedInUser() {
+    public LoggedUserDto getLoggedInUser() {
         var loggedUser = userDataReceiverService.getLoggedInUser();
-        return userMapper.mapToDto(loggedUser);
+        return userMapper.mapToLoggedDto(loggedUser);
     }
 
     public UserDto getUserByEmail(String email) {

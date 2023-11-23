@@ -1,9 +1,18 @@
 package pl.jdacewicz.socialmediaserver.userdatareceiver.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import pl.jdacewicz.socialmediaserver.filemapper.dto.File;
 
-@Builder
-public record UserDto(String userId,
-                      String fullName,
-                      UserProfilePicture profilePicture) {
+@Getter
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserDto {
+
+    private String userId;
+    private String fullName;
+    private File profilePicture;
 }

@@ -10,13 +10,13 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
+import pl.jdacewicz.socialmediaserver.filemapper.dto.File;
 import pl.jdacewicz.socialmediaserver.tokengenerator.TokenGeneratorFacade;
 import pl.jdacewicz.socialmediaserver.tokengenerator.dto.TokenDto;
 import pl.jdacewicz.socialmediaserver.userauthenticator.dto.AuthenticationRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.RegisterRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserProfilePicture;
 
 import java.io.IOException;
 
@@ -48,7 +48,7 @@ class UserAuthenticatorServiceTest {
         //Given
         var authenticationRequest = new AuthenticationRequest("test@example.com", "password");
         var userDto = new UserDto("id", "fullname",
-                new UserProfilePicture("fileName", "directory"));
+                new File("url"));
         var tokenDto = new TokenDto("code", true);
         when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(new UsernamePasswordAuthenticationToken(
                 authenticationRequest.email(),
@@ -61,7 +61,7 @@ class UserAuthenticatorServiceTest {
         assertEquals(tokenDto, result);
         verify(authenticationManager, times(1)).authenticate(any(Authentication.class));
         verify(userDataReceiverFacade, times(1)).getUserByEmail(authenticationRequest.email());
-        verify(tokenGeneratorFacade, times(1)).revokeAllUserTokensByUserId(userDto.userId());
+        verify(tokenGeneratorFacade, times(1)).revokeAllUserTokensByUserId(userDto.getUserId());
         verify(tokenGeneratorFacade, times(1)).createToken(authenticationRequest.email());
     }
 

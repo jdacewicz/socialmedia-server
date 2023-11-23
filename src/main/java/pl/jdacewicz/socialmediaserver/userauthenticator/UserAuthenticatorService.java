@@ -39,6 +39,6 @@ class UserAuthenticatorService {
 
     private void revokeAllUserTokensByUserEmail(String email) {
         var userDto = userDataReceiverFacade.getUserByEmail(email);
-        tokenGeneratorFacade.revokeAllUserTokensByUserId(userDto.userId());
+        tokenGeneratorFacade.revokeAllUserTokensByUserId(userDto.getUserId());
     }
 }
