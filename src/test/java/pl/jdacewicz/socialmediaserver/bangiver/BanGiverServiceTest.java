@@ -6,7 +6,7 @@ import org.mockito.Mockito;
 import pl.jdacewicz.socialmediaserver.bangiver.dto.BannedUser;
 import pl.jdacewicz.socialmediaserver.bangiver.dto.UserPermanentBanRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -47,7 +47,7 @@ class BanGiverServiceTest {
         //Given
         var bannedUserId = "id";
         var userPermanentBanRequest = new UserPermanentBanRequest("reason");
-        var loggedUserDto = UserDto.builder()
+        var loggedUserDto = LoggedUserDto.builder()
                 .userId("idTwo")
                 .build();
         when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
@@ -57,7 +57,7 @@ class BanGiverServiceTest {
         assertEquals(bannedUserId, result.getBannedUser()
                 .userId());
         assertEquals(userPermanentBanRequest.reason(), result.getReason());
-        assertEquals(loggedUserDto.userId(), result.getBlockingUser()
+        assertEquals(loggedUserDto.getUserId(), result.getBlockingUser()
                 .userId());
     }
 }

@@ -6,9 +6,10 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.when;
 
 class ReportDataServiceTest {
@@ -31,7 +32,7 @@ class ReportDataServiceTest {
         var reportedDataId = "id";
         var reportRequest = new ReportRequest("type", "content");
         var reportDataType = "dataType";
-        var loggedUserDto = UserDto.builder()
+        var loggedUserDto = LoggedUserDto.builder()
                 .userId("id")
                 .build();
         when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
@@ -48,7 +49,7 @@ class ReportDataServiceTest {
             assertFalse(result.isEmpty());
             assertEquals(reportRequest.content(), result.get(0)
                     .content());
-            assertEquals(loggedUserDto.userId(), result.get(0)
+            assertEquals(loggedUserDto.getUserId(), result.get(0)
                     .reportingUserId());
             assertEquals(reportedDataId, result.get(0)
                     .reportedDataId());

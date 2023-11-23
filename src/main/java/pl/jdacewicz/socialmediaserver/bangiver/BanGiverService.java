@@ -44,7 +44,7 @@ class BanGiverService {
 
     private Ban prepareBan(String userId, UserPermanentBanRequest userPermanentBanRequest) {
         var loggedUserId = userDataReceiverFacade.getLoggedInUser()
-                .userId();
+                .getUserId();
         var blockingUser = new BlockingUser(loggedUserId);
         var bannedUser = new BannedUser(userId);
         return Ban.builder()

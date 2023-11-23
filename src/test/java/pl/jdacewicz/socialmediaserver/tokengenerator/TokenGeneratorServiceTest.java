@@ -62,7 +62,7 @@ class TokenGeneratorServiceTest {
         //When
         var result = tokenGeneratorService.createToken(username);
         //Then
-        assertEquals(userDto.userId(), result.userId());
+        assertEquals(userDto.getUserId(), result.userId());
         assertEquals(tokenCode, result.code());
         assertFalse(result.expired());
         assertFalse(result.revoked());

@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.dto.BanWordRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 class BannedWordServiceTest {
@@ -28,14 +28,14 @@ class BannedWordServiceTest {
     void should_return_created_banned_word_when_creating_banned_word() {
         //Given
         var banWordRequest = new BanWordRequest("word");
-        var loggedUser = UserDto.builder()
+        var loggedUser = LoggedUserDto.builder()
                 .userId("id")
                 .build();
         when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUser);
         //When
         var result = bannedWordService.createBannedWord(banWordRequest);
         //Then
-        assertEquals(loggedUser.userId(), result.creatorId());
+        assertEquals(loggedUser.getUserId(), result.creatorId());
         assertEquals(banWordRequest.word(), result.word());
     }
 }

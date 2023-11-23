@@ -7,9 +7,9 @@ import pl.jdacewicz.socialmediaserver.reactiondatareceiver.ReactionDataReceiverF
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionDto;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUserRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 class ReactionUserServiceTest {
@@ -35,7 +35,7 @@ class ReactionUserServiceTest {
         var reactionDto = ReactionDto.builder()
                 .reactionId(reactionId)
                 .build();
-        var userDto = UserDto.builder()
+        var userDto = LoggedUserDto.builder()
                 .userId(userId)
                 .build();
         when(reactionDataReceiverFacade.getReactionById(reactionId)).thenReturn(reactionDto);

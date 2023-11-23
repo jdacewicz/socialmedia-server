@@ -19,7 +19,7 @@ class ReactionUserService {
         var loggedUser = userDataReceiverFacade.getLoggedInUser();
         return ReactionUser.builder()
                 .reactionId(reaction.reactionId())
-                .userId(loggedUser.userId())
+                .userId(loggedUser.getUserId())
                 .build();
     }
 }

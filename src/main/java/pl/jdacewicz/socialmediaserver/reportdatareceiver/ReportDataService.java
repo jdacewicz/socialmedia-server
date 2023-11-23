@@ -23,7 +23,7 @@ class ReportDataService {
 
     void createReport(String reportedDataId, ReportRequest reportRequest, String reportDataType) {
         var loggedUserId = userDataReceiverFacade.getLoggedInUser()
-                .userId();
+                .getUserId();
         var reportType = ReportType.valueOf(reportRequest.reportType());
         var dataType = DataType.getType(reportDataType);
         var report = Report.builder()

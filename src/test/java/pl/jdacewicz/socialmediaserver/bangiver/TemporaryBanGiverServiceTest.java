@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import pl.jdacewicz.socialmediaserver.bangiver.dto.BannedUser;
 import pl.jdacewicz.socialmediaserver.bangiver.dto.UserTemporaryBanRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
 import java.time.LocalDateTime;
@@ -53,7 +54,7 @@ class TemporaryBanGiverServiceTest {
         var userId = "id";
         var bannedTo = LocalDateTime.of(2000, 1, 1, 1, 1);
         var userTemporaryBanRequest = new UserTemporaryBanRequest(bannedTo, "reason");
-        var loggedUserDto = UserDto.builder()
+        var loggedUserDto = LoggedUserDto.builder()
                 .userId("idTwo")
                 .build();
         when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
@@ -64,7 +65,7 @@ class TemporaryBanGiverServiceTest {
         assertEquals(userTemporaryBanRequest.reason(), result.getReason());
         assertEquals(userId, result.getBannedUser()
                 .userId());
-        assertEquals(loggedUserDto.userId(), result.getBlockingUser()
+        assertEquals(loggedUserDto.getUserId(), result.getBlockingUser()
                 .userId());
     }
 

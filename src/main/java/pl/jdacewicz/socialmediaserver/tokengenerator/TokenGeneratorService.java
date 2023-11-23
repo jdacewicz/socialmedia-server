@@ -42,7 +42,7 @@ class TokenGeneratorService {
         var userDto = userDataReceiverFacade.getUserByEmail(username);
         var generatedTokenCode = tokenGenerator.generateToken(username);
         return Token.builder()
-                .userId(userDto.userId())
+                .userId(userDto.getUserId())
                 .code(generatedTokenCode)
                 .expired(false)
                 .revoked(false)

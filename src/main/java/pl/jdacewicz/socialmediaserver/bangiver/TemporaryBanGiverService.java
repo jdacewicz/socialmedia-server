@@ -47,7 +47,7 @@ class TemporaryBanGiverService {
 
     private TemporaryBan prepareBan(String userId, UserTemporaryBanRequest userTemporaryBanRequest) {
         var loggedUserId = userDataReceiverFacade.getLoggedInUser()
-                .userId();
+                .getUserId();
         var blockingUser = new BlockingUser(loggedUserId);
         var bannedUser = new BannedUser(userId);
         return TemporaryBan.builder()

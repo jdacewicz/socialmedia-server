@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import pl.jdacewicz.socialmediaserver.filemapper.FileMapperFacade;
+import pl.jdacewicz.socialmediaserver.filemapper.dto.MapRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.DirectoryDeleteRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
@@ -20,6 +22,7 @@ public class ReactionDataReceiverFacade {
 
     private final ReactionDataReceiverService reactionDataReceiverService;
     private final FileStorageFacade fileStorageFacade;
+    private final FileMapperFacade fileMapperFacade;
 
     public ReactionDto getReactionById(String reactionId) {
         var foundReaction = reactionDataReceiverService.getReactionById(reactionId);
@@ -71,7 +74,11 @@ public class ReactionDataReceiverFacade {
     }
 
     private ReactionDto mapToDto(Reaction reaction) {
-        return new ReactionDto(reaction.reactionId(), reaction.getReactionImageDirectory());
+        var image = fileMapperFacade.mapToFile(new MapRequest(reaction.imageName(), reaction.getReactionFolderDirectory()));
+        return ReactionDto.builder()
+                .reactionId(reaction.reactionId())
+                .image(image)
+                .build();
     }
 
     private FileUploadRequest mapToFileUploadRequest(String imageName, String folderDirectory) {

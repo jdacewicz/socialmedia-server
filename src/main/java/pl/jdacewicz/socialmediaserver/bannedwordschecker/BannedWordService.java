@@ -22,7 +22,7 @@ class BannedWordService {
 
     BannedWord createBannedWord(BanWordRequest banWordRequest) {
         var loggedUserId = userDataReceiverFacade.getLoggedInUser()
-                .userId();
+                .getUserId();
         var bannedWord = BannedWord.builder()
                 .word(banWordRequest.word())
                 .creatorId(loggedUserId)
