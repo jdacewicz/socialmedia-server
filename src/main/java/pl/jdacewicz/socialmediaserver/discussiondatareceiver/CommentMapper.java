@@ -4,8 +4,9 @@ import com.vdurmont.emoji.EmojiParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.CommentDto;
-import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.DiscussionImage;
 import pl.jdacewicz.socialmediaserver.elapsedtimeformatter.ElapsedDateTimeFormatterFacade;
+import pl.jdacewicz.socialmediaserver.filemapper.FileMapperFacade;
+import pl.jdacewicz.socialmediaserver.filemapper.dto.MapRequest;
 import pl.jdacewicz.socialmediaserver.reactioncounter.ReactionCounterFacade;
 
 import java.util.Set;
@@ -17,6 +18,7 @@ class CommentMapper {
 
     private final ReactionCounterFacade reactionCounterFacade;
     private final ElapsedDateTimeFormatterFacade elapsedDateTimeFormatterFacade;
+    private final FileMapperFacade fileMapperFacade;
 
     Set<CommentDto> mapToDto(Set<Comment> comments) {
         return comments.stream()
@@ -25,7 +27,7 @@ class CommentMapper {
     }
 
     CommentDto mapToDto(Comment comment) {
-        var discussionImage = new DiscussionImage(comment.getImageName(), comment.getImageMainDirectory());
+        var image = fileMapperFacade.mapToFile(new MapRequest(comment.getImageName(), comment.getFolderDirectory()));
         var elapsedDateTime = elapsedDateTimeFormatterFacade.formatDateTime(comment.getCreationDateTime());
         var reactionCounts = reactionCounterFacade.countReactions(comment.getReactionUsers());
         var parsedContent = EmojiParser.parseToUnicode(comment.getContent());
@@ -33,7 +35,7 @@ class CommentMapper {
                 .commentId(comment.getCommentId())
                 .content(parsedContent)
                 .creator(comment.getCreator())
-                .image(discussionImage)
+                .image(image)
                 .elapsedDateTime(elapsedDateTime)
                 .reactionCounts(reactionCounts)
                 .build();

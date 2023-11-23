@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
+import pl.jdacewicz.socialmediaserver.filemapper.dto.File;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserProfilePicture;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 
 import java.util.List;
 
@@ -89,8 +89,8 @@ class DiscussionDataReceiverServiceTest {
         //Given
         var content = "content";
         var imageName = "name";
-        var loggedUserDto = UserDto.builder()
-                .profilePicture(new UserProfilePicture("fileName", "directory"))
+        var loggedUserDto = LoggedUserDto.builder()
+                .profilePicture(new File("url"))
                 .build();
         when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
         //When
@@ -110,8 +110,8 @@ class DiscussionDataReceiverServiceTest {
         var post = Post.builder()
                 .postId(postId)
                 .build();
-        var loggedUserDto = UserDto.builder()
-                .profilePicture(new UserProfilePicture("fileName", "directory"))
+        var loggedUserDto = LoggedUserDto.builder()
+                .profilePicture(new File("url"))
                 .build();
         postDataReceiverRepositoryTest.save(post);
         when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);

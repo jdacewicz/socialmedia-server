@@ -84,8 +84,7 @@ class DiscussionDataReceiverService {
                 .content(content)
                 .creator(loggedInUser)
                 .imageName(imageName)
-                .imageMainDirectory(loggedInUser.profilePicture()
-                        .folderDirectory())
+                .imageMainDirectory(loggedInUser.getDataDirectory())
                 .build();
         return postDataReceiverRepository.save(post);
     }
