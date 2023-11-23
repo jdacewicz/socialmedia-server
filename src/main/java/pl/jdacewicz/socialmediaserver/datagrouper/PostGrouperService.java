@@ -24,7 +24,7 @@ class PostGrouperService implements DataGrouperService<PostGroup> {
     @Override
     public PostGroup createGroup(GroupRequest groupRequest, String imageName) {
         var loggedUserId = userDataReceiverFacade.getLoggedInUser()
-                .userId();
+                .getUserId();
         var owner = new GroupParticipator(loggedUserId);
         var postGroup = PostGroup.builder()
                 .name(groupRequest.name())

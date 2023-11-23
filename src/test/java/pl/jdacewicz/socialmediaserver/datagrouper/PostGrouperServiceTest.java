@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pl.jdacewicz.socialmediaserver.datagrouper.dto.GroupRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -53,14 +53,14 @@ class PostGrouperServiceTest {
         //Given
         var groupRequest = new GroupRequest("name");
         var imageName = "imageName";
-        var loggedUser = UserDto.builder()
+        var loggedUser = LoggedUserDto.builder()
                 .userId("id")
                 .build();
         when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUser);
         //When
         var result = postGrouperService.createGroup(groupRequest, imageName);
         //Then
-        assertEquals(loggedUser.userId(), result.getOwner()
+        assertEquals(loggedUser.getUserId(), result.getOwner()
                 .userId());
         assertFalse(result.getAdmins()
                 .isEmpty());

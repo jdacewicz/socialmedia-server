@@ -3,9 +3,10 @@ package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.DiscussionImage;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.elapsedtimeformatter.ElapsedDateTimeFormatterFacade;
+import pl.jdacewicz.socialmediaserver.filemapper.FileMapperFacade;
+import pl.jdacewicz.socialmediaserver.filemapper.dto.MapRequest;
 import pl.jdacewicz.socialmediaserver.reactioncounter.ReactionCounterFacade;
 
 import java.util.List;
@@ -19,6 +20,7 @@ class PostMapper {
     private final ReactionCounterFacade reactionCounterFacade;
     private final ElapsedDateTimeFormatterFacade elapsedDateTimeFormatterFacade;
     private final CommentMapper commentMapper;
+    private final FileMapperFacade fileMapperFacade;
 
     public List<PostDto> mapToDto(List<Post> randomPosts) {
         return randomPosts.stream()
@@ -33,7 +35,7 @@ class PostMapper {
     }
 
     PostDto mapToDto(Post post) {
-        var discussionImage = new DiscussionImage(post.getImageName(), post.getImageMainDirectory());
+        var image = fileMapperFacade.mapToFile(new MapRequest(post.getImageName(), post.getFolderDirectory()));
         var elapsedDateTime = elapsedDateTimeFormatterFacade.formatDateTime(post.getCreationDateTime());
         var reactionCounts = reactionCounterFacade.countReactions(post.getReactionUsers());
         var comments = commentMapper.mapToDto(post.getComments());
@@ -41,7 +43,7 @@ class PostMapper {
                 .postId(post.getPostId())
                 .content(EmojiParser.parseToUnicode(post.getContent()))
                 .creator(post.getCreator())
-                .image(discussionImage)
+                .image(image)
                 .elapsedDateTime(elapsedDateTime)
                 .reactionCounts(reactionCounts)
                 .comments(comments)
