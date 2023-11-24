@@ -32,6 +32,11 @@ public class PostDataReceiverRestController {
         return discussionDataReceiverFacade.getRandomPosts();
     }
 
+    @GetMapping("/user/{userId}")
+    public List<PostDto> getPostsByUserId(@PathVariable String userId) {
+        return discussionDataReceiverFacade.getPostsByUserId(userId);
+    }
+
     @PostMapping
     public PostDto createPost(@RequestPart MultipartFile postImage,
                               @RequestPart @Valid PostRequest postRequest) throws IOException {

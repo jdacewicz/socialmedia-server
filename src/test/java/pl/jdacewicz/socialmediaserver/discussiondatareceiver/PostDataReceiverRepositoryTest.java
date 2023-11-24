@@ -41,6 +41,11 @@ class PostDataReceiverRepositoryTest implements PostDataReceiverRepository {
     }
 
     @Override
+    public List<Post> findAllByCreator_UserId(String userId) {
+        return null;
+    }
+
+    @Override
     public <S extends Post> S insert(S entity) {
         return null;
     }

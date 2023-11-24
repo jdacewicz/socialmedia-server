@@ -41,6 +41,11 @@ public class DiscussionDataReceiverFacade {
         return postMapper.mapToDto(randomPosts);
     }
 
+    public List<PostDto> getPostsByUserId(String userId) {
+        var foundPosts = discussionDataReceiverService.getPostsByUserId(userId);
+        return postMapper.mapToDto(foundPosts);
+    }
+
     public Set<PostDto> getPostsByContentContaining(String phrase) {
         var foundPosts = discussionDataReceiverService.getPostsByContentContaining(phrase);
         return postMapper.mapToDto(foundPosts);

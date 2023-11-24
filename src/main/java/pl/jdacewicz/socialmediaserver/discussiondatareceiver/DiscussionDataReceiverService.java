@@ -52,13 +52,6 @@ class DiscussionDataReceiverService {
         return commentDataReceiverRepository.save(comment);
     }
 
-    List<Post> getRandomPosts() {
-        var aggregation = Aggregation.newAggregation(
-                Aggregation.sample(randomPostsCount));
-        return mongoTemplate.aggregate(aggregation, "posts", Post.class)
-                .getMappedResults();
-    }
-
     Post getPostById(String postId) {
         return postDataReceiverRepository.findById(postId)
                 .orElseThrow(UnsupportedOperationException::new);
@@ -67,6 +60,17 @@ class DiscussionDataReceiverService {
     Comment getCommentById(String commentId) {
         return commentDataReceiverRepository.findById(commentId)
                 .orElseThrow(UnsupportedOperationException::new);
+    }
+
+    List<Post> getRandomPosts() {
+        var aggregation = Aggregation.newAggregation(
+                Aggregation.sample(randomPostsCount));
+        return mongoTemplate.aggregate(aggregation, "posts", Post.class)
+                .getMappedResults();
+    }
+
+    List<Post> getPostsByUserId(String userId) {
+        return postDataReceiverRepository.findAllByCreator_UserId(userId);
     }
 
     Set<Post> getPostsByContentContaining(String phrase) {
