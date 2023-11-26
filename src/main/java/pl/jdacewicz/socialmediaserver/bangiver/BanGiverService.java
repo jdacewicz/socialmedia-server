@@ -31,8 +31,8 @@ class BanGiverService {
         return banRepository.existsByBannedUserAndRevoked(bannedUser ,false);
     }
 
-    Ban createBan(String userId, UserPermanentBanRequest userPermanentBanRequest) {
-        var ban = prepareBan(userId, userPermanentBanRequest);
+    Ban createBan(String userId, String authenticationHeader, UserPermanentBanRequest userPermanentBanRequest) {
+        var ban = prepareBan(userId, authenticationHeader, userPermanentBanRequest);
         return banRepository.save(ban);
     }
 
@@ -42,8 +42,8 @@ class BanGiverService {
         banRepository.deleteAll();
     }
 
-    private Ban prepareBan(String userId, UserPermanentBanRequest userPermanentBanRequest) {
-        var loggedUserId = userDataReceiverFacade.getLoggedInUser()
+    private Ban prepareBan(String userId, String authenticationHeader, UserPermanentBanRequest userPermanentBanRequest) {
+        var loggedUserId = userDataReceiverFacade.getLoggedInUser(authenticationHeader)
                 .getUserId();
         var blockingUser = new BlockingUser(loggedUserId);
         var bannedUser = new BannedUser(userId);

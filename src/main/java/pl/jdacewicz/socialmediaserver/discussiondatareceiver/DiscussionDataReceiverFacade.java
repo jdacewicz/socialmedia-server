@@ -57,10 +57,10 @@ public class DiscussionDataReceiverFacade {
     }
 
     @Transactional
-    public PostDto createPost(MultipartFile postImage, PostRequest postRequest) throws IOException {
+    public PostDto createPost(MultipartFile postImage, String authenticationHeader, PostRequest postRequest) throws IOException {
         var newFileName = fileStorageFacade.generateFilename(postImage)
                 .fileName();
-        var createdPost = discussionDataReceiverService.createPost(postRequest.content(), newFileName);
+        var createdPost = discussionDataReceiverService.createPost(postRequest.content(), authenticationHeader, newFileName);
         var imageUploadRequest = FileUploadRequest.builder()
                 .fileName(newFileName)
                 .fileUploadDirectory(createdPost.getFolderDirectory())
@@ -70,11 +70,11 @@ public class DiscussionDataReceiverFacade {
     }
 
     @Transactional
-    public CommentDto createComment(MultipartFile commentImage, CommentRequest commentRequest) throws IOException {
+    public CommentDto createComment(MultipartFile commentImage, String authenticationHeader, CommentRequest commentRequest) throws IOException {
         var newFileName = fileStorageFacade.generateFilename(commentImage)
                 .fileName();
         var createdComment = discussionDataReceiverService.createComment(commentRequest.postId(),
-                commentRequest.content(), newFileName);
+                commentRequest.content(), newFileName, authenticationHeader);
         var imageUploadRequest = FileUploadRequest.builder()
                 .fileName(newFileName)
                 .fileUploadDirectory(createdComment.getFolderDirectory())
@@ -83,16 +83,16 @@ public class DiscussionDataReceiverFacade {
         return commentMapper.mapToDto(createdComment);
     }
 
-    public PostDto reactToPost(String reactionId, String postId) {
+    public PostDto reactToPost(String reactionId, String postId, String jwtToken) {
         var reactionUserRequest = new ReactionUserRequest(reactionId);
-        var reactionUser = reactionUserFacade.createReactionUser(reactionUserRequest);
+        var reactionUser = reactionUserFacade.createReactionUser(jwtToken, reactionUserRequest);
         var reactedPost = discussionDataReceiverService.reactToPostById(postId, reactionUser);
         return postMapper.mapToDto(reactedPost);
     }
 
-    public CommentDto reactToComment(String reactionId, String commentId) {
+    public CommentDto reactToComment(String reactionId, String commentId, String jwtToken) {
         var reactionUserRequest = new ReactionUserRequest(reactionId);
-        var reactionUser = reactionUserFacade.createReactionUser(reactionUserRequest);
+        var reactionUser = reactionUserFacade.createReactionUser(jwtToken, reactionUserRequest);
         var reactedComment = discussionDataReceiverService.reactToCommentById(commentId, reactionUser);
         return commentMapper.mapToDto(reactedComment);
     }

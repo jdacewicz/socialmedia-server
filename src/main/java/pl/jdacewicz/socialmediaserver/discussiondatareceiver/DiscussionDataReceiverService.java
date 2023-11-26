@@ -30,9 +30,9 @@ class DiscussionDataReceiverService {
     private final MongoTemplate mongoTemplate;
 
     @Transactional
-    public Comment createComment(String postId, String content, String imageName) {
+    public Comment createComment(String postId, String content, String imageName, String authenticationHeader) {
         bannedWordsCheckerFacade.checkForBannedWords(content);
-        var loggedUser = userDataReceiverFacade.getLoggedInUser();
+        var loggedUser = userDataReceiverFacade.getLoggedInUser(authenticationHeader);
         var foundPost = getPostById(postId);
         var comment = commentPost(content, imageName, loggedUser, foundPost);
         return commentDataReceiverRepository.save(comment);
@@ -81,9 +81,9 @@ class DiscussionDataReceiverService {
         return commentDataReceiverRepository.findByContentContaining(phrase);
     }
 
-    Post createPost(String content, String imageName) {
+    Post createPost(String content, String jwtToken, String imageName) {
         bannedWordsCheckerFacade.checkForBannedWords(content);
-        var loggedInUser = userDataReceiverFacade.getLoggedInUser();
+        var loggedInUser = userDataReceiverFacade.getLoggedInUser(jwtToken);
         var post = Post.builder()
                 .content(content)
                 .creator(loggedInUser)

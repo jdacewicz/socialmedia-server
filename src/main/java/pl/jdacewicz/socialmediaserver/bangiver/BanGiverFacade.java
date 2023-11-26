@@ -17,19 +17,19 @@ public class BanGiverFacade {
     private final TemporaryBanMapper temporaryBanMapper;
 
     @Transactional
-    public PermanentBanResponse banUserPermanently(String userId, UserPermanentBanRequest userPermanentBanRequest) {
-        var createdBan = banGiverService.createBan(userId, userPermanentBanRequest);
+    public PermanentBanResponse banUserPermanently(String userId, String authenticationHeader, UserPermanentBanRequest userPermanentBanRequest) {
+        var createdBan = banGiverService.createBan(userId, authenticationHeader, userPermanentBanRequest);
         temporaryBanGiverService.revokeAllTemporaryBansByUserId(userId);
         userDataReceiverFacade.banUser(userId, createdBan.getBanId());
         return banMapper.mapToPermanentBanResponse(createdBan);
     }
 
     @Transactional
-    public TemporaryBanResponse banUserTemporary(String userId, UserTemporaryBanRequest userTemporaryBanRequest) {
+    public TemporaryBanResponse banUserTemporary(String userId, String authenticationHeader, UserTemporaryBanRequest userTemporaryBanRequest) {
         if (banGiverService.isPermanentBanAssignedToUser(userId)) {
             throw new UnsupportedOperationException();
         }
-        var createdTempBan = temporaryBanGiverService.createBan(userId, userTemporaryBanRequest);
+        var createdTempBan = temporaryBanGiverService.createBan(userId, authenticationHeader, userTemporaryBanRequest);
         userDataReceiverFacade.banUser(userId, createdTempBan.getBanId());
         return temporaryBanMapper.mapToTemporaryBanResponse(createdTempBan);
     }

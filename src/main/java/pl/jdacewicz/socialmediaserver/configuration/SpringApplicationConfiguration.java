@@ -42,7 +42,7 @@ public class SpringApplicationConfiguration {
     }
 
     @Bean
-    JwtClaimsExtractor jwtClaimsExtractorFacade() {
+    JwtClaimsExtractor jwtClaimsExtractor() {
         return new JwtClaimsExtractor(getSignInKey());
     }
 

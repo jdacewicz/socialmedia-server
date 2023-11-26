@@ -43,11 +43,12 @@ class BanGiverFacadeTest {
                 .to(userTemporaryBanRequest.to())
                 .reason(userTemporaryBanRequest.reason())
                 .build();
+        var authenticationHeader = "token";
         when(banGiverService.isPermanentBanAssignedToUser(userId)).thenReturn(false);
-        when(temporaryBanGiverService.createBan(userId, userTemporaryBanRequest)).thenReturn(tempBan);
+        when(temporaryBanGiverService.createBan(userId, authenticationHeader, userTemporaryBanRequest)).thenReturn(tempBan);
         //When
         //Then
-        assertDoesNotThrow(() -> banGiverFacade.banUserTemporary(userId, userTemporaryBanRequest));
+        assertDoesNotThrow(() -> banGiverFacade.banUserTemporary(userId, authenticationHeader, userTemporaryBanRequest));
     }
 
     @Test
@@ -55,10 +56,11 @@ class BanGiverFacadeTest {
         //Given
         var userId = "id";
         var userTemporaryBanRequest = new UserTemporaryBanRequest(LocalDateTime.now(), "reason");
+        var authenticationHeader = "token";
         when(banGiverService.isPermanentBanAssignedToUser(userId)).thenReturn(true);
         //When
         //Then
         assertThrows(UnsupportedOperationException.class,
-                () -> banGiverFacade.banUserTemporary(userId, userTemporaryBanRequest));
+                () -> banGiverFacade.banUserTemporary(userId, authenticationHeader, userTemporaryBanRequest));
     }
 }

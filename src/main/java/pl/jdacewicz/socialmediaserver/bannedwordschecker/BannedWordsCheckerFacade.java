@@ -24,8 +24,8 @@ public class BannedWordsCheckerFacade {
         return bannedWordMapper.mapToDto(bannedWords);
     }
 
-    public BannedWordDto createBannedWords(BanWordRequest banWordRequest) {
-        var createdBannedWord = bannedWordService.createBannedWord(banWordRequest);
+    public BannedWordDto createBannedWords(String authenticationHeader, BanWordRequest banWordRequest) {
+        var createdBannedWord = bannedWordService.createBannedWord(authenticationHeader, banWordRequest);
         return bannedWordMapper.mapToDto(createdBannedWord);
     }
 

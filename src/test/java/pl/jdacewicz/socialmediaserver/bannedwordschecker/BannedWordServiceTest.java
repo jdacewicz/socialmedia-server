@@ -31,9 +31,10 @@ class BannedWordServiceTest {
         var loggedUser = LoggedUserDto.builder()
                 .userId("id")
                 .build();
-        when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUser);
+        var authenticationHeader = "token";
+        when(userDataReceiverFacade.getLoggedInUser(authenticationHeader)).thenReturn(loggedUser);
         //When
-        var result = bannedWordService.createBannedWord(banWordRequest);
+        var result = bannedWordService.createBannedWord(authenticationHeader, banWordRequest);
         //Then
         assertEquals(loggedUser.getUserId(), result.creatorId());
         assertEquals(banWordRequest.word(), result.word());

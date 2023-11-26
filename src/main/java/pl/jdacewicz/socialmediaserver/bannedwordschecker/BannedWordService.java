@@ -20,8 +20,8 @@ class BannedWordService {
        return bannedWordRepository.findAll();
     }
 
-    BannedWord createBannedWord(BanWordRequest banWordRequest) {
-        var loggedUserId = userDataReceiverFacade.getLoggedInUser()
+    BannedWord createBannedWord(String authenticationHeader, BanWordRequest banWordRequest) {
+        var loggedUserId = userDataReceiverFacade.getLoggedInUser(authenticationHeader)
                 .getUserId();
         var bannedWord = BannedWord.builder()
                 .word(banWordRequest.word())

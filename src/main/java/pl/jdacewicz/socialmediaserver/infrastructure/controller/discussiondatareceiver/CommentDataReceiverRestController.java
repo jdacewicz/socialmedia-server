@@ -26,21 +26,24 @@ public class CommentDataReceiverRestController {
     }
 
     @PostMapping
-    public CommentDto createComment(@RequestPart MultipartFile commentImage,
+    public CommentDto createComment(@RequestHeader("Authorization") String authorizationHeader,
+                                    @RequestPart MultipartFile commentImage,
                                     @RequestPart @Valid CommentRequest commentRequest) throws IOException {
-        return discussionDataReceiverFacade.createComment(commentImage, commentRequest);
+        return discussionDataReceiverFacade.createComment(commentImage, authorizationHeader, commentRequest);
     }
 
     @PostMapping("/{id}/report")
-    public void reportComment(@PathVariable String id,
+    public void reportComment(@RequestHeader("Authorization") String authorizationHeader,
+                              @PathVariable String id,
                               @RequestBody ReportRequest reportRequest) {
-        reportDataReceiverFacade.report(id, reportRequest, "COMMENT");
+        reportDataReceiverFacade.report(id, authorizationHeader, reportRequest, "COMMENT");
     }
 
     @PutMapping("/{commentId}/react/{reactionId}")
-    public CommentDto reactToPost(@PathVariable @NotBlank String commentId,
+    public CommentDto reactToPost(@RequestHeader("Authorization") String authorizationHeader,
+                                  @PathVariable @NotBlank String commentId,
                                   @PathVariable @NotBlank String reactionId) {
-        return discussionDataReceiverFacade.reactToComment(reactionId, commentId);
+        return discussionDataReceiverFacade.reactToComment(reactionId, commentId, authorizationHeader);
     }
 
     @DeleteMapping("/{id}")

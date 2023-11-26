@@ -9,15 +9,15 @@ import java.util.Date;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
-class JwtClaimsExtractor {
+public class JwtClaimsExtractor {
 
     private final Key signInKey;
 
-    String extractUsername(String token) {
+    public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    Date extractExpiration(String token) {
+    public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 

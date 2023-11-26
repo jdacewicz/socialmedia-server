@@ -6,7 +6,7 @@ interface DataGrouperService<T extends Group> {
 
     T getGroupById(String groupId);
 
-    T createGroup(GroupRequest groupRequest, String groupImageName);
+    T createGroup(String authenticationHeader, GroupRequest groupRequest, String groupImageName);
 
     void deleteGroupById(String groupId);
 

@@ -28,8 +28,8 @@ class TemporaryBanGiverService {
         temporaryBanRepository.saveAll(revokedTempBans);
     }
 
-    TemporaryBan createBan(String userId, UserTemporaryBanRequest userTemporaryBanRequest) {
-        var tempBan = prepareBan(userId, userTemporaryBanRequest);
+    TemporaryBan createBan(String userId, String authenticationHeader, UserTemporaryBanRequest userTemporaryBanRequest) {
+        var tempBan = prepareBan(userId, authenticationHeader, userTemporaryBanRequest);
         return temporaryBanRepository.save(tempBan);
     }
 
@@ -45,8 +45,8 @@ class TemporaryBanGiverService {
         temporaryBanRepository.deleteAll();
     }
 
-    private TemporaryBan prepareBan(String userId, UserTemporaryBanRequest userTemporaryBanRequest) {
-        var loggedUserId = userDataReceiverFacade.getLoggedInUser()
+    private TemporaryBan prepareBan(String userId, String jwtToken, UserTemporaryBanRequest userTemporaryBanRequest) {
+        var loggedUserId = userDataReceiverFacade.getLoggedInUser(jwtToken)
                 .getUserId();
         var blockingUser = new BlockingUser(loggedUserId);
         var bannedUser = new BannedUser(userId);

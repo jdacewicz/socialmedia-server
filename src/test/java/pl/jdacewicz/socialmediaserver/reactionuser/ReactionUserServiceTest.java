@@ -38,10 +38,11 @@ class ReactionUserServiceTest {
         var userDto = LoggedUserDto.builder()
                 .userId(userId)
                 .build();
+        var authenticationHeader = "token";
         when(reactionDataReceiverFacade.getReactionById(reactionId)).thenReturn(reactionDto);
-        when(userDataReceiverFacade.getLoggedInUser()).thenReturn(userDto);
+        when(userDataReceiverFacade.getLoggedInUser(authenticationHeader)).thenReturn(userDto);
         //When
-        var result = reactionUserService.createReactionUser(reactionUserRequest);
+        var result = reactionUserService.createReactionUser(authenticationHeader, reactionUserRequest);
         //Then
         assertEquals(reactionId, result.reactionId());
         assertEquals(userId, result.userId());

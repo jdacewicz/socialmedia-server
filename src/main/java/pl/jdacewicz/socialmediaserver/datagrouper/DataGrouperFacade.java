@@ -28,11 +28,11 @@ public class DataGrouperFacade {
 
 
     @Transactional
-    public GroupDto createGroup(MultipartFile groupImage, GroupRequest groupRequest, String type) throws IOException {
+    public GroupDto createGroup(MultipartFile groupImage, String authenticationHeader, GroupRequest groupRequest, String type) throws IOException {
         var dataGrouperService = dataGrouperServiceFactory.getDataGrouperService(type);
         var newFileName = fileStorageFacade.generateFilename(groupImage)
                 .fileName();
-        var createdGroup = dataGrouperService.createGroup(groupRequest, newFileName);
+        var createdGroup = dataGrouperService.createGroup(authenticationHeader, groupRequest, newFileName);
         var imageUploadRequest = FileUploadRequest.builder()
                 .fileName(newFileName)
                 .fileUploadDirectory(createdGroup.getFolderDirectory())

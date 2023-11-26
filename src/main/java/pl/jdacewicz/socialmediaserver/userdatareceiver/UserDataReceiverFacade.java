@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import pl.jdacewicz.socialmediaserver.configuration.JwtClaimsExtractor;
 import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.DirectoryDeleteRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
@@ -21,9 +22,12 @@ public class UserDataReceiverFacade {
     private final UserDataReceiverService userDataReceiverService;
     private final UserMapper userMapper;
     private final FileStorageFacade fileStorageFacade;
+    private final JwtClaimsExtractor jwtClaimsExtractor;
 
-    public LoggedUserDto getLoggedInUser() {
-        var loggedUser = userDataReceiverService.getLoggedInUser();
+    public LoggedUserDto getLoggedInUser(String authenticationHeader) {
+        var jwtToken = authenticationHeader.substring(7);
+        var userName = jwtClaimsExtractor.extractUsername(jwtToken);
+        var loggedUser = userDataReceiverService.getUserByEmail(userName);
         return userMapper.mapToLoggedDto(loggedUser);
     }
 

@@ -21,8 +21,8 @@ class ReportDataService {
         return reportRepository.findAllByDataType(dataType);
     }
 
-    void createReport(String reportedDataId, ReportRequest reportRequest, String reportDataType) {
-        var loggedUserId = userDataReceiverFacade.getLoggedInUser()
+    void createReport(String reportedDataId, String authenticationHeader, ReportRequest reportRequest, String reportDataType) {
+        var loggedUserId = userDataReceiverFacade.getLoggedInUser(authenticationHeader)
                 .getUserId();
         var reportType = ReportType.valueOf(reportRequest.reportType());
         var dataType = DataType.getType(reportDataType);

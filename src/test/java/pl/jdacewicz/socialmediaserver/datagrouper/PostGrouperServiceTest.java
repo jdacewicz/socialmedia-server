@@ -56,9 +56,10 @@ class PostGrouperServiceTest {
         var loggedUser = LoggedUserDto.builder()
                 .userId("id")
                 .build();
-        when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUser);
+        var authenticationHeader = "token";
+        when(userDataReceiverFacade.getLoggedInUser(authenticationHeader)).thenReturn(loggedUser);
         //When
-        var result = postGrouperService.createGroup(groupRequest, imageName);
+        var result = postGrouperService.createGroup(authenticationHeader, groupRequest, imageName);
         //Then
         assertEquals(loggedUser.getUserId(), result.getOwner()
                 .userId());

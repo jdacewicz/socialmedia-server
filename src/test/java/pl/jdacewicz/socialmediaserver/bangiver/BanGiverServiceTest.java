@@ -50,9 +50,10 @@ class BanGiverServiceTest {
         var loggedUserDto = LoggedUserDto.builder()
                 .userId("idTwo")
                 .build();
-        when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
+        var authenticationHeader = "token";
+        when(userDataReceiverFacade.getLoggedInUser(authenticationHeader)).thenReturn(loggedUserDto);
         //When
-        var result = banGiverService.createBan(bannedUserId, userPermanentBanRequest);
+        var result = banGiverService.createBan(bannedUserId, authenticationHeader, userPermanentBanRequest);
         //Then
         assertEquals(bannedUserId, result.getBannedUser()
                 .userId());

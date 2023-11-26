@@ -38,21 +38,24 @@ public class PostDataReceiverRestController {
     }
 
     @PostMapping
-    public PostDto createPost(@RequestPart MultipartFile postImage,
+    public PostDto createPost(@RequestHeader("Authorization") String authorizationHeader,
+                              @RequestPart MultipartFile postImage,
                               @RequestPart @Valid PostRequest postRequest) throws IOException {
-        return discussionDataReceiverFacade.createPost(postImage, postRequest);
+        return discussionDataReceiverFacade.createPost(postImage, authorizationHeader, postRequest);
     }
 
     @PostMapping("/{id}/report")
-    public void reportPost(@PathVariable String id,
+    public void reportPost(@RequestHeader("Authorization") String authorizationHeader,
+                           @PathVariable String id,
                            @RequestBody ReportRequest reportRequest) {
-        reportDataReceiverFacade.report(id, reportRequest, "POST");
+        reportDataReceiverFacade.report(id, authorizationHeader, reportRequest, "POST");
     }
 
     @PutMapping("/{postId}/react/{reactionId}")
-    public PostDto reactToPost(@PathVariable @NotBlank String postId,
+    public PostDto reactToPost(@RequestHeader("Authorization") String authorizationHeader,
+                               @PathVariable @NotBlank String postId,
                                @PathVariable @NotBlank String reactionId) {
-        return discussionDataReceiverFacade.reactToPost(reactionId, postId);
+        return discussionDataReceiverFacade.reactToPost(reactionId, postId, authorizationHeader);
     }
 
     @DeleteMapping("/{id}")

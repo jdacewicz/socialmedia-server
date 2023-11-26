@@ -25,10 +25,11 @@ public class DataGrouperRestController {
     }
 
     @PostMapping
-    public GroupDto createGroup(@RequestParam @NotBlank String type,
+    public GroupDto createGroup(@RequestHeader("Authorization") String authorizationHeader,
+                                @RequestParam @NotBlank String type,
                                 @RequestPart MultipartFile groupImage,
                                 @RequestPart @Valid GroupRequest groupRequest) throws IOException {
-        return dataGrouperFacade.createGroup(groupImage, groupRequest, type);
+        return dataGrouperFacade.createGroup(groupImage, authorizationHeader, groupRequest, type);
     }
 
     @DeleteMapping("/{id}")

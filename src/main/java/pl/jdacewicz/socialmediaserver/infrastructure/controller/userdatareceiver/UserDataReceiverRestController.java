@@ -24,27 +24,30 @@ public class UserDataReceiverRestController {
     private final BanGiverFacade banGiverFacade;
 
     @GetMapping
-    public UserDto getLoggedInUser() {
-        return userDataReceiverFacade.getLoggedInUser();
+    public UserDto getLoggedInUser(@RequestHeader("Authorization") String authorizationHeader) {
+        return userDataReceiverFacade.getLoggedInUser(authorizationHeader);
     }
 
     @PostMapping("/{id}/report")
-    public void reportUser(@PathVariable @NotBlank String id,
+    public void reportUser(@RequestHeader("Authorization") String authorizationHeader,
+                           @PathVariable @NotBlank String id,
                            @RequestBody @Valid ReportRequest reportRequest) {
-        reportDataReceiverFacade.report(id, reportRequest, "USER");
+        reportDataReceiverFacade.report(id, authorizationHeader, reportRequest, "USER");
     }
 
 
     @PutMapping("/{id}/ban/permanent")
-    public PermanentBanResponse banUserPermanently(@PathVariable @NotBlank String id,
+    public PermanentBanResponse banUserPermanently(@RequestHeader("Authorization") String authorizationHeader,
+                                                   @PathVariable @NotBlank String id,
                                                    @RequestBody @Valid UserPermanentBanRequest userPermanentBanRequest) {
-        return banGiverFacade.banUserPermanently(id, userPermanentBanRequest);
+        return banGiverFacade.banUserPermanently(id, authorizationHeader, userPermanentBanRequest);
     }
 
     @PutMapping("/{id}/ban/temporary")
-    public TemporaryBanResponse banUserTemporary(@PathVariable @NotBlank String id,
+    public TemporaryBanResponse banUserTemporary(@RequestHeader("Authorization") String authorizationHeader,
+                                                 @PathVariable @NotBlank String id,
                                                  @RequestBody @Valid UserTemporaryBanRequest userTemporaryBanRequest) {
-        return banGiverFacade.banUserTemporary(id, userTemporaryBanRequest);
+        return banGiverFacade.banUserTemporary(id, authorizationHeader, userTemporaryBanRequest);
     }
 
     @PutMapping("/{id}/ban/revoke")

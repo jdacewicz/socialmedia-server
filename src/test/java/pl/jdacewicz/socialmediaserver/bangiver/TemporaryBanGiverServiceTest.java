@@ -8,7 +8,6 @@ import pl.jdacewicz.socialmediaserver.bangiver.dto.BannedUser;
 import pl.jdacewicz.socialmediaserver.bangiver.dto.UserTemporaryBanRequest;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,9 +56,10 @@ class TemporaryBanGiverServiceTest {
         var loggedUserDto = LoggedUserDto.builder()
                 .userId("idTwo")
                 .build();
-        when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
+        var authenticationHeader = "token";
+        when(userDataReceiverFacade.getLoggedInUser(authenticationHeader)).thenReturn(loggedUserDto);
         //When
-        var result = temporaryBanGiverService.createBan(userId, userTemporaryBanRequest);
+        var result = temporaryBanGiverService.createBan(userId, authenticationHeader, userTemporaryBanRequest);
         //Then
         assertEquals(bannedTo, result.getTo());
         assertEquals(userTemporaryBanRequest.reason(), result.getReason());

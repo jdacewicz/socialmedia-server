@@ -9,7 +9,7 @@ public class ReactionUserFacade {
 
     private final ReactionUserService reactionUserService;
 
-    public ReactionUser createReactionUser(ReactionUserRequest reactionUserRequest) {
-        return reactionUserService.createReactionUser(reactionUserRequest);
+    public ReactionUser createReactionUser(String authenticationHeader, ReactionUserRequest reactionUserRequest) {
+        return reactionUserService.createReactionUser(authenticationHeader, reactionUserRequest);
     }
 }

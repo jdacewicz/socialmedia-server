@@ -17,8 +17,8 @@ public class ReportDataReceiverFacade {
         return reportMapper.mapToDto(reports);
     }
 
-    public void report(String reportedDataId, ReportRequest reportRequest, String reportedDataType) {
-        reportDataService.createReport(reportedDataId, reportRequest, reportedDataType);
+    public void report(String reportedDataId, String authenticationHeader, ReportRequest reportRequest, String reportedDataType) {
+        reportDataService.createReport(reportedDataId, authenticationHeader, reportRequest, reportedDataType);
     }
 
     public void deleteReport(String reportedDataId) {

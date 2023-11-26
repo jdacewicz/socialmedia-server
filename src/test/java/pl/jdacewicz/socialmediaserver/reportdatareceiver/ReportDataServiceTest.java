@@ -35,7 +35,8 @@ class ReportDataServiceTest {
         var loggedUserDto = LoggedUserDto.builder()
                 .userId("id")
                 .build();
-        when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
+        var authenticationHeader = "token";
+        when(userDataReceiverFacade.getLoggedInUser(authenticationHeader)).thenReturn(loggedUserDto);
         try (MockedStatic<ReportType> reportType = Mockito.mockStatic(ReportType.class);
              MockedStatic<DataType> dataType = Mockito.mockStatic(DataType.class)) {
             reportType.when(() -> ReportType.getType(reportRequest.reportType()))
@@ -43,7 +44,7 @@ class ReportDataServiceTest {
             dataType.when(() -> DataType.getType(reportDataType))
                     .thenReturn(DataType.POST);
             //When
-            reportDataService.createReport(reportedDataId, reportRequest, reportDataType);
+            reportDataService.createReport(reportedDataId, authenticationHeader, reportRequest, reportDataType);
             var result = reportRepositoryTest.findAll();
             //Then
             assertFalse(result.isEmpty());

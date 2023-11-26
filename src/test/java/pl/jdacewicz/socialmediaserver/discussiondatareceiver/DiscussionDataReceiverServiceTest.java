@@ -92,9 +92,10 @@ class DiscussionDataReceiverServiceTest {
         var loggedUserDto = LoggedUserDto.builder()
                 .profilePicture(new File("url"))
                 .build();
-        when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
+        var authenticationHeader = "token";
+        when(userDataReceiverFacade.getLoggedInUser(authenticationHeader)).thenReturn(loggedUserDto);
         //When
-        var result = discussionDataReceiverService.createPost(content, imageName);
+        var result = discussionDataReceiverService.createPost(content, authenticationHeader, imageName);
         //Then
         assertEquals(content, result.getContent());
         assertEquals(imageName, result.getImageName());
@@ -113,10 +114,11 @@ class DiscussionDataReceiverServiceTest {
         var loggedUserDto = LoggedUserDto.builder()
                 .profilePicture(new File("url"))
                 .build();
+        var authenticationHeader = "token";
         postDataReceiverRepositoryTest.save(post);
-        when(userDataReceiverFacade.getLoggedInUser()).thenReturn(loggedUserDto);
+        when(userDataReceiverFacade.getLoggedInUser(authenticationHeader)).thenReturn(loggedUserDto);
         //When
-        var result = discussionDataReceiverService.createComment(postId, content, imageName);
+        var result = discussionDataReceiverService.createComment(postId, content, imageName, authenticationHeader);
         //Then
         assertEquals(content, result.getContent());
         assertEquals(imageName, result.getImageName());
