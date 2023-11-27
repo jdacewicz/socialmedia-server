@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,7 +76,19 @@ class UserDataReceiverService implements UserDetailsService {
         return userDataReceiverRepository.findAllByFirstnameInAndLastnameIn(firstnames, lastnames);
     }
 
-    User createUser(RegisterRequest registerRequest) {
+    @Transactional
+    public User createUserWithProfilePicture(RegisterRequest registerRequest, String profilePictureFileName) {
+        var user = User.builder()
+                .email(registerRequest.email())
+                .password(passwordEncoder.encode(registerRequest.password()))
+                .firstname(registerRequest.firstname())
+                .lastname(registerRequest.lastname())
+                .profilePictureName(profilePictureFileName)
+                .build();
+        return userDataReceiverRepository.save(user);
+    }
+
+    User createUserWithoutProfilePicture(RegisterRequest registerRequest) {
         var user = User.builder()
                 .email(registerRequest.email())
                 .password(passwordEncoder.encode(registerRequest.password()))

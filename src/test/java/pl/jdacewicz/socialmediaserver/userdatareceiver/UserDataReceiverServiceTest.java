@@ -91,9 +91,10 @@ class UserDataReceiverServiceTest {
                 .firstname(registerRequest.firstname())
                 .lastname(registerRequest.lastname())
                 .build();
+        var profilePictureFileName = "file.jpg";
         userDataReceiverRepository.save(user);
         //When
-        var result = userDataReceiverService.createUser(registerRequest);
+        var result = userDataReceiverService.createUserWithProfilePicture(registerRequest, profilePictureFileName);
         //Then
         assertEquals(registerRequest.email(), result.email());
         assertEquals(registerRequest.firstname(), result.firstname());

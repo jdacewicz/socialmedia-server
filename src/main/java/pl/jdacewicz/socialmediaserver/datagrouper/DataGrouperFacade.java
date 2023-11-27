@@ -52,7 +52,7 @@ public class DataGrouperFacade {
 
     @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
     @Profile("demo")
-    private void deleteGroupsData() throws IOException {
+    void deleteGroupsData() throws IOException {
         var directoryDeleteRequest = new DirectoryDeleteRequest(Group.MAIN_DIRECTORY);
         var types = GroupType.values();
         for (GroupType type: types) {

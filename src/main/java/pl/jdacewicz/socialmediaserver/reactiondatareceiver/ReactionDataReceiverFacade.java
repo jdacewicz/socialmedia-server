@@ -91,7 +91,7 @@ public class ReactionDataReceiverFacade {
 
     @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
     @Profile("demo")
-    private void deleteAllReactionsData() throws IOException {
+    void deleteAllReactionsData() throws IOException {
         var deleteDirectoryRequest = new DirectoryDeleteRequest(Reaction.MAIN_DIRECTORY);
         reactionDataReceiverService.deleteAllReactions();
         fileStorageFacade.deleteDirectory(deleteDirectoryRequest);

@@ -43,14 +43,16 @@ public class UserDataReceiverFacade {
 
     @Transactional
     public UserDto createUser(MultipartFile profileImage, RegisterRequest registerRequest) throws IOException {
-        var newFileName = fileStorageFacade.generateFilename(profileImage)
-                .fileName();
-        var createdUser = userDataReceiverService.createUser(registerRequest);
-        var imageUploadRequest = FileUploadRequest.builder()
-                .fileName(newFileName)
-                .fileUploadDirectory(createdUser.getFolderDirectory())
-                .build();
-        fileStorageFacade.uploadImage(profileImage, imageUploadRequest);
+        User createdUser;
+        if (profileImage != null && !profileImage.isEmpty()) {
+            var newFileName = fileStorageFacade.generateFilename(profileImage)
+                    .fileName();
+            createdUser = userDataReceiverService.createUserWithProfilePicture(registerRequest, newFileName);
+            fileStorageFacade.uploadImage(profileImage, new FileUploadRequest(newFileName, createdUser.getFolderDirectory()));
+
+        } else {
+            createdUser = userDataReceiverService.createUserWithoutProfilePicture(registerRequest);
+        }
         return userMapper.mapToDto(createdUser);
     }
 
@@ -68,7 +70,7 @@ public class UserDataReceiverFacade {
 
     @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")
     @Profile("demo")
-    private void deleteAllUsersData() throws IOException {
+    void deleteAllUsersData() throws IOException {
         var directoryDeleteRequest = new DirectoryDeleteRequest(User.MAIN_DIRECTORY);
         userDataReceiverService.deleteAllUsers();
         fileStorageFacade.deleteDirectory(directoryDeleteRequest);
