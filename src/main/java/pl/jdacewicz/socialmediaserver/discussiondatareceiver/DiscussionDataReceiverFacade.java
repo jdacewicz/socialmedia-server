@@ -70,11 +70,11 @@ public class DiscussionDataReceiverFacade {
     }
 
     @Transactional
-    public CommentDto createComment(MultipartFile commentImage, String authenticationHeader, CommentRequest commentRequest) throws IOException {
+    public CommentDto createComment(String postId, MultipartFile commentImage, String authenticationHeader, CommentRequest commentRequest) throws IOException {
         var newFileName = fileStorageFacade.generateFilename(commentImage)
                 .fileName();
-        var createdComment = discussionDataReceiverService.createComment(commentRequest.postId(),
-                commentRequest.content(), newFileName, authenticationHeader);
+        var createdComment = discussionDataReceiverService.createComment(postId, commentRequest.content(),
+                newFileName, authenticationHeader);
         var imageUploadRequest = FileUploadRequest.builder()
                 .fileName(newFileName)
                 .fileUploadDirectory(createdComment.getFolderDirectory())

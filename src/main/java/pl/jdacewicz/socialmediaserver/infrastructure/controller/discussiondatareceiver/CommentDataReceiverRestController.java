@@ -25,11 +25,12 @@ public class CommentDataReceiverRestController {
         return discussionDataReceiverFacade.getCommentById(id);
     }
 
-    @PostMapping
+    @PostMapping("/post/{postId}")
     public CommentDto createComment(@RequestHeader("Authorization") String authorizationHeader,
+                                    @PathVariable @NotBlank String postId,
                                     @RequestPart MultipartFile commentImage,
                                     @RequestPart @Valid CommentRequest commentRequest) throws IOException {
-        return discussionDataReceiverFacade.createComment(commentImage, authorizationHeader, commentRequest);
+        return discussionDataReceiverFacade.createComment(postId, commentImage, authorizationHeader, commentRequest);
     }
 
     @PostMapping("/{id}/report")

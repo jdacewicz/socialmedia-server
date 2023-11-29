@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
 import java.util.List;
 import java.util.Set;
@@ -34,8 +33,15 @@ class DiscussionDataReceiverService {
         bannedWordsCheckerFacade.checkForBannedWords(content);
         var loggedUser = userDataReceiverFacade.getLoggedInUser(authenticationHeader);
         var foundPost = getPostById(postId);
-        var comment = commentPost(content, imageName, loggedUser, foundPost);
-        return commentDataReceiverRepository.save(comment);
+        var comment = Comment.builder()
+                .content(content)
+                .creator(loggedUser)
+                .imageName(imageName)
+                .imageMainDirectory(foundPost.getFolderDirectory())
+                .build();
+        var createdComment = commentDataReceiverRepository.save(comment);
+        postDataReceiverRepository.save(foundPost.withComment(createdComment));
+        return createdComment;
     }
 
     @Transactional
@@ -105,18 +111,6 @@ class DiscussionDataReceiverService {
         return (discussion.isReactionUserStored(reactionUser))
                 ? discussion.withoutReactionUser(reactionUser)
                 : discussion.withReactionUser(reactionUser);
-    }
-
-    private Comment commentPost(String content, String imageName, UserDto loggedUser, Post foundPost) {
-        var comment = Comment.builder()
-                .content(content)
-                .creator(loggedUser)
-                .imageName(imageName)
-                .imageMainDirectory(foundPost.getFolderDirectory())
-                .build();
-        var commentedPost = foundPost.withComment(comment);
-        postDataReceiverRepository.save(commentedPost);
-        return comment;
     }
 
     @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")

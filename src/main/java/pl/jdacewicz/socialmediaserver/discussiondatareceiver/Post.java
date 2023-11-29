@@ -36,7 +36,7 @@ class Post extends Discussion<Post> {
                 .content(getContent())
                 .creator(getCreator())
                 .imageName(getImageName())
-                .imageMainDirectory(getImageDirectory())
+                .imageMainDirectory(getImageMainDirectory())
                 .creationDateTime(getCreationDateTime())
                 .reactionUsers(newReactionUsers)
                 .build();
@@ -52,7 +52,7 @@ class Post extends Discussion<Post> {
                 .content(getContent())
                 .creator(getCreator())
                 .imageName(getImageName())
-                .imageMainDirectory(getImageDirectory())
+                .imageMainDirectory(getImageMainDirectory())
                 .creationDateTime(getCreationDateTime())
                 .reactionUsers(newReactionUsers)
                 .build();
@@ -67,7 +67,7 @@ class Post extends Discussion<Post> {
                 .content(getContent())
                 .creator(getCreator())
                 .imageName(getImageName())
-                .imageMainDirectory(getImageDirectory())
+                .imageMainDirectory(getImageMainDirectory())
                 .creationDateTime(getCreationDateTime())
                 .reactionUsers(getReactionUsers())
                 .build();

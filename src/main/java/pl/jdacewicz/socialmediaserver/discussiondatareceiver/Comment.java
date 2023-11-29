@@ -27,7 +27,7 @@ class Comment extends Discussion<Comment> {
                 .content(getContent())
                 .creator(getCreator())
                 .imageName(getImageName())
-                .imageMainDirectory(getImageDirectory())
+                .imageMainDirectory(getFullImageDirectory())
                 .creationDateTime(getCreationDateTime())
                 .reactionUsers(newReactionUsers)
                 .build();
@@ -42,7 +42,7 @@ class Comment extends Discussion<Comment> {
                 .content(getContent())
                 .creator(getCreator())
                 .imageName(getImageName())
-                .imageMainDirectory(getImageDirectory())
+                .imageMainDirectory(getFullImageDirectory())
                 .creationDateTime(getCreationDateTime())
                 .reactionUsers(newReactionUsers)
                 .build();

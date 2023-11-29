@@ -40,7 +40,7 @@ abstract class Discussion<T> {
 
     abstract T withoutReactionUser(ReactionUser reactionUser);
 
-    String getImageDirectory() {
+    String getFullImageDirectory() {
         return String.format("%s/%s", getFolderDirectory(), imageName);
     }
 
