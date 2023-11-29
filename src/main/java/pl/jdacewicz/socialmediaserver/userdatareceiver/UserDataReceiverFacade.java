@@ -31,6 +31,11 @@ public class UserDataReceiverFacade {
         return userMapper.mapToLoggedDto(loggedUser);
     }
 
+    public UserDto getUserById(String id) {
+        var foundUser = userDataReceiverService.getUserById(id);
+        return userMapper.mapToDto(foundUser);
+    }
+
     public UserDto getUserByEmail(String email) {
         var user = userDataReceiverService.getUserByEmail(email);
         return userMapper.mapToDto(user);

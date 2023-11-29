@@ -28,6 +28,11 @@ public class UserDataReceiverRestController {
         return userDataReceiverFacade.getLoggedInUser(authorizationHeader);
     }
 
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable String id) {
+        return userDataReceiverFacade.getUserById(id);
+    }
+
     @PostMapping("/{id}/report")
     public void reportUser(@RequestHeader("Authorization") String authorizationHeader,
                            @PathVariable @NotBlank String id,
