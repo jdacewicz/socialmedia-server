@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import pl.jdacewicz.socialmediaserver.datagrouper.dto.GroupParticipator;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Getter
 @SuperBuilder
 @AllArgsConstructor
+@NoArgsConstructor
 abstract class Group {
 
     @Id
