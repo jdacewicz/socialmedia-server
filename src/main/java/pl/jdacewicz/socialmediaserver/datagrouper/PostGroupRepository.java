@@ -7,6 +7,6 @@ import org.springframework.data.mongodb.repository.Query;
 
 interface PostGroupRepository extends MongoRepository<PostGroup, String> {
 
-    @Query("{ 'participants': { '$in': [?0 ] } }")
+    @Query("{ 'participants.userId': { '$in': [?0 ] } }")
     Page<PostGroup> findByParticipants(String participantId, Pageable pageable);
 }
