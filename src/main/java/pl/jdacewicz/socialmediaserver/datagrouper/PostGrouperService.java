@@ -1,6 +1,8 @@
 package pl.jdacewicz.socialmediaserver.datagrouper;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.datagrouper.dto.GroupParticipator;
 import pl.jdacewicz.socialmediaserver.datagrouper.dto.GroupRequest;
@@ -19,6 +21,11 @@ class PostGrouperService implements DataGrouperService<PostGroup> {
     public PostGroup getGroupById(String groupId) {
         return postGroupRepository.findById(groupId)
                 .orElseThrow(UnsupportedOperationException::new);
+    }
+
+    @Override
+    public Page<PostGroup> getGroupsByParticipantId(String participantId, Pageable pageable) {
+        return postGroupRepository.findByParticipants(participantId, pageable);
     }
 
     @Override

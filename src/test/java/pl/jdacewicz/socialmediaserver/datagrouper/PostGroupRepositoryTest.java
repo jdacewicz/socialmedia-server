@@ -31,6 +31,11 @@ class PostGroupRepositoryTest implements PostGroupRepository {
     }
 
     @Override
+    public Page<PostGroup> findByParticipants(String participantId, Pageable pageable) {
+        return null;
+    }
+
+    @Override
     public void deleteById(String s) {
 
     }

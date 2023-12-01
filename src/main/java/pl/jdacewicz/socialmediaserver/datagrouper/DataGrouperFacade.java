@@ -2,6 +2,8 @@ package pl.jdacewicz.socialmediaserver.datagrouper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +28,12 @@ public class DataGrouperFacade {
         return groupMapper.mapToDto(foundGroup);
     }
 
+    public Page<GroupDto> getGroupsByParticipantId(String participantId, String type, int pageNumber, int pageSize) {
+        var dataGrouperService = dataGrouperServiceFactory.getDataGrouperService(type);
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var foundGroups = dataGrouperService.getGroupsByParticipantId(participantId, pageable);
+        return foundGroups.map(groupMapper::mapToDto);
+    }
 
     @Transactional
     public GroupDto createGroup(MultipartFile groupImage, String authenticationHeader, GroupRequest groupRequest, String type) throws IOException {
