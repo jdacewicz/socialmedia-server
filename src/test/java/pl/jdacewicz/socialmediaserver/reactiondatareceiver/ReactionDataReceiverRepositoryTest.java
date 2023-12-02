@@ -90,6 +90,21 @@ class ReactionDataReceiverRepositoryTest implements ReactionDataReceiverReposito
     }
 
     @Override
+    public Page<Reaction> findByArchived(boolean archived, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<Reaction> findByActiveAndArchived(boolean active, boolean archived, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public List<Reaction> findAllByActiveAndArchived(boolean active, boolean archived) {
+        return null;
+    }
+
+    @Override
     public <S extends Reaction> S insert(S entity) {
         return null;
     }

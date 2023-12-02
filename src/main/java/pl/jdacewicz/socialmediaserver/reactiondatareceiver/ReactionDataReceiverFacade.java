@@ -2,11 +2,11 @@ package pl.jdacewicz.socialmediaserver.reactiondatareceiver;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import pl.jdacewicz.socialmediaserver.filemapper.FileMapperFacade;
-import pl.jdacewicz.socialmediaserver.filemapper.dto.MapRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.FileStorageFacade;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.DirectoryDeleteRequest;
 import pl.jdacewicz.socialmediaserver.filestorage.dto.FileUploadRequest;
@@ -22,28 +22,38 @@ public class ReactionDataReceiverFacade {
 
     private final ReactionDataReceiverService reactionDataReceiverService;
     private final FileStorageFacade fileStorageFacade;
-    private final FileMapperFacade fileMapperFacade;
+    private final ReactionMapper reactionMapper;
 
     public ReactionDto getReactionById(String reactionId) {
         var foundReaction = reactionDataReceiverService.getReactionById(reactionId);
-        return mapToDto(foundReaction);
+        return reactionMapper.mapToDto(foundReaction);
     }
 
-    public List<ReactionDto> getAllReactions() {
-        return reactionDataReceiverService.getAllReactions()
-                .stream()
-                .map(this::mapToDto)
-                .toList();
+    public List<ReactionDto> getAllActiveReactions() {
+        var foundActiveReaction = reactionDataReceiverService.getAllActiveNotArchivedReactions();
+        return reactionMapper.mapToDto(foundActiveReaction);
+    }
+
+    public Page<ReactionDto> getArchivedReactions(int pageNumber, int pageSize) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var foundReactions = reactionDataReceiverService.getArchivedReactions(pageable);
+        return foundReactions.map(reactionMapper::mapToDto);
+    }
+
+    public Page<ReactionDto> getReactionsByActive(boolean active, int pageNumber, int pageSize) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var foundReactions = reactionDataReceiverService.getReactionsByActive(active, pageable);
+        return foundReactions.map(reactionMapper::mapToDto);
     }
 
     @Transactional
     public ReactionDto createReaction(MultipartFile reactionImage, ReactionRequest reactionRequest) throws IOException {
-        var createdReaction = reactionDataReceiverService.createReaction(reactionRequest);
         var newFileName = fileStorageFacade.generateFilename(reactionImage)
                 .fileName();
-        var fileUploadRequest = mapToFileUploadRequest(newFileName, createdReaction.getReactionFolderDirectory());
+        var createdReaction = reactionDataReceiverService.createReaction(reactionRequest, newFileName);
+        var fileUploadRequest = new FileUploadRequest(newFileName, createdReaction.getReactionFolderDirectory());
         fileStorageFacade.uploadImage(reactionImage, fileUploadRequest);
-        return mapToDto(createdReaction);
+        return reactionMapper.mapToDto(createdReaction);
     }
 
     @Transactional
@@ -52,7 +62,7 @@ public class ReactionDataReceiverFacade {
         reactionDataReceiverService.updateReactionName(reactionId, reactionUpdateRequest);
         if (reactionImage != null) {
             var reaction = reactionDataReceiverService.getReactionById(reactionId);
-            var fileUploadRequest = mapToFileUploadRequest(reaction.imageName(), reaction.getReactionFolderDirectory());
+            var fileUploadRequest = new FileUploadRequest(reaction.imageName(), reaction.getReactionFolderDirectory());
             fileStorageFacade.uploadImage(reactionImage, fileUploadRequest);
         }
     }
@@ -71,22 +81,6 @@ public class ReactionDataReceiverFacade {
 
     public void unarchiveReaction(String reactionId) {
         reactionDataReceiverService.updateReactionArchived(reactionId, false);
-    }
-
-    private ReactionDto mapToDto(Reaction reaction) {
-        var image = fileMapperFacade.mapToFile(new MapRequest(reaction.imageName(), reaction.getReactionFolderDirectory()));
-        return ReactionDto.builder()
-                .reactionId(reaction.reactionId())
-                .image(image)
-                .build();
-    }
-
-    private FileUploadRequest mapToFileUploadRequest(String imageName, String folderDirectory) {
-        return FileUploadRequest.builder()
-                .fileName(imageName)
-                .fileUploadDirectory(folderDirectory)
-                .build();
-
     }
 
     @Scheduled(cron = "${application.scheduled-tasks.delete-all-data.cron}")

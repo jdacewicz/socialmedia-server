@@ -46,8 +46,9 @@ class ReactionDataReceiverServiceTest {
     void should_return_created_reaction_when_creating_reaction() {
         //Given
         var reactionRequest = new ReactionRequest("name");
+        var imageFileName = "file.png";
         //When
-        var result = reactionDataReceiverService.createReaction(reactionRequest);
+        var result = reactionDataReceiverService.createReaction(reactionRequest, imageFileName);
         //Then
         assertEquals(reactionRequest.name(), result.name());
     }

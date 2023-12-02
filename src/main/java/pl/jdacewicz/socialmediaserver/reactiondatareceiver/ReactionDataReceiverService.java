@@ -1,6 +1,8 @@
 package pl.jdacewicz.socialmediaserver.reactiondatareceiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionRequest;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionUpdateRequest;
@@ -18,13 +20,26 @@ class ReactionDataReceiverService {
                 .orElseThrow(UnsupportedOperationException::new);
     }
 
-    List<Reaction> getAllReactions() {
-        return reactionDataReceiverRepository.findAll();
+    List<Reaction> getAllActiveNotArchivedReactions() {
+        var active = true;
+        var archived = false;
+        return reactionDataReceiverRepository.findAllByActiveAndArchived(active, archived);
     }
 
-    Reaction createReaction(ReactionRequest reactionRequest) {
+    Page<Reaction> getArchivedReactions(Pageable pageable) {
+        var archived = true;
+        return reactionDataReceiverRepository.findByArchived(archived, pageable);
+    }
+
+    Page<Reaction> getReactionsByActive(boolean active, Pageable pageable) {
+        var archived = false;
+        return reactionDataReceiverRepository.findByActiveAndArchived(active, archived, pageable);
+    }
+
+    Reaction createReaction(ReactionRequest reactionRequest, String imageFileName) {
         var reaction = Reaction.builder()
                 .name(reactionRequest.name())
+                .imageName(imageFileName)
                 .active(false)
                 .archived(false)
                 .build();

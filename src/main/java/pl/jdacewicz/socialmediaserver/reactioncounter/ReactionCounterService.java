@@ -18,7 +18,7 @@ class ReactionCounterService {
     private final ReactionDataReceiverFacade reactionDataReceiverFacade;
 
     public Set<ReactionCount> countReactions(List<ReactionUser> reactionUsers) {
-        var activeReactions = reactionDataReceiverFacade.getAllReactions();
+        var activeReactions = reactionDataReceiverFacade.getAllActiveReactions();
         var reactionCounts = reactionCounter.countReactionsByActiveReactions(reactionUsers, activeReactions);
         return reactionCounts.entrySet()
                 .stream()

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.reactiondatareceiver.ReactionDataReceiverFacade;
@@ -23,6 +24,19 @@ public class ReactionDataReceiverRestController {
     @GetMapping("/{id}")
     public ReactionDto getReactionById(@PathVariable @NotBlank String id) {
         return reactionDataReceiverFacade.getReactionById(id);
+    }
+
+    @GetMapping
+    public Page<ReactionDto> getReactionsByActive (@RequestParam boolean active,
+                                                   @RequestParam int pageNumber,
+                                                   @RequestParam int pageSize) {
+        return reactionDataReceiverFacade.getReactionsByActive(active, pageNumber, pageSize);
+    }
+
+    @GetMapping("/archived")
+    public Page<ReactionDto> getArchivedReactions(@RequestParam int pageNumber,
+                                                  @RequestParam int pageSize) {
+        return reactionDataReceiverFacade.getArchivedReactions(pageNumber, pageSize);
     }
 
     @PostMapping
