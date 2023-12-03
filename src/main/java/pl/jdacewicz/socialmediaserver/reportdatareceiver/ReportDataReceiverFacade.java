@@ -1,10 +1,10 @@
 package pl.jdacewicz.socialmediaserver.reportdatareceiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportDto;
 import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportRequest;
-
-import java.util.Set;
 
 @RequiredArgsConstructor
 public class ReportDataReceiverFacade {
@@ -12,9 +12,10 @@ public class ReportDataReceiverFacade {
     private final ReportDataService reportDataService;
     private final ReportMapper reportMapper;
 
-    public Set<ReportDto> getReports(String reportedDataType) {
-        var reports = reportDataService.getReportsByDataType(reportedDataType);
-        return reportMapper.mapToDto(reports);
+    public Page<ReportDto> getReports(String reportedDataType, int pageNumber, int pageSize) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var reports = reportDataService.getReportsByDataType(reportedDataType, pageable);
+        return reports.map(reportMapper::mapToDto);
     }
 
     public void report(String reportedDataId, String authenticationHeader, ReportRequest reportRequest, String reportedDataType) {

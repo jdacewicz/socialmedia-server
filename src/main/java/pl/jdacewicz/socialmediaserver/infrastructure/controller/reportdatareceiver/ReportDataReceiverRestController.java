@@ -2,11 +2,10 @@ package pl.jdacewicz.socialmediaserver.infrastructure.controller.reportdatarecei
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import pl.jdacewicz.socialmediaserver.reportdatareceiver.ReportDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportDto;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/reports")
@@ -16,8 +15,10 @@ public class ReportDataReceiverRestController {
     private final ReportDataReceiverFacade reportDataReceiverFacade;
 
     @GetMapping
-    public Set<ReportDto> getReports(@RequestParam @NotBlank String dataType) {
-        return reportDataReceiverFacade.getReports(dataType);
+    public Page<ReportDto> getReports(@RequestParam @NotBlank String dataType,
+                                      @RequestParam int pageNumber,
+                                      @RequestParam int pageSize) {
+        return reportDataReceiverFacade.getReports(dataType, pageNumber, pageSize);
     }
 
     @DeleteMapping("/{id}")

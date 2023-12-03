@@ -22,11 +22,6 @@ class ReportRepositoryTest implements ReportRepository {
     }
 
     @Override
-    public List<Report> findAllByDataType(DataType dataType) {
-        return null;
-    }
-
-    @Override
     public <S extends Report> S save(S entity) {
         database.add(entity);
         return entity;
@@ -134,6 +129,11 @@ class ReportRepositoryTest implements ReportRepository {
 
     @Override
     public Page<Report> findAll(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<Report> findAllByDataType(DataType dataType, Pageable pageable) {
         return null;
     }
 }
