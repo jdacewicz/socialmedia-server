@@ -1,10 +1,10 @@
 package pl.jdacewicz.socialmediaserver.bannedwordschecker;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.dto.BanWordRequest;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.dto.BannedWordDto;
-
-import java.util.Set;
 
 @RequiredArgsConstructor
 public class BannedWordsCheckerFacade {
@@ -19,9 +19,10 @@ public class BannedWordsCheckerFacade {
         }
     }
 
-    public Set<BannedWordDto> getBannedWords() {
-        var bannedWords = bannedWordService.getAllBannedWords();
-        return bannedWordMapper.mapToDto(bannedWords);
+    public Page<BannedWordDto> getBannedWords(int pageNumber, int pageSize) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var bannedWords = bannedWordService.getBannedWords(pageable);
+        return bannedWords.map(bannedWordMapper::mapToDto);
     }
 
     public BannedWordDto createBannedWord(String authenticationHeader, BanWordRequest banWordRequest) {

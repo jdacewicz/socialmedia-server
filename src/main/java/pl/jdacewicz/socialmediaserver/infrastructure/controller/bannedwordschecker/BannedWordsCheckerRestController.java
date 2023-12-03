@@ -1,12 +1,11 @@
 package pl.jdacewicz.socialmediaserver.infrastructure.controller.bannedwordschecker;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.dto.BanWordRequest;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.dto.BannedWordDto;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/banned-words")
@@ -16,8 +15,9 @@ public class BannedWordsCheckerRestController {
     private final BannedWordsCheckerFacade bannedWordsCheckerFacade;
 
     @GetMapping
-    public Set<BannedWordDto> getBannedWords() {
-        return bannedWordsCheckerFacade.getBannedWords();
+    public Page<BannedWordDto> getBannedWords(@RequestParam int pageNumber,
+                                              @RequestParam int pageSize) {
+        return bannedWordsCheckerFacade.getBannedWords(pageNumber, pageSize);
     }
 
     @PostMapping
