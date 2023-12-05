@@ -24,7 +24,7 @@ class ReportDataService {
     void createReport(String reportedDataId, String authenticationHeader, ReportRequest reportRequest, String reportDataType) {
         var loggedUserId = userDataReceiverFacade.getLoggedInUser(authenticationHeader)
                 .getUserId();
-        var reportType = ReportType.valueOf(reportRequest.reportType());
+        var reportType = ReportType.getType(reportRequest.reportType());
         var dataType = DataType.getType(reportDataType);
         var report = Report.builder()
                 .reportType(reportType)
