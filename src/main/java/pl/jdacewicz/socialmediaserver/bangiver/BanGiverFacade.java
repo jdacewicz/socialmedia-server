@@ -19,6 +19,9 @@ public class BanGiverFacade {
     @Transactional
     public PermanentBanResponse banUserPermanently(String userId, String authenticationHeader, UserPermanentBanRequest userPermanentBanRequest) {
         Ban createdBan;
+        if (banGiverService.isBanAssignedToUser(userId)) {
+            throw new UnsupportedOperationException();
+        }
         temporaryBanGiverService.revokeAllTemporaryBansByUserId(userId);
         createdBan = banGiverService.createBan(userId, authenticationHeader, userPermanentBanRequest);
         userDataReceiverFacade.banUser(userId, createdBan.getBanId());
@@ -27,7 +30,7 @@ public class BanGiverFacade {
 
     @Transactional
     public TemporaryBanResponse banUserTemporary(String userId, String authenticationHeader, UserTemporaryBanRequest userTemporaryBanRequest) {
-        if (banGiverService.isPermanentBanAssignedToUser(userId)) {
+        if (banGiverService.isBanAssignedToUser(userId)) {
             throw new UnsupportedOperationException();
         }
         var createdTempBan = temporaryBanGiverService.createBan(userId, authenticationHeader, userTemporaryBanRequest);

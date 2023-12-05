@@ -26,7 +26,7 @@ class BanGiverService {
         banRepository.saveAll(revokedBans);
     }
 
-    boolean isPermanentBanAssignedToUser(String userId) {
+    boolean isBanAssignedToUser(String userId) {
         var bannedUser = new BannedUser(userId);
         return banRepository.existsByBannedUserAndRevoked(bannedUser ,false);
     }
