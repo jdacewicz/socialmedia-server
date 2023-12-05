@@ -18,8 +18,9 @@ public class BanGiverFacade {
 
     @Transactional
     public PermanentBanResponse banUserPermanently(String userId, String authenticationHeader, UserPermanentBanRequest userPermanentBanRequest) {
-        var createdBan = banGiverService.createBan(userId, authenticationHeader, userPermanentBanRequest);
+        Ban createdBan;
         temporaryBanGiverService.revokeAllTemporaryBansByUserId(userId);
+        createdBan = banGiverService.createBan(userId, authenticationHeader, userPermanentBanRequest);
         userDataReceiverFacade.banUser(userId, createdBan.getBanId());
         return banMapper.mapToPermanentBanResponse(createdBan);
     }
