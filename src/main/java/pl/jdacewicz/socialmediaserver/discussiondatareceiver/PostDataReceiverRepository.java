@@ -1,13 +1,12 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
-
-import java.util.List;
-import java.util.Set;
 
 interface PostDataReceiverRepository extends MongoRepository<Post, String> {
 
-    Set<Post> findByContentContaining(String phrase);
+    Page<Post> findByContentContaining(String phrase, Pageable pageable);
 
-    List<Post> findAllByCreator_UserId(String userId);
+    Page<Post> findAllByCreator_UserId(String userId, Pageable pageable);
 }
