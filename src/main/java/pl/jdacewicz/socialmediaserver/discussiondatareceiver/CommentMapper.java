@@ -14,25 +14,27 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-class CommentMapper {
+class CommentMapper implements DiscussionMapper<Comment, CommentDto> {
 
     private final ReactionCounterFacade reactionCounterFacade;
     private final ElapsedDateTimeFormatterFacade elapsedDateTimeFormatterFacade;
     private final FileMapperFacade fileMapperFacade;
 
-    Set<CommentDto> mapToDto(Set<Comment> comments) {
+    @Override
+    public Set<CommentDto> mapToDto(Set<Comment> comments) {
         return comments.stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toSet());
     }
 
-    CommentDto mapToDto(Comment comment) {
+    @Override
+    public CommentDto mapToDto(Comment comment) {
         var image = fileMapperFacade.mapToFile(new MapRequest(comment.getImageName(), comment.getFolderDirectory()));
         var elapsedDateTime = elapsedDateTimeFormatterFacade.formatDateTime(comment.getCreationDateTime());
         var reactionCounts = reactionCounterFacade.countReactions(comment.getReactionUsers());
         var parsedContent = EmojiParser.parseToUnicode(comment.getContent());
         return CommentDto.builder()
-                .commentId(comment.getCommentId())
+                .commentId(comment.getDiscussionId())
                 .content(parsedContent)
                 .creator(comment.getCreator())
                 .image(image)

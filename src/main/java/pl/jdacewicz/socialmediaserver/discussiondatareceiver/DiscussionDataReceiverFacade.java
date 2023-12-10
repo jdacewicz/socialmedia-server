@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.CommentDto;
@@ -15,52 +16,59 @@ import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUserRequest;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 public class DiscussionDataReceiverFacade {
 
-    private final DiscussionDataReceiverService discussionDataReceiverService;
+    private final PostDataReceiverFactory postDataReceiverFactory;
+    private final CommentDataReceiverFactory commentDataReceiverFactory;
     private final ReactionUserFacade reactionUserFacade;
     private final FileStorageFacade fileStorageFacade;
     private final PostMapper postMapper;
     private final CommentMapper commentMapper;
 
-    public PostDto getPostById(String postId) {
-        var foundPost = discussionDataReceiverService.getPostById(postId);
+    public PostDto getPostById(String postId, String postType) {
+        var service = postDataReceiverFactory.getDiscussionDataReceiverService(postType);
+        var foundPost = service.getDiscussionById(postId);
         return postMapper.mapToDto(foundPost);
     }
 
-    public CommentDto getCommentById(String commentId) {
-        var foundComment = discussionDataReceiverService.getCommentById(commentId);
+    public CommentDto getCommentById(String commentId, String commentType) {
+        var service = commentDataReceiverFactory.getDiscussionDataReceiverService(commentType);
+        var foundComment = service.getDiscussionById(commentId);
         return commentMapper.mapToDto(foundComment);
     }
 
-    public List<PostDto> getRandomPosts() {
-        var randomPosts = discussionDataReceiverService.getRandomPosts();
-        return postMapper.mapToDto(randomPosts);
-    }
-
-    public List<PostDto> getPostsByUserId(String userId) {
-        var foundPosts = discussionDataReceiverService.getPostsByUserId(userId);
+    public List<PostDto> getRandomPosts(String postType) {
+        var service = postDataReceiverFactory.getDiscussionDataReceiverService(postType);
+        var foundPosts = service.getRandomPosts();
         return postMapper.mapToDto(foundPosts);
     }
 
-    public Set<PostDto> getPostsByContentContaining(String phrase) {
-        var foundPosts = discussionDataReceiverService.getPostsByContentContaining(phrase);
-        return postMapper.mapToDto(foundPosts);
+    public Page<PostDto> getPostsByUserId(String userId, String postType) {
+        var service = postDataReceiverFactory.getDiscussionDataReceiverService(postType);
+        var foundPosts = service.getPostsByCreatorUserId(userId, null);
+        return foundPosts.map(postMapper::mapToDto);
     }
 
-    public Set<CommentDto> getCommentsByContentContaining(String phrase) {
-        var foundComments = discussionDataReceiverService.getCommentsByContentContaining(phrase);
-        return commentMapper.mapToDto(foundComments);
+    public Page<PostDto> getPostsByContentContaining(String phrase, String postType) {
+        var service = postDataReceiverFactory.getDiscussionDataReceiverService(postType);
+        var foundPosts = service.getDiscussionsByContentContaining(phrase, null);
+        return foundPosts.map(postMapper::mapToDto);
+    }
+
+    public Page<CommentDto> getCommentsByContentContaining(String phrase, String commentType) {
+        var service = commentDataReceiverFactory.getDiscussionDataReceiverService(commentType);
+        var foundComments = service.getDiscussionsByContentContaining(phrase, null);
+        return foundComments.map(commentMapper::mapToDto);
     }
 
     @Transactional
-    public PostDto createPost(MultipartFile postImage, String authenticationHeader, PostRequest postRequest) throws IOException {
+    public PostDto createBasicPost(String authenticationHeader, MultipartFile postImage, PostRequest postRequest) throws IOException {
+        var service = (BasicPostDataReceiverService) postDataReceiverFactory.getDiscussionDataReceiverService(PostType.BASIC.name());
         var newFileName = fileStorageFacade.generateFilename(postImage)
                 .fileName();
-        var createdPost = discussionDataReceiverService.createPost(postRequest.content(), authenticationHeader, newFileName);
+        var createdPost = service.createBasicPost(authenticationHeader, newFileName, postRequest);
         var imageUploadRequest = FileUploadRequest.builder()
                 .fileName(newFileName)
                 .fileUploadDirectory(createdPost.getFolderDirectory())
@@ -70,10 +78,27 @@ public class DiscussionDataReceiverFacade {
     }
 
     @Transactional
-    public CommentDto createComment(String postId, MultipartFile commentImage, String authenticationHeader, CommentRequest commentRequest) throws IOException {
+    public PostDto createGroupedPost(String groupId, String authenticationHeader, MultipartFile postImage,
+                                     PostRequest postRequest) throws IOException {
+        var service = (GroupedPostDataReceiverService) postDataReceiverFactory.getDiscussionDataReceiverService(PostType.GROUPED.name());
+        var newFileName = fileStorageFacade.generateFilename(postImage)
+                .fileName();
+        var createdPost = service.createGroupedPost(groupId, authenticationHeader, newFileName, postRequest);
+        var imageUploadRequest = FileUploadRequest.builder()
+                .fileName(newFileName)
+                .fileUploadDirectory(createdPost.getFolderDirectory())
+                .build();
+        fileStorageFacade.uploadImage(postImage, imageUploadRequest);
+        return postMapper.mapToDto(createdPost);
+    }
+
+    @Transactional
+    public CommentDto createGroupedComment(String postId, String groupId, String authenticationHeader,
+                                           MultipartFile commentImage, CommentRequest commentRequest) throws IOException {
+        var service = (GroupedCommentDataReceiverService) commentDataReceiverFactory.getDiscussionDataReceiverService(CommentType.GROUPED.name());
         var newFileName = fileStorageFacade.generateFilename(commentImage)
                 .fileName();
-        var createdComment = discussionDataReceiverService.createComment(postId, commentRequest.content(),
+        var createdComment = service.createGroupedComment(postId, groupId, commentRequest.content(),
                 newFileName, authenticationHeader);
         var imageUploadRequest = FileUploadRequest.builder()
                 .fileName(newFileName)
@@ -83,33 +108,55 @@ public class DiscussionDataReceiverFacade {
         return commentMapper.mapToDto(createdComment);
     }
 
-    public PostDto reactToPost(String reactionId, String postId, String jwtToken) {
+    @Transactional
+    public CommentDto createBasicComment(String postId, String authenticationHeader, MultipartFile commentImage,
+                                         CommentRequest commentRequest) throws IOException {
+        var service = (BasicCommentDataReceiverService) commentDataReceiverFactory.getDiscussionDataReceiverService(CommentType.BASIC.name());
+        var newFileName = fileStorageFacade.generateFilename(commentImage)
+                .fileName();
+        var createdComment = service.createBasicComment(postId, commentRequest.content(),
+                newFileName, authenticationHeader);
+        var imageUploadRequest = FileUploadRequest.builder()
+                .fileName(newFileName)
+                .fileUploadDirectory(createdComment.getFolderDirectory())
+                .build();
+        fileStorageFacade.uploadImage(commentImage, imageUploadRequest);
+        return commentMapper.mapToDto(createdComment);
+    }
+
+    @Transactional
+    public PostDto reactToPost(String reactionId, String postId, String postType, String authenticationHeader) {
+        var service = postDataReceiverFactory.getDiscussionDataReceiverService(postType);
         var reactionUserRequest = new ReactionUserRequest(reactionId);
-        var reactionUser = reactionUserFacade.createReactionUser(jwtToken, reactionUserRequest);
-        var reactedPost = discussionDataReceiverService.reactToPostById(postId, reactionUser);
+        var reactionUser = reactionUserFacade.createReactionUser(authenticationHeader, reactionUserRequest);
+        var reactedPost = service.reactToDiscussionById(postId, reactionUser);
         return postMapper.mapToDto(reactedPost);
     }
 
-    public CommentDto reactToComment(String reactionId, String commentId, String jwtToken) {
+    @Transactional
+    public CommentDto reactToComment(String reactionId, String commentId, String commentType, String authenticationHeader) {
+        var service = commentDataReceiverFactory.getDiscussionDataReceiverService(commentType);
         var reactionUserRequest = new ReactionUserRequest(reactionId);
-        var reactionUser = reactionUserFacade.createReactionUser(jwtToken, reactionUserRequest);
-        var reactedComment = discussionDataReceiverService.reactToCommentById(commentId, reactionUser);
+        var reactionUser = reactionUserFacade.createReactionUser(authenticationHeader, reactionUserRequest);
+        var reactedComment = service.reactToDiscussionById(commentId, reactionUser);
         return commentMapper.mapToDto(reactedComment);
     }
 
     @Transactional
-    public void deletePost(String postId) throws IOException {
-        var foundPost = discussionDataReceiverService.getPostById(postId);
+    public void deletePost(String postId, String postType) throws IOException {
+        var service = postDataReceiverFactory.getDiscussionDataReceiverService(postType);
+        var foundPost = service.getDiscussionById(postId);
         var directoryDeleteRequest = new DirectoryDeleteRequest(foundPost.getFolderDirectory());
-        discussionDataReceiverService.deletePost(foundPost);
+        service.deleteDiscussionById(postId);
         fileStorageFacade.deleteDirectory(directoryDeleteRequest);
     }
 
     @Transactional
-    public void deleteComment(String commentId) throws IOException {
-        var foundComment = discussionDataReceiverService.getCommentById(commentId);
+    public void deleteComment(String commentId, String commentType) throws IOException {
+        var service = commentDataReceiverFactory.getDiscussionDataReceiverService(commentType);
+        var foundComment = service.getDiscussionById(commentId);
         var directoryDeleteRequest = new DirectoryDeleteRequest(foundComment.getFolderDirectory());
-        discussionDataReceiverService.deleteComment(foundComment);
+        service.deleteDiscussionById(commentId);
         fileStorageFacade.deleteDirectory(directoryDeleteRequest);
     }
 }

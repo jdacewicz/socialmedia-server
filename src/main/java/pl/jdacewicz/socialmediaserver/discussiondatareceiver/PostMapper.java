@@ -15,32 +15,28 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-class PostMapper {
+class PostMapper implements DiscussionMapper<Post, PostDto> {
 
     private final ReactionCounterFacade reactionCounterFacade;
     private final ElapsedDateTimeFormatterFacade elapsedDateTimeFormatterFacade;
     private final CommentMapper commentMapper;
     private final FileMapperFacade fileMapperFacade;
 
-    public List<PostDto> mapToDto(List<Post> randomPosts) {
-        return randomPosts.stream()
-                .map(this::mapToDto)
-                .toList();
-    }
-
+    @Override
     public Set<PostDto> mapToDto(Set<Post> foundPosts) {
         return foundPosts.stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toSet());
     }
 
-    PostDto mapToDto(Post post) {
+    @Override
+    public PostDto mapToDto(Post post) {
         var image = fileMapperFacade.mapToFile(new MapRequest(post.getImageName(), post.getFolderDirectory()));
         var elapsedDateTime = elapsedDateTimeFormatterFacade.formatDateTime(post.getCreationDateTime());
         var reactionCounts = reactionCounterFacade.countReactions(post.getReactionUsers());
         var comments = commentMapper.mapToDto(post.getComments());
         return PostDto.builder()
-                .postId(post.getPostId())
+                .postId(post.getDiscussionId())
                 .content(EmojiParser.parseToUnicode(post.getContent()))
                 .creator(post.getCreator())
                 .image(image)
@@ -48,5 +44,11 @@ class PostMapper {
                 .reactionCounts(reactionCounts)
                 .comments(comments)
                 .build();
+    }
+
+    public List<PostDto> mapToDto(List<? extends Post> foundPosts) {
+        return foundPosts.stream()
+                .map(this::mapToDto)
+                .toList();
     }
 }
