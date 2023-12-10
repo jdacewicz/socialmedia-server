@@ -1,6 +1,5 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
-interface CommentDataReceiverService<T extends Comment> {
+interface CommentDataReceiverService<T extends Comment> extends DiscussionDataReceiverService<T> {
 
-    T createComment(String postId, String content, String imageName, String authenticationHeader);
 }

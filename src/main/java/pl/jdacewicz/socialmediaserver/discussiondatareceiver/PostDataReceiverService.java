@@ -5,13 +5,11 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-interface PostDataReceiverService<T extends Post> {
+interface PostDataReceiverService<T extends Post> extends DiscussionDataReceiverService<T> {
 
     List<T> getRandomPosts();
 
     Page<T> getPostsByCreatorUserId(String userId, Pageable pageable);
-
-    T createPost(String content, String imageName, String authenticationHeader);
 
     void updatePost(T post);
 }
