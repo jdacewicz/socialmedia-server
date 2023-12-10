@@ -21,16 +21,26 @@ public class CommentDataReceiverRestController {
     private final ReportDataReceiverFacade reportDataReceiverFacade;
 
     @GetMapping("/{id}")
-    public CommentDto getCommentById(@PathVariable @NotBlank String id) {
-        return discussionDataReceiverFacade.getCommentById(id);
+    public CommentDto getCommentById(@PathVariable @NotBlank String id,
+                                     @RequestParam @NotBlank String commentType) {
+        return discussionDataReceiverFacade.getCommentById(id, commentType);
     }
 
     @PostMapping("/post/{postId}")
-    public CommentDto createComment(@RequestHeader("Authorization") String authorizationHeader,
-                                    @PathVariable @NotBlank String postId,
-                                    @RequestPart MultipartFile commentImage,
-                                    @RequestPart @Valid CommentRequest commentRequest) throws IOException {
-        return discussionDataReceiverFacade.createComment(postId, commentImage, authorizationHeader, commentRequest);
+    public CommentDto createBasicComment(@RequestHeader("Authorization") String authorizationHeader,
+                                         @PathVariable @NotBlank String postId,
+                                         @RequestPart MultipartFile commentImage,
+                                         @RequestPart @Valid CommentRequest commentRequest) throws IOException {
+        return discussionDataReceiverFacade.createBasicComment(postId, authorizationHeader, commentImage, commentRequest);
+    }
+
+    @PostMapping("/group/{groupId}/post/{postId}")
+    public CommentDto createGroupComment(@RequestHeader("Authorization") String authorizationHeader,
+                                         @PathVariable @NotBlank String postId,
+                                         @PathVariable @NotBlank String groupId,
+                                         @RequestPart MultipartFile commentImage,
+                                         @RequestPart @Valid CommentRequest commentRequest) throws IOException {
+        return discussionDataReceiverFacade.createGroupedComment(postId, groupId, authorizationHeader, commentImage, commentRequest);
     }
 
     @PostMapping("/{id}/report")
@@ -41,14 +51,16 @@ public class CommentDataReceiverRestController {
     }
 
     @PutMapping("/{commentId}/react/{reactionId}")
-    public CommentDto reactToPost(@RequestHeader("Authorization") String authorizationHeader,
-                                  @PathVariable @NotBlank String commentId,
-                                  @PathVariable @NotBlank String reactionId) {
-        return discussionDataReceiverFacade.reactToComment(reactionId, commentId, authorizationHeader);
+    public CommentDto reactToComment(@RequestHeader("Authorization") String authorizationHeader,
+                                          @PathVariable @NotBlank String commentId,
+                                          @PathVariable @NotBlank String reactionId,
+                                          @RequestParam @NotBlank String commentType) {
+        return discussionDataReceiverFacade.reactToComment(reactionId, commentId, commentType, authorizationHeader);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteComment(@PathVariable @NotBlank String id) throws IOException {
-        discussionDataReceiverFacade.deleteComment(id);
+    public void deleteComment(@PathVariable @NotBlank String id,
+                              @RequestParam @NotBlank String commentType) throws IOException {
+        discussionDataReceiverFacade.deleteComment(id, commentType);
     }
 }
