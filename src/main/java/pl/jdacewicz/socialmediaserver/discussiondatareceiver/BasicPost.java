@@ -1,54 +1,62 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 
-@Document(collection = "comments_grouped")
+@Document(collection = "posts")
 @Getter
 @SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
-class GroupedComment extends Comment {
-
-    @NotBlank
-    private String groupId;
+class BasicPost extends Post {
 
     @Override
-    GroupedComment withReactionUser(ReactionUser reactionUser) {
+    BasicPost withReactionUser(ReactionUser reactionUser) {
         var newReactionUsers = new LinkedList<>(this.getReactionUsers());
         newReactionUsers.add(reactionUser);
-        return GroupedComment.builder()
-                .groupId(groupId)
+        return BasicPost.builder()
+                .comments(getComments())
                 .discussionId(getDiscussionId())
                 .content(getContent())
                 .creator(getCreator())
                 .imageName(getImageName())
-                .imageMainDirectory(getFullImageDirectory())
+                .imageMainDirectory(getImageMainDirectory())
                 .creationDateTime(getCreationDateTime())
                 .reactionUsers(newReactionUsers)
                 .build();
     }
 
     @Override
-    GroupedComment withoutReactionUser(ReactionUser reactionUser) {
+    BasicPost withoutReactionUser(ReactionUser reactionUser) {
         var newReactionUsers = new LinkedList<>(this.getReactionUsers());
         newReactionUsers.remove(reactionUser);
-        return GroupedComment.builder()
-                .groupId(groupId)
+        return BasicPost.builder()
+                .comments(getComments())
                 .discussionId(getDiscussionId())
                 .content(getContent())
                 .creator(getCreator())
                 .imageName(getImageName())
-                .imageMainDirectory(getFullImageDirectory())
+                .imageMainDirectory(getImageMainDirectory())
                 .creationDateTime(getCreationDateTime())
                 .reactionUsers(newReactionUsers)
+                .build();
+    }
+
+    BasicPost withComment(Comment comment) {
+        var newComments = new HashSet<>(getComments());
+        newComments.add(comment);
+        return BasicPost.builder()
+                .comments(newComments)
+                .discussionId(getDiscussionId())
+                .content(getContent())
+                .creator(getCreator())
+                .imageName(getImageName())
+                .imageMainDirectory(getImageMainDirectory())
+                .creationDateTime(getCreationDateTime())
+                .reactionUsers(getReactionUsers())
                 .build();
     }
 }

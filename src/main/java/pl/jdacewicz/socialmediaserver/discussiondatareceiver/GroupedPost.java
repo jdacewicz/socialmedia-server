@@ -8,47 +8,66 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 
-@Document(collection = "comments_grouped")
+@Document(collection = "grouped_posts")
 @Getter
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-class GroupedComment extends Comment {
+class GroupedPost extends Post {
 
     @NotBlank
     private String groupId;
 
     @Override
-    GroupedComment withReactionUser(ReactionUser reactionUser) {
+    GroupedPost withReactionUser(ReactionUser reactionUser) {
         var newReactionUsers = new LinkedList<>(this.getReactionUsers());
         newReactionUsers.add(reactionUser);
-        return GroupedComment.builder()
+        return GroupedPost.builder()
                 .groupId(groupId)
+                .comments(getComments())
                 .discussionId(getDiscussionId())
                 .content(getContent())
                 .creator(getCreator())
                 .imageName(getImageName())
-                .imageMainDirectory(getFullImageDirectory())
+                .imageMainDirectory(getImageMainDirectory())
                 .creationDateTime(getCreationDateTime())
                 .reactionUsers(newReactionUsers)
                 .build();
     }
 
     @Override
-    GroupedComment withoutReactionUser(ReactionUser reactionUser) {
+    GroupedPost withoutReactionUser(ReactionUser reactionUser) {
         var newReactionUsers = new LinkedList<>(this.getReactionUsers());
         newReactionUsers.remove(reactionUser);
-        return GroupedComment.builder()
+        return GroupedPost.builder()
                 .groupId(groupId)
+                .comments(getComments())
                 .discussionId(getDiscussionId())
                 .content(getContent())
                 .creator(getCreator())
                 .imageName(getImageName())
-                .imageMainDirectory(getFullImageDirectory())
+                .imageMainDirectory(getImageMainDirectory())
                 .creationDateTime(getCreationDateTime())
                 .reactionUsers(newReactionUsers)
+                .build();
+    }
+
+    GroupedPost withComment(Comment comment) {
+        var newComments = new HashSet<>(getComments());
+        newComments.add(comment);
+        return GroupedPost.builder()
+                .groupId(groupId)
+                .comments(newComments)
+                .discussionId(getDiscussionId())
+                .content(getContent())
+                .creator(getCreator())
+                .imageName(getImageName())
+                .imageMainDirectory(getImageMainDirectory())
+                .creationDateTime(getCreationDateTime())
+                .reactionUsers(getReactionUsers())
                 .build();
     }
 }
