@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Id;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
@@ -16,7 +17,10 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-abstract class Discussion<T> {
+abstract class Discussion<T extends Discussion<T>> {
+
+    @Id
+    private String discussionId;
 
     @NotBlank
     @Size(max = 255)
@@ -44,7 +48,9 @@ abstract class Discussion<T> {
         return String.format("%s/%s", getFolderDirectory(), imageName);
     }
 
-    abstract String getFolderDirectory();
+    String getFolderDirectory() {
+        return String.format("%s/%s", getImageMainDirectory(), discussionId);
+    }
 
     boolean isReactionUserStored(ReactionUser reactionUser) {
         return reactionUsers.contains(reactionUser);
