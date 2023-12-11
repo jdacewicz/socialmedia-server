@@ -1,6 +1,8 @@
 package pl.jdacewicz.socialmediaserver.userdatareceiver;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -72,8 +74,8 @@ class UserDataReceiverService implements UserDetailsService {
         return userDataReceiverRepository.findAllById(userIds);
     }
 
-    Set<User> getUsersByFirstnamesAndLastnames(Set<String> firstnames, Set<String> lastnames) {
-        return userDataReceiverRepository.findAllByFirstnameInAndLastnameIn(firstnames, lastnames);
+    Page<User> getUsersByFirstnamesAndLastnames(Set<String> firstnames, Set<String> lastnames, Pageable pageable) {
+        return userDataReceiverRepository.findAllByFirstnameInAndLastnameIn(firstnames, lastnames, pageable);
     }
 
     @Transactional

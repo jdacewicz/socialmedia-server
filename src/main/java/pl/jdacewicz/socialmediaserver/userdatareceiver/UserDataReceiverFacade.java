@@ -2,6 +2,8 @@ package pl.jdacewicz.socialmediaserver.userdatareceiver;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,9 +43,10 @@ public class UserDataReceiverFacade {
         return userMapper.mapToDto(user);
     }
 
-    public Set<UserDto> getUsersByFirstnamesAndLastnames(Set<String> firstnames, Set<String> lastnames) {
-        var users = userDataReceiverService.getUsersByFirstnamesAndLastnames(firstnames, lastnames);
-        return userMapper.mapToDto(users);
+    public Page<UserDto> getUsersByFirstnamesAndLastnames(Set<String> firstnames, Set<String> lastnames, int pageNumber, int pageSize) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var users = userDataReceiverService.getUsersByFirstnamesAndLastnames(firstnames, lastnames, pageable);
+        return users.map(userMapper::mapToDto);
     }
 
     @Transactional

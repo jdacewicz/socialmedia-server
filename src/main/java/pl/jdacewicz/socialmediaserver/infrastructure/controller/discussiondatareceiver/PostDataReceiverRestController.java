@@ -36,8 +36,10 @@ public class PostDataReceiverRestController {
 
     @GetMapping("/user/{userId}")
     public Page<PostDto> getPostsByUserId(@PathVariable String userId,
-                                          @RequestParam @NotBlank String postType) {
-        return discussionDataReceiverFacade.getPostsByUserId(userId, postType);
+                                          @RequestParam @NotBlank String postType,
+                                          @RequestParam int pageNumber,
+                                          @RequestParam int pageSize) {
+        return discussionDataReceiverFacade.getPostsByUserId(userId, postType, pageNumber, pageSize);
     }
 
     @PostMapping

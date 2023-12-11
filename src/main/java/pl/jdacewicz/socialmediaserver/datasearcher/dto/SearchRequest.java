@@ -5,5 +5,5 @@ import jakarta.validation.constraints.Size;
 
 public record SearchRequest(@NotBlank
                             @Size(min = 2, max = 60)
-                            String typedInText) {
+                            String phrase) {
 }

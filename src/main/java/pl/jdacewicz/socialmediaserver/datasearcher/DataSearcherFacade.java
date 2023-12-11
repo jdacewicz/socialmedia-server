@@ -9,13 +9,13 @@ public class DataSearcherFacade {
 
     private final SearchStrategy searchStrategy;
 
-    public SearchResult searchData(String scope, SearchRequest searchRequest) {
+    public SearchResult searchData(String scope, int pageNumber, int pageSize, SearchRequest searchRequest) {
         var searchRequestScope = SearchRequestScope.getScope(scope);
         return switch (searchRequestScope) {
-            case ALL -> searchStrategy.searchAll(searchRequest);
-            case USERS -> searchStrategy.searchUsers(searchRequest);
-            case POSTS -> searchStrategy.searchPosts(searchRequest);
-            case COMMENTS -> searchStrategy.searchComments(searchRequest);
+            case ALL -> searchStrategy.searchAll(searchRequest, pageNumber, pageSize);
+            case USERS -> searchStrategy.searchUsers(searchRequest, pageNumber, pageSize);
+            case POSTS -> searchStrategy.searchPosts(searchRequest, pageNumber, pageSize);
+            case COMMENTS -> searchStrategy.searchComments(searchRequest, pageNumber, pageSize);
         };
     }
 }

@@ -17,7 +17,9 @@ public class DataSearcherRestController {
 
     @GetMapping
     public SearchResult searchData(@RequestParam @NotBlank String scope,
+                                   @RequestParam int pageNumber,
+                                   @RequestParam int pageSize,
                                    @RequestBody @Valid SearchRequest searchRequest) {
-        return dataSearcherFacade.searchData(scope, searchRequest);
+        return dataSearcherFacade.searchData(scope, pageNumber, pageSize, searchRequest);
     }
 }

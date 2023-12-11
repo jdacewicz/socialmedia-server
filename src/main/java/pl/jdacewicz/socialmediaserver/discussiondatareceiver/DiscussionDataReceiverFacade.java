@@ -2,6 +2,7 @@ package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.CommentDto;
@@ -45,21 +46,24 @@ public class DiscussionDataReceiverFacade {
         return postMapper.mapToDto(foundPosts);
     }
 
-    public Page<PostDto> getPostsByUserId(String userId, String postType) {
+    public Page<PostDto> getPostsByUserId(String userId, String postType, int pageNumber, int pageSize) {
         var service = postDataReceiverFactory.getDiscussionDataReceiverService(postType);
-        var foundPosts = service.getPostsByCreatorUserId(userId, null);
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var foundPosts = service.getPostsByCreatorUserId(userId, pageable);
         return foundPosts.map(postMapper::mapToDto);
     }
 
-    public Page<PostDto> getPostsByContentContaining(String phrase, String postType) {
+    public Page<PostDto> getPostsByContentContaining(String phrase, String postType, int pageNumber, int pageSize) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
         var service = postDataReceiverFactory.getDiscussionDataReceiverService(postType);
-        var foundPosts = service.getDiscussionsByContentContaining(phrase, null);
+        var foundPosts = service.getDiscussionsByContentContaining(phrase, pageable);
         return foundPosts.map(postMapper::mapToDto);
     }
 
-    public Page<CommentDto> getCommentsByContentContaining(String phrase, String commentType) {
+    public Page<CommentDto> getCommentsByContentContaining(String phrase, String commentType, int pageNumber, int pageSize) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
         var service = commentDataReceiverFactory.getDiscussionDataReceiverService(commentType);
-        var foundComments = service.getDiscussionsByContentContaining(phrase, null);
+        var foundComments = service.getDiscussionsByContentContaining(phrase, pageable);
         return foundComments.map(commentMapper::mapToDto);
     }
 

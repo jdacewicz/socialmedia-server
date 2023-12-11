@@ -5,8 +5,11 @@ import pl.jdacewicz.socialmediaserver.datasearcher.dto.SearchResult;
 
 interface SearchStrategy {
 
-    SearchResult searchAll(SearchRequest searchRequest);
-    SearchResult searchUsers(SearchRequest searchRequest);
-    SearchResult searchPosts(SearchRequest searchRequest);
-    SearchResult searchComments(SearchRequest searchRequest);
+    SearchResult searchAll(SearchRequest searchRequest, int pageNumber, int pageSize);
+
+    SearchResult searchUsers(SearchRequest searchRequest, int pageNumber, int pageSize);
+
+    SearchResult searchPosts(SearchRequest searchRequest, int pageNumber, int pageSize);
+
+    SearchResult searchComments(SearchRequest searchRequest,  int pageNumber, int pageSize);
 }
