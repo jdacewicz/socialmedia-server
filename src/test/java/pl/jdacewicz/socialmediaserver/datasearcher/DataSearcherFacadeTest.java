@@ -28,12 +28,14 @@ class DataSearcherFacadeTest {
         var searchRequest = new SearchRequest("test");
         var searchResult = SearchResult.builder()
                 .build();
-        when(searchStrategy.searchAll(searchRequest)).thenReturn(searchResult);
+        var pageNumber = 0;
+        var pageSize = 1;
+        when(searchStrategy.searchAll(searchRequest, pageNumber, pageSize)).thenReturn(searchResult);
         //When
-        var result = dataSearcherFacade.searchData(scope, searchRequest);
+        var result = dataSearcherFacade.searchData(scope, pageNumber, pageSize, searchRequest);
         //Then
         assertEquals(searchResult, result);
-        verify(searchStrategy, times(1)).searchAll(searchRequest);
+        verify(searchStrategy, times(1)).searchAll(searchRequest, pageNumber, pageSize);
     }
 
     @Test
@@ -43,12 +45,14 @@ class DataSearcherFacadeTest {
         var searchRequest = new SearchRequest("test");
         var searchResult = SearchResult.builder()
                 .build();
-        when(searchStrategy.searchUsers(searchRequest)).thenReturn(searchResult);
+        var pageNumber = 0;
+        var pageSize = 1;
+        when(searchStrategy.searchUsers(searchRequest, pageNumber, pageSize)).thenReturn(searchResult);
         //When
-        var result = dataSearcherFacade.searchData(scope, searchRequest);
+        var result = dataSearcherFacade.searchData(scope, pageNumber, pageSize, searchRequest);
         //Then
         assertEquals(searchResult, result);
-        verify(searchStrategy, times(1)).searchUsers(searchRequest);
+        verify(searchStrategy, times(1)).searchUsers(searchRequest, pageNumber, pageSize);
     }
 
     @Test
@@ -58,12 +62,14 @@ class DataSearcherFacadeTest {
         var searchRequest = new SearchRequest("test");
         var searchResult = SearchResult.builder()
                 .build();
-        when(searchStrategy.searchPosts(searchRequest)).thenReturn(searchResult);
+        var pageNumber = 0;
+        var pageSize = 1;
+        when(searchStrategy.searchPosts(searchRequest, pageNumber, pageSize)).thenReturn(searchResult);
         //When
-        var result = dataSearcherFacade.searchData(scope, searchRequest);
+        var result = dataSearcherFacade.searchData(scope, pageNumber, pageSize, searchRequest);
         //Then
         assertEquals(searchResult, result);
-        verify(searchStrategy, times(1)).searchPosts(searchRequest);
+        verify(searchStrategy, times(1)).searchPosts(searchRequest, pageNumber, pageSize);
     }
 
     @Test
@@ -73,11 +79,13 @@ class DataSearcherFacadeTest {
         var searchRequest = new SearchRequest("test");
         var searchResult = SearchResult.builder()
                 .build();
-        when(searchStrategy.searchComments(searchRequest)).thenReturn(searchResult);
+        var pageNumber = 0;
+        var pageSize = 1;
+        when(searchStrategy.searchComments(searchRequest, pageNumber, pageSize)).thenReturn(searchResult);
         //When
-        var result = dataSearcherFacade.searchData(scope, searchRequest);
+        var result = dataSearcherFacade.searchData(scope, pageNumber, pageSize, searchRequest);
         //Then
         assertEquals(searchResult, result);
-        verify(searchStrategy, times(1)).searchComments(searchRequest);
+        verify(searchStrategy, times(1)).searchComments(searchRequest, pageNumber, pageSize);
     }
 }
