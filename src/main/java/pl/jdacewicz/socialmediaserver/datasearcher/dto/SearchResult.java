@@ -6,9 +6,6 @@ import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.CommentDto;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostDto;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Builder
 public record SearchResult(Page<UserDto> users,
                            Page<PostDto> posts,
@@ -16,8 +13,8 @@ public record SearchResult(Page<UserDto> users,
 
     @SuppressWarnings("unused")
     public static class SearchResultBuilder {
-        private Set<UserDto> users = new HashSet<>();
-        private Set<PostDto> posts = new HashSet<>();
-        private Set<CommentDto> comments = new HashSet<>();
+        private Page<UserDto> users = Page.empty();
+        private Page<PostDto> posts = Page.empty();
+        private Page<CommentDto> comments = Page.empty();
     }
 }
