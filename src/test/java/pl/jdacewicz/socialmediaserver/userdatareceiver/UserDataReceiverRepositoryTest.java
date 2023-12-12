@@ -1,9 +1,6 @@
 package pl.jdacewicz.socialmediaserver.userdatareceiver;
 
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 
 import java.util.LinkedList;
@@ -11,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("all")
 public class UserDataReceiverRepositoryTest implements UserDataReceiverRepository {
@@ -26,11 +22,12 @@ public class UserDataReceiverRepositoryTest implements UserDataReceiverRepositor
     }
 
     @Override
-    public Set<User> findAllByFirstnameInAndLastnameIn(Set<String> firstnames, Set<String> lastnames) {
-        return database.stream()
+    public Page<User> findAllByFirstnameInAndLastnameIn(Set<String> firstnames, Set<String> lastnames, Pageable pageable) {
+        var users = database.stream()
                 .filter(user -> lastnames.contains(user.lastname()))
                 .filter(user -> firstnames.contains(user.firstname()))
-                .collect(Collectors.toSet());
+                .toList();
+        return new PageImpl<>(users);
     }
 
     @Override
