@@ -1,6 +1,7 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
@@ -11,6 +12,7 @@ import java.util.LinkedList;
 @Document(collection = "posts")
 @Getter
 @SuperBuilder
+@NoArgsConstructor
 class BasicPost extends Post {
 
     @Override

@@ -1,5 +1,6 @@
 package pl.jdacewicz.socialmediaserver.discussiondatareceiver;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Getter
 @SuperBuilder
+@AllArgsConstructor
 @NoArgsConstructor
 abstract class Post extends Discussion<Post> {
 

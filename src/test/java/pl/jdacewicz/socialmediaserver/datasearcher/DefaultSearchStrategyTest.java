@@ -6,8 +6,7 @@ import org.mockito.Mockito;
 import org.springframework.data.domain.PageImpl;
 import pl.jdacewicz.socialmediaserver.datasearcher.dto.SearchRequest;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.DiscussionDataReceiverFacade;
-import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.CommentDto;
-import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostDto;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.DiscussionDto;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
@@ -41,7 +40,7 @@ class DefaultSearchStrategyTest {
     @Test
     void should_return_search_result_with_users_comments_and_posts_when_searching_all() {
         //Given
-        var postDto = PostDto.builder()
+        var postDto = DiscussionDto.builder()
                 .build();
         var commentDto = CommentDto.builder()
                 .build();
@@ -50,7 +49,7 @@ class DefaultSearchStrategyTest {
         var posts = new PageImpl<>(List.of(postDto));
         var comments = new PageImpl<>(List.of(commentDto));
         var users = new PageImpl<>(List.of(userDto));
-        when(discussionDataReceiverFacade.getPostsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize))
+        when(discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize))
                 .thenReturn(posts);
         when(discussionDataReceiverFacade.getCommentsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize))
                 .thenReturn(comments);
@@ -65,7 +64,7 @@ class DefaultSearchStrategyTest {
                 .isEmpty());
         assertFalse(result.users()
                 .isEmpty());
-        verify(discussionDataReceiverFacade, times(1)).getPostsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
+        verify(discussionDataReceiverFacade, times(1)).getDiscussionsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
         verify(discussionDataReceiverFacade, times(1)).getCommentsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
         verify(userDataReceiverFacade, times(1)).getUsersByFirstnamesAndLastnames(Set.of(searchRequest.phrase()),
                 Set.of(searchRequest.phrase()), pageNumber, pageSize);
@@ -90,17 +89,17 @@ class DefaultSearchStrategyTest {
                 .isEmpty());
         verify(userDataReceiverFacade, times(1)).getUsersByFirstnamesAndLastnames(Set.of(searchRequest.phrase()),
                 Set.of(searchRequest.phrase()), pageNumber, pageSize);
-        verify(discussionDataReceiverFacade, never()).getPostsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
+        verify(discussionDataReceiverFacade, never()).getDiscussionsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
         verify(discussionDataReceiverFacade, never()).getCommentsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
     }
 
     @Test
     void should_return_search_result_with_posts_when_searching_posts() {
         //Given
-        var postDto = PostDto.builder()
+        var postDto = DiscussionDto.builder()
                 .build();
         var posts = new PageImpl<>(List.of(postDto));
-        when(discussionDataReceiverFacade.getPostsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize))
+        when(discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize))
                 .thenReturn(posts);
         //When
         var result = defaultSearchStrategy.searchPosts(searchRequest, pageNumber, pageSize);
@@ -111,7 +110,7 @@ class DefaultSearchStrategyTest {
                 .isEmpty());
         assertTrue(result.users()
                 .isEmpty());
-        verify(discussionDataReceiverFacade, times(1)).getPostsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
+        verify(discussionDataReceiverFacade, times(1)).getDiscussionsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
         verify(discussionDataReceiverFacade, never()).getCommentsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
         verify(userDataReceiverFacade, never()).getUsersByFirstnamesAndLastnames(Set.of(searchRequest.phrase()), Set.of(searchRequest.phrase()), pageNumber, pageSize);
     }
@@ -134,7 +133,7 @@ class DefaultSearchStrategyTest {
         assertTrue(result.users()
                 .isEmpty());
         verify(discussionDataReceiverFacade, times(1)).getCommentsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
-        verify(discussionDataReceiverFacade, never()).getPostsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
+        verify(discussionDataReceiverFacade, never()).getDiscussionsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
         verify(userDataReceiverFacade, never()).getUsersByFirstnamesAndLastnames(Set.of(searchRequest.phrase()), Set.of(searchRequest.phrase()), pageNumber, pageSize);
     }
 }

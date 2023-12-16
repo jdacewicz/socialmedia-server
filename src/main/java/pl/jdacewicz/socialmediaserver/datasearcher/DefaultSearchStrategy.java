@@ -17,7 +17,7 @@ class DefaultSearchStrategy implements SearchStrategy {
     @Override
     public SearchResult searchAll(SearchRequest searchRequest, int pageNumber, int pageSize) {
         var uniqueWords = SearchDataProcessor.splitTextToUniqueWords(searchRequest.phrase());
-        var foundPosts = discussionDataReceiverFacade.getPostsByContentContaining(searchRequest.phrase(), type, pageNumber, pageSize);
+        var foundPosts = discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), type, pageNumber, pageSize);
         var foundComments = discussionDataReceiverFacade.getCommentsByContentContaining(searchRequest.phrase(), type, pageNumber, pageSize);
         var foundUsers = userDataReceiverFacade.getUsersByFirstnamesAndLastnames(uniqueWords, uniqueWords, pageNumber, pageSize);
         return SearchResult.builder()
@@ -38,7 +38,7 @@ class DefaultSearchStrategy implements SearchStrategy {
 
     @Override
     public SearchResult searchPosts(SearchRequest searchRequest, int pageNumber, int pageSize) {
-        var foundPosts = discussionDataReceiverFacade.getPostsByContentContaining(searchRequest.phrase(), type, pageNumber, pageSize);
+        var foundPosts = discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), type, pageNumber, pageSize);
         return SearchResult.builder()
                 .posts(foundPosts)
                 .build();
