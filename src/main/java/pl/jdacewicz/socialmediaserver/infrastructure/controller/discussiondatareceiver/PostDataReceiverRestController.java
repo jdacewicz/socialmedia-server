@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.DiscussionDataReceiverFacade;
-import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostDto;
-import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.DiscussionCreationRequest;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.DiscussionDto;
 import pl.jdacewicz.socialmediaserver.reportdatareceiver.ReportDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportRequest;
 
@@ -20,61 +20,51 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostDataReceiverRestController {
 
+    final static String discussionType = "BASIC_POST";
+
     private final DiscussionDataReceiverFacade discussionDataReceiverFacade;
     private final ReportDataReceiverFacade reportDataReceiverFacade;
 
     @GetMapping("/{id}")
-    public PostDto getPostById(@PathVariable @NotBlank String id,
-                               @RequestParam @NotBlank String postType) {
-        return discussionDataReceiverFacade.getPostById(id, postType);
+    public DiscussionDto getBasicPostById(@PathVariable @NotBlank String id) {
+        return discussionDataReceiverFacade.getDiscussionById(id, discussionType);
     }
 
     @GetMapping
-    public List<PostDto> getRandomPosts(@RequestParam @NotBlank String postType) {
-        return discussionDataReceiverFacade.getRandomPosts(postType);
+    public List<DiscussionDto> getRandomBasicPosts() {
+        return discussionDataReceiverFacade.getRandomPosts(discussionType);
     }
 
-    @GetMapping("/user/{userId}")
-    public Page<PostDto> getPostsByUserId(@PathVariable String userId,
-                                          @RequestParam @NotBlank String postType,
-                                          @RequestParam int pageNumber,
-                                          @RequestParam int pageSize) {
-        return discussionDataReceiverFacade.getPostsByUserId(userId, postType, pageNumber, pageSize);
+    @GetMapping("/users/{userId}")
+    public Page<DiscussionDto> getBasicPostsByUserId(@PathVariable String userId,
+                                                     @RequestParam int pageNumber,
+                                                     @RequestParam int pageSize) {
+        return discussionDataReceiverFacade.getPostsByUserId(userId, discussionType, pageNumber, pageSize);
     }
 
     @PostMapping
-    public PostDto createBasicPost(@RequestHeader("Authorization") String authorizationHeader,
-                              @RequestPart MultipartFile postImage,
-                              @RequestPart @Valid PostRequest postRequest) throws IOException {
-        return discussionDataReceiverFacade.createBasicPost(authorizationHeader, postImage, postRequest);
-    }
-
-    @PostMapping("/group/{id}")
-    public PostDto createGroupPost(@RequestHeader("Authorization") String authorizationHeader,
-                                   @PathVariable String id,
-                                   @RequestPart MultipartFile postImage,
-                                   @RequestPart @Valid PostRequest postRequest) throws IOException {
-        return discussionDataReceiverFacade.createGroupedPost(id, authorizationHeader, postImage, postRequest);
+    public DiscussionDto createBasicPost(@RequestHeader("Authorization") String authorizationHeader,
+                                         @RequestPart MultipartFile postImage,
+                                         @RequestPart @Valid DiscussionCreationRequest discussionCreationRequest) throws IOException {
+        return discussionDataReceiverFacade.createDiscussion(discussionType, authorizationHeader, postImage, discussionCreationRequest);
     }
 
     @PostMapping("/{id}/report")
-    public void reportPost(@RequestHeader("Authorization") String authorizationHeader,
-                           @PathVariable String id,
-                           @RequestBody ReportRequest reportRequest) {
-        reportDataReceiverFacade.report(id, authorizationHeader, reportRequest, "POST");
+    public void reportBasicPost(@PathVariable String id,
+                                @RequestHeader("Authorization") String authorizationHeader,
+                                @RequestBody ReportRequest reportRequest) {
+        reportDataReceiverFacade.report(id, authorizationHeader, reportRequest, discussionType);
     }
 
     @PutMapping("/{postId}/react/{reactionId}")
-    public PostDto reactToPost(@RequestHeader("Authorization") String authorizationHeader,
-                               @PathVariable @NotBlank String postId,
-                               @PathVariable @NotBlank String reactionId,
-                               @RequestParam @NotBlank String postType) {
-        return discussionDataReceiverFacade.reactToPost(reactionId, postId, postType, authorizationHeader);
+    public DiscussionDto reactToBasicPost(@RequestHeader("Authorization") String authorizationHeader,
+                                          @PathVariable @NotBlank String postId,
+                                          @PathVariable @NotBlank String reactionId) {
+        return discussionDataReceiverFacade.reactToDiscussion(reactionId, postId, discussionType, authorizationHeader);
     }
 
     @DeleteMapping("/{id}")
-    public void deletePost(@PathVariable @NotBlank String id,
-                           @RequestParam @NotBlank String postType) throws IOException {
-        discussionDataReceiverFacade.deletePost(id, postType);
+    public void deleteBasicPost(@PathVariable @NotBlank String id) throws IOException {
+        discussionDataReceiverFacade.deleteDiscussion(id, discussionType);
     }
 }
