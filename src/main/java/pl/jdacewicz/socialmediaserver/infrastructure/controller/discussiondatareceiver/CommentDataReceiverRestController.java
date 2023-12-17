@@ -17,50 +17,40 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CommentDataReceiverRestController {
 
+    final static String discussionType = "COMMENT";
+
     private final DiscussionDataReceiverFacade discussionDataReceiverFacade;
     private final ReportDataReceiverFacade reportDataReceiverFacade;
 
     @GetMapping("/{id}")
-    public CommentDto getCommentById(@PathVariable @NotBlank String id,
-                                     @RequestParam @NotBlank String commentType) {
-        return discussionDataReceiverFacade.getCommentById(id, commentType);
+    public DiscussionDto getCommentById(@PathVariable @NotBlank String id) {
+        return discussionDataReceiverFacade.getDiscussionById(id, discussionType);
     }
 
-    @PostMapping("/post/{postId}")
-    public CommentDto createBasicComment(@RequestHeader("Authorization") String authorizationHeader,
-                                         @PathVariable @NotBlank String postId,
-                                         @RequestPart MultipartFile commentImage,
-                                         @RequestPart @Valid CommentRequest commentRequest) throws IOException {
-        return discussionDataReceiverFacade.createBasicComment(postId, authorizationHeader, commentImage, commentRequest);
-    }
-
-    @PostMapping("/group/{groupId}/post/{postId}")
-    public CommentDto createGroupComment(@RequestHeader("Authorization") String authorizationHeader,
-                                         @PathVariable @NotBlank String postId,
-                                         @PathVariable @NotBlank String groupId,
-                                         @RequestPart MultipartFile commentImage,
-                                         @RequestPart @Valid CommentRequest commentRequest) throws IOException {
-        return discussionDataReceiverFacade.createGroupedComment(postId, groupId, authorizationHeader, commentImage, commentRequest);
+    @PostMapping
+    public DiscussionDto createComment(@RequestHeader("Authorization") String authorizationHeader,
+                                       @RequestPart MultipartFile commentImage,
+                                       @RequestPart @Valid CommentCreationRequest commentCreationRequest) throws IOException {
+        return discussionDataReceiverFacade.createDiscussion(discussionType, authorizationHeader, commentImage, commentCreationRequest);
     }
 
     @PostMapping("/{id}/report")
-    public void reportComment(@RequestHeader("Authorization") String authorizationHeader,
-                              @PathVariable String id,
+    public void reportComment(@PathVariable String id,
+                              @RequestHeader("Authorization") String authorizationHeader,
                               @RequestBody ReportRequest reportRequest) {
-        reportDataReceiverFacade.report(id, authorizationHeader, reportRequest, "COMMENT");
+        reportDataReceiverFacade.report(id, authorizationHeader, reportRequest, discussionType);
     }
 
     @PutMapping("/{commentId}/react/{reactionId}")
-    public CommentDto reactToComment(@RequestHeader("Authorization") String authorizationHeader,
-                                          @PathVariable @NotBlank String commentId,
-                                          @PathVariable @NotBlank String reactionId,
-                                          @RequestParam @NotBlank String commentType) {
-        return discussionDataReceiverFacade.reactToComment(reactionId, commentId, commentType, authorizationHeader);
+    public DiscussionDto reactToComment(@PathVariable @NotBlank String commentId,
+                                        @PathVariable @NotBlank String reactionId,
+                                        @RequestHeader("Authorization") String authorizationHeader) {
+        return discussionDataReceiverFacade.reactToDiscussion(reactionId, commentId, discussionType, authorizationHeader);
     }
 
     @DeleteMapping("/{id}")
     public void deleteComment(@PathVariable @NotBlank String id,
                               @RequestParam @NotBlank String commentType) throws IOException {
-        discussionDataReceiverFacade.deleteComment(id, commentType);
+        discussionDataReceiverFacade.deleteDiscussion(id, commentType);
     }
 }
