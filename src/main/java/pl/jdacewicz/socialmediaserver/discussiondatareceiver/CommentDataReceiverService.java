@@ -8,6 +8,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.CommentCreationRequest;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.DiscussionCreationRequest;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 
@@ -32,22 +34,14 @@ class CommentDataReceiverService implements DiscussionDataReceiverService<Commen
     }
 
     @Override
-    @Transactional
-    public Comment reactToDiscussionById(String id, ReactionUser reactionUser) {
-        var comment = getDiscussionById(id);
-        if (comment.isReactionUserStored(reactionUser)) {
-            return commentDataReceiverRepository.save(comment.withoutReactionUser(reactionUser));
-        }
-        return commentDataReceiverRepository.save(comment.withReactionUser(reactionUser));
-    }
-
-    @Transactional
-    public Comment createBasicComment(String postId, String content, String imageName, String authenticationHeader) {
-        bannedWordsCheckerFacade.checkForBannedWords(content);
+    public <S extends DiscussionCreationRequest> Comment createDiscussion(String authenticationHeader, String imageName,
+                                                                          S request) {
+        var commentRequest = (CommentCreationRequest) request;
+        bannedWordsCheckerFacade.checkForBannedWords(commentRequest.getContent());
         var loggedUser = userDataReceiverFacade.getLoggedInUser(authenticationHeader);
-        var foundPost = basicPostDataReceiverService.getDiscussionById(postId);
+        var foundPost = basicPostDataReceiverService.getDiscussionById(commentRequest.getPostId());
         var comment = Comment.builder()
-                .content(content)
+                .content(commentRequest.getContent())
                 .creator(loggedUser)
                 .imageName(imageName)
                 .imageMainDirectory(foundPost.getFolderDirectory())
@@ -55,6 +49,16 @@ class CommentDataReceiverService implements DiscussionDataReceiverService<Commen
         var createdComment = commentDataReceiverRepository.save(comment);
         basicPostDataReceiverService.updatePost(foundPost.withComment(createdComment));
         return createdComment;
+    }
+
+    @Override
+    @Transactional
+    public Comment reactToDiscussionById(String id, ReactionUser reactionUser) {
+        var comment = getDiscussionById(id);
+        if (comment.isReactionUserStored(reactionUser)) {
+            return commentDataReceiverRepository.save(comment.withoutReactionUser(reactionUser));
+        }
+        return commentDataReceiverRepository.save(comment.withReactionUser(reactionUser));
     }
 
     @Override

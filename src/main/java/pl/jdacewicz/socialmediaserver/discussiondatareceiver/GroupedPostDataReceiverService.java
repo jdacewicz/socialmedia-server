@@ -8,10 +8,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.stereotype.Service;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
-import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.DiscussionCreationRequest;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.GroupedPostCreationRequest;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 
 import java.util.List;
 
@@ -52,6 +52,21 @@ class GroupedPostDataReceiverService implements PostDataReceiverService<GroupedP
     }
 
     @Override
+    public <S extends DiscussionCreationRequest> GroupedPost createDiscussion(String authenticationHeader, String imageName, S request) {
+        var groupedPostRequest = (GroupedPostCreationRequest) request;
+        bannedWordsCheckerFacade.checkForBannedWords(groupedPostRequest.getContent());
+        var loggedInUser = userDataReceiverFacade.getLoggedInUser(authenticationHeader);
+        var post = GroupedPost.builder()
+                .groupId(groupedPostRequest.getGroupId())
+                .content(groupedPostRequest.getContent())
+                .creator(loggedInUser)
+                .imageName(imageName)
+                .imageMainDirectory(loggedInUser.getDataDirectory())
+                .build();
+        return groupedPostDataReceiverRepository.save(post);
+    }
+
+    @Override
     public void updatePost(GroupedPost post) {
         groupedPostDataReceiverRepository.save(post);
     }
@@ -73,20 +88,5 @@ class GroupedPostDataReceiverService implements PostDataReceiverService<GroupedP
     @Override
     public void deleteAllDiscussions() {
         groupedPostDataReceiverRepository.deleteAll();
-    }
-
-    GroupedPost createGroupedPost(String groupId, String imageName, String authenticationHeader, PostRequest postRequest) {
-        GroupedPost post;
-        LoggedUserDto loggedInUser;
-        bannedWordsCheckerFacade.checkForBannedWords(postRequest.content());
-        loggedInUser = userDataReceiverFacade.getLoggedInUser(authenticationHeader);
-        post = GroupedPost.builder()
-                .groupId(groupId)
-                .content(postRequest.content())
-                .creator(loggedInUser)
-                .imageName(imageName)
-                .imageMainDirectory(loggedInUser.getDataDirectory())
-                .build();
-        return groupedPostDataReceiverRepository.save(post);
     }
 }

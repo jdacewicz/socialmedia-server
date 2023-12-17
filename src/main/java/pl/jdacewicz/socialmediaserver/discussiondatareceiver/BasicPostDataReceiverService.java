@@ -11,10 +11,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
-import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.DiscussionCreationRequest;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
-import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 
 import java.util.List;
 
@@ -55,6 +54,20 @@ class BasicPostDataReceiverService implements PostDataReceiverService<BasicPost>
     }
 
     @Override
+    public <S extends DiscussionCreationRequest> BasicPost createDiscussion(String authenticationHeader, String imageName,
+                                                                            S request) {
+        bannedWordsCheckerFacade.checkForBannedWords(request.getContent());
+        var loggedInUser = userDataReceiverFacade.getLoggedInUser(authenticationHeader);
+        var post = BasicPost.builder()
+                .content(request.getContent())
+                .creator(loggedInUser)
+                .imageName(imageName)
+                .imageMainDirectory(loggedInUser.getDataDirectory())
+                .build();
+        return basicPostDataReceiverRepository.save(post);
+    }
+
+    @Override
     public void updatePost(BasicPost post) {
         basicPostDataReceiverRepository.save(post);
     }
@@ -79,19 +92,5 @@ class BasicPostDataReceiverService implements PostDataReceiverService<BasicPost>
     @Profile("demo")
     public void deleteAllDiscussions() {
         basicPostDataReceiverRepository.deleteAll();
-    }
-
-    BasicPost createBasicPost(String authenticationHeader, String imageName, PostRequest postRequest) {
-        BasicPost post;
-        LoggedUserDto loggedInUser;
-        bannedWordsCheckerFacade.checkForBannedWords(postRequest.content());
-        loggedInUser = userDataReceiverFacade.getLoggedInUser(authenticationHeader);
-        post = BasicPost.builder()
-                .content(postRequest.content())
-                .creator(loggedInUser)
-                .imageName(imageName)
-                .imageMainDirectory(loggedInUser.getDataDirectory())
-                .build();
-        return basicPostDataReceiverRepository.save(post);
     }
 }
