@@ -10,6 +10,4 @@ interface SearchStrategy {
     SearchResult searchUsers(SearchRequest searchRequest, int pageNumber, int pageSize);
 
     SearchResult searchPosts(SearchRequest searchRequest, int pageNumber, int pageSize);
-
-    SearchResult searchComments(SearchRequest searchRequest,  int pageNumber, int pageSize);
 }

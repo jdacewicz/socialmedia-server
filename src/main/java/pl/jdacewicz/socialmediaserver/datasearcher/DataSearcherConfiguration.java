@@ -9,9 +9,14 @@ import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 class DataSearcherConfiguration {
 
     @Bean
-    DataSearcherFacade dataSearcherFacade(UserDataReceiverFacade userDataReceiverFacade,
-                                          DiscussionDataReceiverFacade discussionDataReceiverFacade) {
+    DataSearcherFacade dataSearcherFacade(SearchResultFactory searchResultFactory) {
+        return new DataSearcherFacade(searchResultFactory);
+    }
+
+    @Bean
+    SearchResultFactory searchResultFactory(UserDataReceiverFacade userDataReceiverFacade,
+                                            DiscussionDataReceiverFacade discussionDataReceiverFacade) {
         var defaultSearchStrategy = new DefaultSearchStrategy(userDataReceiverFacade, discussionDataReceiverFacade);
-        return new DataSearcherFacade(defaultSearchStrategy);
+        return new SearchResultFactory(defaultSearchStrategy);
     }
 }

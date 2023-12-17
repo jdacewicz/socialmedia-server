@@ -1,36 +1,34 @@
 package pl.jdacewicz.socialmediaserver.datasearcher;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import pl.jdacewicz.socialmediaserver.datasearcher.dto.SearchRequest;
 import pl.jdacewicz.socialmediaserver.datasearcher.dto.SearchResult;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.DiscussionDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
+import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
 @RequiredArgsConstructor
 class DefaultSearchStrategy implements SearchStrategy {
 
+    final static String postSearchType = "BASIC_POST";
+
     private final UserDataReceiverFacade userDataReceiverFacade;
     private final DiscussionDataReceiverFacade discussionDataReceiverFacade;
 
-    private final String type = "BASIC";
-
     @Override
     public SearchResult searchAll(SearchRequest searchRequest, int pageNumber, int pageSize) {
-        var uniqueWords = SearchDataProcessor.splitTextToUniqueWords(searchRequest.phrase());
-        var foundPosts = discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), type, pageNumber, pageSize);
-        var foundComments = discussionDataReceiverFacade.getCommentsByContentContaining(searchRequest.phrase(), type, pageNumber, pageSize);
-        var foundUsers = userDataReceiverFacade.getUsersByFirstnamesAndLastnames(uniqueWords, uniqueWords, pageNumber, pageSize);
+        var foundUsers = getUserDtosByUniqueWords(searchRequest, pageNumber, pageSize);
+        var foundPosts = discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), postSearchType, pageNumber, pageSize);
         return SearchResult.builder()
-                .posts(foundPosts)
-                .comments(foundComments)
                 .users(foundUsers)
+                .posts(foundPosts)
                 .build();
     }
 
     @Override
     public SearchResult searchUsers(SearchRequest searchRequest, int pageNumber, int pageSize) {
-        var uniqueWords = SearchDataProcessor.splitTextToUniqueWords(searchRequest.phrase());
-        var foundUsers =  userDataReceiverFacade.getUsersByFirstnamesAndLastnames(uniqueWords, uniqueWords, pageNumber, pageSize);
+        var foundUsers = getUserDtosByUniqueWords(searchRequest, pageNumber, pageSize);
         return SearchResult.builder()
                 .users(foundUsers)
                 .build();
@@ -38,17 +36,14 @@ class DefaultSearchStrategy implements SearchStrategy {
 
     @Override
     public SearchResult searchPosts(SearchRequest searchRequest, int pageNumber, int pageSize) {
-        var foundPosts = discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), type, pageNumber, pageSize);
+        var foundPosts = discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), postSearchType, pageNumber, pageSize);
         return SearchResult.builder()
                 .posts(foundPosts)
                 .build();
     }
 
-    @Override
-    public SearchResult searchComments(SearchRequest searchRequest, int pageNumber, int pageSize) {
-        var comments = discussionDataReceiverFacade.getCommentsByContentContaining(searchRequest.phrase(), type, pageNumber, pageSize);
-        return SearchResult.builder()
-                .comments(comments)
-                .build();
+    private Page<UserDto> getUserDtosByUniqueWords(SearchRequest searchRequest, int pageNumber, int pageSize) {
+        var uniqueWords = SearchDataProcessor.splitTextToUniqueWords(searchRequest.phrase());
+        return userDataReceiverFacade.getUsersByFirstnamesAndLastnames(uniqueWords, uniqueWords, pageNumber, pageSize);
     }
 }
