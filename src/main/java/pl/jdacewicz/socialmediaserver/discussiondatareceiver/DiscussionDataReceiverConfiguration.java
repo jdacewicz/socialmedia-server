@@ -9,13 +9,11 @@ import pl.jdacewicz.socialmediaserver.reactionuser.ReactionUserFacade;
 class DiscussionDataReceiverConfiguration {
 
     @Bean
-    DiscussionDataReceiverFacade dataReceiverFacade(PostDataReceiverFactory postDataReceiverFactory,
-                                                    CommentDataReceiverFactory commentDataReceiverFactory,
+    DiscussionDataReceiverFacade dataReceiverFacade(DiscussionDataReceiverFactoryImpl discussionDataReceiverFactoryImpl,
                                                     ReactionUserFacade reactionUserFacade,
                                                     FileStorageFacade fileStorageFacade,
-                                                    PostMapper postMapper,
-                                                    CommentMapper commentMapper) {
-        return new DiscussionDataReceiverFacade(postDataReceiverFactory, commentDataReceiverFactory, reactionUserFacade,
-                fileStorageFacade, postMapper, commentMapper);
+                                                    DiscussionMapper discussionMapper) {
+        return new DiscussionDataReceiverFacade(discussionDataReceiverFactoryImpl, reactionUserFacade, fileStorageFacade,
+                discussionMapper);
     }
 }

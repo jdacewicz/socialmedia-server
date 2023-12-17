@@ -10,8 +10,6 @@ import pl.jdacewicz.socialmediaserver.filemapper.dto.MapRequest;
 import pl.jdacewicz.socialmediaserver.reactioncounter.ReactionCounterFacade;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -21,10 +19,11 @@ class DiscussionMapper {
     private final ElapsedDateTimeFormatterFacade elapsedDateTimeFormatterFacade;
     private final FileMapperFacade fileMapperFacade;
 
-    <T extends Discussion<T>> Set<DiscussionDto> mapToDto(Set<T> foundPosts) {
+
+    public List<DiscussionDto> mapToDto(List<? extends Post> foundPosts) {
         return foundPosts.stream()
                 .map(this::mapToDto)
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     public DiscussionDto mapToDto(Discussion<?> discussion) {
@@ -39,8 +38,5 @@ class DiscussionMapper {
                 .elapsedDateTime(elapsedDateTime)
                 .reactionCounts(reactionCounts)
                 .build();
-    }
-
-    public List<DiscussionDto> mapToDto(List<? extends Post> foundPosts) {
     }
 }
