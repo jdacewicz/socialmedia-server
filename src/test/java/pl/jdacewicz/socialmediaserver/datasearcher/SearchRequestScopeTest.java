@@ -37,16 +37,6 @@ class SearchRequestScopeTest {
     }
 
     @Test
-    void should_return_comments_when_getting_scope_by_comments_string() {
-        //Given
-        var scope = "comments";
-        //When
-        var result = SearchRequestScope.getScope(scope);
-        //Then
-        assertEquals(SearchRequestScope.COMMENTS, result);
-    }
-
-    @Test
     void should_throw_illegal_argument_exception_when_getting_scope_by_unrecognized_string() {
         //Given
         var scope = "unrecognized";

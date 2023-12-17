@@ -9,16 +9,16 @@ import pl.jdacewicz.socialmediaserver.datasearcher.dto.SearchResult;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class DataSearcherFacadeTest {
+class SearchResultFactoryTest {
 
-    DataSearcherFacade dataSearcherFacade;
+    SearchResultFactory searchResultFactory;
 
     SearchStrategy searchStrategy;
 
     @BeforeEach
     void setUp() {
         searchStrategy = Mockito.mock(SearchStrategy.class);
-        dataSearcherFacade = new DataSearcherFacade(searchStrategy);
+        searchResultFactory = new SearchResultFactory(searchStrategy);
     }
 
     @Test
@@ -32,7 +32,7 @@ class DataSearcherFacadeTest {
         var pageSize = 1;
         when(searchStrategy.searchAll(searchRequest, pageNumber, pageSize)).thenReturn(searchResult);
         //When
-        var result = dataSearcherFacade.searchData(scope, pageNumber, pageSize, searchRequest);
+        var result = searchResultFactory.searchData(scope, pageNumber, pageSize, searchRequest);
         //Then
         assertEquals(searchResult, result);
         verify(searchStrategy, times(1)).searchAll(searchRequest, pageNumber, pageSize);
@@ -49,7 +49,7 @@ class DataSearcherFacadeTest {
         var pageSize = 1;
         when(searchStrategy.searchUsers(searchRequest, pageNumber, pageSize)).thenReturn(searchResult);
         //When
-        var result = dataSearcherFacade.searchData(scope, pageNumber, pageSize, searchRequest);
+        var result = searchResultFactory.searchData(scope, pageNumber, pageSize, searchRequest);
         //Then
         assertEquals(searchResult, result);
         verify(searchStrategy, times(1)).searchUsers(searchRequest, pageNumber, pageSize);
@@ -66,26 +66,9 @@ class DataSearcherFacadeTest {
         var pageSize = 1;
         when(searchStrategy.searchPosts(searchRequest, pageNumber, pageSize)).thenReturn(searchResult);
         //When
-        var result = dataSearcherFacade.searchData(scope, pageNumber, pageSize, searchRequest);
+        var result = searchResultFactory.searchData(scope, pageNumber, pageSize, searchRequest);
         //Then
         assertEquals(searchResult, result);
         verify(searchStrategy, times(1)).searchPosts(searchRequest, pageNumber, pageSize);
-    }
-
-    @Test
-    void should_return_comments_when_scope_equals_comments() {
-        //Given
-        var scope = "comments";
-        var searchRequest = new SearchRequest("test");
-        var searchResult = SearchResult.builder()
-                .build();
-        var pageNumber = 0;
-        var pageSize = 1;
-        when(searchStrategy.searchComments(searchRequest, pageNumber, pageSize)).thenReturn(searchResult);
-        //When
-        var result = dataSearcherFacade.searchData(scope, pageNumber, pageSize, searchRequest);
-        //Then
-        assertEquals(searchResult, result);
-        verify(searchStrategy, times(1)).searchComments(searchRequest, pageNumber, pageSize);
     }
 }
