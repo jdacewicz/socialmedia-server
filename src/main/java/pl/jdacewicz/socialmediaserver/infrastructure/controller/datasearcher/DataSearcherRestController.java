@@ -3,9 +3,11 @@ package pl.jdacewicz.socialmediaserver.infrastructure.controller.datasearcher;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import pl.jdacewicz.socialmediaserver.datasearcher.DataSearcherFacade;
-import pl.jdacewicz.socialmediaserver.datasearcher.dto.SearchRequest;
 import pl.jdacewicz.socialmediaserver.datasearcher.dto.SearchResult;
 
 @RestController
@@ -19,7 +21,7 @@ public class DataSearcherRestController {
     public SearchResult searchData(@RequestParam @NotBlank String scope,
                                    @RequestParam int pageNumber,
                                    @RequestParam int pageSize,
-                                   @RequestBody @Valid SearchRequest searchRequest) {
-        return dataSearcherFacade.searchData(scope, pageNumber, pageSize, searchRequest);
+                                   @RequestParam @Valid String phrase) {
+        return dataSearcherFacade.searchData(scope, pageNumber, pageSize, phrase);
     }
 }

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.domain.PageImpl;
-import pl.jdacewicz.socialmediaserver.datasearcher.dto.SearchRequest;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.DiscussionDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.DiscussionDto;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
@@ -19,8 +18,8 @@ import static org.mockito.Mockito.*;
 
 class DefaultSearchStrategyTest {
 
-    final SearchRequest searchRequest = new SearchRequest("test");
     final String dataType = DefaultSearchStrategy.postSearchType;
+    final String phrase = "test";
     final int pageNumber = 0;
     final int pageSize = 1;
 
@@ -46,20 +45,20 @@ class DefaultSearchStrategyTest {
                 .build();
         var posts = new PageImpl<>(List.of(postDto));
         var users = new PageImpl<>(List.of(userDto));
-        when(discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize))
+        when(discussionDataReceiverFacade.getDiscussionsByContentContaining(phrase, dataType, pageNumber, pageSize))
                 .thenReturn(posts);
-        when(userDataReceiverFacade.getUsersByFirstnamesAndLastnames(Set.of(searchRequest.phrase()), Set.of(searchRequest.phrase()), pageNumber, pageSize))
+        when(userDataReceiverFacade.getUsersByFirstnamesAndLastnames(Set.of(phrase), Set.of(phrase), pageNumber, pageSize))
                 .thenReturn(users);
         //When
-        var result = defaultSearchStrategy.searchAll(searchRequest, pageNumber, pageSize);
+        var result = defaultSearchStrategy.searchAll(phrase, pageNumber, pageSize);
         //Then
         assertFalse(result.posts()
                 .isEmpty());
         assertFalse(result.users()
                 .isEmpty());
-        verify(discussionDataReceiverFacade, times(1)).getDiscussionsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
-        verify(userDataReceiverFacade, times(1)).getUsersByFirstnamesAndLastnames(Set.of(searchRequest.phrase()),
-                Set.of(searchRequest.phrase()), pageNumber, pageSize);
+        verify(discussionDataReceiverFacade, times(1)).getDiscussionsByContentContaining(phrase, dataType, pageNumber, pageSize);
+        verify(userDataReceiverFacade, times(1)).getUsersByFirstnamesAndLastnames(Set.of(phrase),
+                Set.of(phrase), pageNumber, pageSize);
     }
 
     @Test
@@ -68,18 +67,18 @@ class DefaultSearchStrategyTest {
         var userDto = UserDto.builder()
                 .build();
         var users = new PageImpl<>(List.of(userDto));
-        when(userDataReceiverFacade.getUsersByFirstnamesAndLastnames(Set.of(searchRequest.phrase()), Set.of(searchRequest.phrase()), pageNumber, pageSize))
+        when(userDataReceiverFacade.getUsersByFirstnamesAndLastnames(Set.of(phrase), Set.of(phrase), pageNumber, pageSize))
                 .thenReturn(users);
         //When
-        var result = defaultSearchStrategy.searchUsers(searchRequest, pageNumber, pageSize);
+        var result = defaultSearchStrategy.searchUsers(phrase, pageNumber, pageSize);
         //Then
         assertFalse(result.users()
                 .isEmpty());
         assertTrue(result.posts()
                 .isEmpty());
-        verify(userDataReceiverFacade, times(1)).getUsersByFirstnamesAndLastnames(Set.of(searchRequest.phrase()),
-                Set.of(searchRequest.phrase()), pageNumber, pageSize);
-        verify(discussionDataReceiverFacade, never()).getDiscussionsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
+        verify(userDataReceiverFacade, times(1)).getUsersByFirstnamesAndLastnames(Set.of(phrase),
+                Set.of(phrase), pageNumber, pageSize);
+        verify(discussionDataReceiverFacade, never()).getDiscussionsByContentContaining(phrase, dataType, pageNumber, pageSize);
     }
 
     @Test
@@ -88,16 +87,16 @@ class DefaultSearchStrategyTest {
         var postDto = DiscussionDto.builder()
                 .build();
         var posts = new PageImpl<>(List.of(postDto));
-        when(discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize))
+        when(discussionDataReceiverFacade.getDiscussionsByContentContaining(phrase, dataType, pageNumber, pageSize))
                 .thenReturn(posts);
         //When
-        var result = defaultSearchStrategy.searchPosts(searchRequest, pageNumber, pageSize);
+        var result = defaultSearchStrategy.searchPosts(phrase, pageNumber, pageSize);
         //Then
         assertFalse(result.posts()
                 .isEmpty());
         assertTrue(result.users()
                 .isEmpty());
-        verify(discussionDataReceiverFacade, times(1)).getDiscussionsByContentContaining(searchRequest.phrase(), dataType, pageNumber, pageSize);
-        verify(userDataReceiverFacade, never()).getUsersByFirstnamesAndLastnames(Set.of(searchRequest.phrase()), Set.of(searchRequest.phrase()), pageNumber, pageSize);
+        verify(discussionDataReceiverFacade, times(1)).getDiscussionsByContentContaining(phrase, dataType, pageNumber, pageSize);
+        verify(userDataReceiverFacade, never()).getUsersByFirstnamesAndLastnames(Set.of(phrase), Set.of(phrase), pageNumber, pageSize);
     }
 }

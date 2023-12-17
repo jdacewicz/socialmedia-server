@@ -2,7 +2,6 @@ package pl.jdacewicz.socialmediaserver.datasearcher;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import pl.jdacewicz.socialmediaserver.datasearcher.dto.SearchRequest;
 import pl.jdacewicz.socialmediaserver.datasearcher.dto.SearchResult;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.DiscussionDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
@@ -17,9 +16,9 @@ class DefaultSearchStrategy implements SearchStrategy {
     private final DiscussionDataReceiverFacade discussionDataReceiverFacade;
 
     @Override
-    public SearchResult searchAll(SearchRequest searchRequest, int pageNumber, int pageSize) {
-        var foundUsers = getUserDtosByUniqueWords(searchRequest, pageNumber, pageSize);
-        var foundPosts = discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), postSearchType, pageNumber, pageSize);
+    public SearchResult searchAll(String phrase, int pageNumber, int pageSize) {
+        var foundUsers = getUserDtosByUniqueWords(phrase, pageNumber, pageSize);
+        var foundPosts = discussionDataReceiverFacade.getDiscussionsByContentContaining(phrase, postSearchType, pageNumber, pageSize);
         return SearchResult.builder()
                 .users(foundUsers)
                 .posts(foundPosts)
@@ -27,23 +26,23 @@ class DefaultSearchStrategy implements SearchStrategy {
     }
 
     @Override
-    public SearchResult searchUsers(SearchRequest searchRequest, int pageNumber, int pageSize) {
-        var foundUsers = getUserDtosByUniqueWords(searchRequest, pageNumber, pageSize);
+    public SearchResult searchUsers(String phrase, int pageNumber, int pageSize) {
+        var foundUsers = getUserDtosByUniqueWords(phrase, pageNumber, pageSize);
         return SearchResult.builder()
                 .users(foundUsers)
                 .build();
     }
 
     @Override
-    public SearchResult searchPosts(SearchRequest searchRequest, int pageNumber, int pageSize) {
-        var foundPosts = discussionDataReceiverFacade.getDiscussionsByContentContaining(searchRequest.phrase(), postSearchType, pageNumber, pageSize);
+    public SearchResult searchPosts(String phrase, int pageNumber, int pageSize) {
+        var foundPosts = discussionDataReceiverFacade.getDiscussionsByContentContaining(phrase, postSearchType, pageNumber, pageSize);
         return SearchResult.builder()
                 .posts(foundPosts)
                 .build();
     }
 
-    private Page<UserDto> getUserDtosByUniqueWords(SearchRequest searchRequest, int pageNumber, int pageSize) {
-        var uniqueWords = SearchDataProcessor.splitTextToUniqueWords(searchRequest.phrase());
+    private Page<UserDto> getUserDtosByUniqueWords(String phrase, int pageNumber, int pageSize) {
+        var uniqueWords = SearchDataProcessor.splitTextToUniqueWords(phrase);
         return userDataReceiverFacade.getUsersByFirstnamesAndLastnames(uniqueWords, uniqueWords, pageNumber, pageSize);
     }
 }
