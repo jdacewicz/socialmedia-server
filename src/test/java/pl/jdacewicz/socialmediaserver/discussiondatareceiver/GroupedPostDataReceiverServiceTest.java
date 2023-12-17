@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
-import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.GroupedPostCreationRequest;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
@@ -63,15 +63,18 @@ class GroupedPostDataReceiverServiceTest {
         var groupId = "id";
         var imageName = "image.png";
         var authenticationHeader = "header";
-        var postRequest = new PostRequest("content");
         var loggedUser = LoggedUserDto.builder()
+                .build();
+        var request = GroupedPostCreationRequest.builder()
+                .groupId(groupId)
+                .content("content")
                 .build();
         when(userDataReceiverFacade.getLoggedInUser(authenticationHeader)).thenReturn(loggedUser);
         //When
-        var result = groupedPostDataReceiverService.createGroupedPost(groupId, imageName, authenticationHeader, postRequest);
+        var result = groupedPostDataReceiverService.createDiscussion(authenticationHeader, imageName, request);
         //Then
         assertEquals(groupId, result.getGroupId());
-        assertEquals(postRequest.content(), result.getContent());
+        assertEquals(request.getContent(), result.getContent());
         assertEquals(imageName, result.getImageName());
         assertEquals(loggedUser, result.getCreator());
     }

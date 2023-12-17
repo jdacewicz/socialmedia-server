@@ -12,18 +12,18 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @SuppressWarnings("all")
-class BasicCommentDataReceiverRepositoryTest implements BasicCommentDataReceiverRepository {
+class CommentDataReceiverRepositoryTest implements CommentDataReceiverRepository {
 
-    List<BasicComment> database = new LinkedList<>();
+    List<Comment> database = new LinkedList<>();
 
     @Override
-    public <S extends BasicComment> S save(S entity) {
+    public <S extends Comment> S save(S entity) {
         database.add(entity);
         return entity;
     }
 
     @Override
-    public Optional<BasicComment> findById(String s) {
+    public Optional<Comment> findById(String s) {
         return database.stream()
                 .filter(comment -> comment.getDiscussionId()
                         .equals(s))
@@ -31,62 +31,62 @@ class BasicCommentDataReceiverRepositoryTest implements BasicCommentDataReceiver
     }
 
     @Override
-    public List<BasicComment> findAllById(Iterable<String> strings) {
+    public List<Comment> findAllById(Iterable<String> strings) {
         return null;
     }
 
     @Override
-    public Page<BasicComment> findByContentContaining(String phrase, Pageable pageable) {
+    public Page<Comment> findByContentContaining(String phrase, Pageable pageable) {
         return null;
     }
 
     @Override
-    public <S extends BasicComment> S insert(S entity) {
+    public <S extends Comment> S insert(S entity) {
         return null;
     }
 
     @Override
-    public <S extends BasicComment> List<S> insert(Iterable<S> entities) {
+    public <S extends Comment> List<S> insert(Iterable<S> entities) {
         return null;
     }
 
     @Override
-    public <S extends BasicComment> Optional<S> findOne(Example<S> example) {
+    public <S extends Comment> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
 
     @Override
-    public <S extends BasicComment> List<S> findAll(Example<S> example) {
+    public <S extends Comment> List<S> findAll(Example<S> example) {
         return null;
     }
 
     @Override
-    public <S extends BasicComment> List<S> findAll(Example<S> example, Sort sort) {
+    public <S extends Comment> List<S> findAll(Example<S> example, Sort sort) {
         return null;
     }
 
     @Override
-    public <S extends BasicComment> Page<S> findAll(Example<S> example, Pageable pageable) {
+    public <S extends Comment> Page<S> findAll(Example<S> example, Pageable pageable) {
         return null;
     }
 
     @Override
-    public <S extends BasicComment> long count(Example<S> example) {
+    public <S extends Comment> long count(Example<S> example) {
         return 0;
     }
 
     @Override
-    public <S extends BasicComment> boolean exists(Example<S> example) {
+    public <S extends Comment> boolean exists(Example<S> example) {
         return false;
     }
 
     @Override
-    public <S extends BasicComment, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends Comment, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
 
     @Override
-    public <S extends BasicComment> List<S> saveAll(Iterable<S> entities) {
+    public <S extends Comment> List<S> saveAll(Iterable<S> entities) {
         return null;
     }
 
@@ -96,7 +96,7 @@ class BasicCommentDataReceiverRepositoryTest implements BasicCommentDataReceiver
     }
 
     @Override
-    public List<BasicComment> findAll() {
+    public List<Comment> findAll() {
         return null;
     }
 
@@ -111,7 +111,7 @@ class BasicCommentDataReceiverRepositoryTest implements BasicCommentDataReceiver
     }
 
     @Override
-    public void delete(BasicComment entity) {
+    public void delete(Comment entity) {
 
     }
 
@@ -121,7 +121,7 @@ class BasicCommentDataReceiverRepositoryTest implements BasicCommentDataReceiver
     }
 
     @Override
-    public void deleteAll(Iterable<? extends BasicComment> entities) {
+    public void deleteAll(Iterable<? extends Comment> entities) {
 
     }
 
@@ -131,12 +131,12 @@ class BasicCommentDataReceiverRepositoryTest implements BasicCommentDataReceiver
     }
 
     @Override
-    public List<BasicComment> findAll(Sort sort) {
+    public List<Comment> findAll(Sort sort) {
         return null;
     }
 
     @Override
-    public Page<BasicComment> findAll(Pageable pageable) {
+    public Page<Comment> findAll(Pageable pageable) {
         return null;
     }
 }

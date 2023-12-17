@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
-import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.PostRequest;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.DiscussionCreationRequest;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
@@ -62,14 +62,16 @@ class BasicPostDataReceiverServiceTest {
     void should_return_created_basic_post_when_creating_basic_post() {
         var imageName = "image.png";
         var authenticationHeader = "header";
-        var postRequest = new PostRequest("content");
         var loggedUser = LoggedUserDto.builder()
+                .build();
+        var request = DiscussionCreationRequest.builder()
+                .content("content")
                 .build();
         when(userDataReceiverFacade.getLoggedInUser(authenticationHeader)).thenReturn(loggedUser);
         //When
-        var result = basicPostDataReceiverService.createBasicPost(authenticationHeader, imageName, postRequest);
+        var result = basicPostDataReceiverService.createDiscussion(authenticationHeader, imageName, request);
         //Then
-        assertEquals(postRequest.content(), result.getContent());
+        assertEquals(request.getContent(), result.getContent());
         assertEquals(imageName, result.getImageName());
         assertEquals(loggedUser, result.getCreator());
     }

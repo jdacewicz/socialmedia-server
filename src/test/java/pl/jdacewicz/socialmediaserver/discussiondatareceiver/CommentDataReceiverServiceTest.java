@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
+import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.CommentCreationRequest;
 import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
@@ -13,12 +14,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class BasicCommentDataReceiverServiceTest {
+class CommentDataReceiverServiceTest {
 
-    BasicCommentDataReceiverService basicCommentDataReceiverService;
+    CommentDataReceiverService commentDataReceiverService;
 
     BasicPostDataReceiverService basicPostDataReceiverService;
-    BasicCommentDataReceiverRepositoryTest basicCommentDataReceiverRepositoryTest;
+    CommentDataReceiverRepositoryTest basicCommentDataReceiverRepositoryTest;
     UserDataReceiverFacade userDataReceiverFacade;
     BannedWordsCheckerFacade bannedWordsCheckerFacade;
 
@@ -27,8 +28,8 @@ class BasicCommentDataReceiverServiceTest {
         basicPostDataReceiverService = Mockito.mock(BasicPostDataReceiverService.class);
         userDataReceiverFacade = Mockito.mock(UserDataReceiverFacade.class);
         bannedWordsCheckerFacade = Mockito.mock(BannedWordsCheckerFacade.class);
-        basicCommentDataReceiverRepositoryTest = new BasicCommentDataReceiverRepositoryTest();
-        basicCommentDataReceiverService = new BasicCommentDataReceiverService(basicPostDataReceiverService,
+        basicCommentDataReceiverRepositoryTest = new CommentDataReceiverRepositoryTest();
+        commentDataReceiverService = new CommentDataReceiverService(basicPostDataReceiverService,
                 basicCommentDataReceiverRepositoryTest, userDataReceiverFacade, bannedWordsCheckerFacade);
     }
 
@@ -36,12 +37,12 @@ class BasicCommentDataReceiverServiceTest {
     void should_return_basic_comment_when_getting_discussion_by_existing_id() {
         //Given
         var discussionId = "id";
-        var basicComment = BasicComment.builder()
+        var basicComment = Comment.builder()
                 .discussionId(discussionId)
                 .build();
         basicCommentDataReceiverRepositoryTest.save(basicComment);
         //When
-        var result = basicCommentDataReceiverService.getDiscussionById(discussionId);
+        var result = commentDataReceiverService.getDiscussionById(discussionId);
         //Then
         assertEquals(discussionId, result.getDiscussionId());
     }
@@ -53,14 +54,13 @@ class BasicCommentDataReceiverServiceTest {
         //When
         //Then
         assertThrows(UnsupportedOperationException.class,
-                () -> basicCommentDataReceiverService.getDiscussionById(discussionId));
+                () -> commentDataReceiverService.getDiscussionById(discussionId));
     }
 
     @Test
     void should_return_created_comment_when_creating_comment() {
         //Given
         var postId = "id";
-        var content = "content";
         var imageName = "image.png";
         var authenticationHeader = "header";
         var loggedUser = LoggedUserDto.builder()
@@ -68,12 +68,16 @@ class BasicCommentDataReceiverServiceTest {
         var foundPost = BasicPost.builder()
                 .discussionId(postId)
                 .build();
+        var request = CommentCreationRequest.builder()
+                .postId(postId)
+                .content("content")
+                .build();
         when(userDataReceiverFacade.getLoggedInUser(authenticationHeader)).thenReturn(loggedUser);
         when(basicPostDataReceiverService.getDiscussionById(postId)).thenReturn(foundPost);
         //When
-        var result = basicCommentDataReceiverService.createBasicComment(postId, content, imageName, authenticationHeader);
+        var result = commentDataReceiverService.createDiscussion(authenticationHeader, imageName, request);
         //Then
-        assertEquals(content, result.getContent());
+        assertEquals(request.getContent(), result.getContent());
         assertEquals(imageName, result.getImageName());
         assertEquals(loggedUser, result.getCreator());
     }
@@ -86,13 +90,13 @@ class BasicCommentDataReceiverServiceTest {
                 .userId("id")
                 .reactionId("id")
                 .build();
-        var basicComment = BasicComment.builder()
+        var basicComment = Comment.builder()
                 .discussionId(discussionId)
                 .reactionUsers(List.of(reactionUser))
                 .build();
         basicCommentDataReceiverRepositoryTest.save(basicComment);
         //When
-        var result = basicCommentDataReceiverService.reactToDiscussionById(discussionId, reactionUser);
+        var result = commentDataReceiverService.reactToDiscussionById(discussionId, reactionUser);
         //Then
         assertTrue(result.getReactionUsers()
                 .isEmpty());
@@ -106,13 +110,13 @@ class BasicCommentDataReceiverServiceTest {
                 .userId("id")
                 .reactionId("id")
                 .build();
-        var basicComment = BasicComment.builder()
+        var basicComment = Comment.builder()
                 .discussionId(discussionId)
                 .reactionUsers(List.of())
                 .build();
         basicCommentDataReceiverRepositoryTest.save(basicComment);
         //When
-        var result = basicCommentDataReceiverService.reactToDiscussionById(discussionId, reactionUser);
+        var result = commentDataReceiverService.reactToDiscussionById(discussionId, reactionUser);
         //Then
         assertFalse(result.getReactionUsers()
                 .isEmpty());
