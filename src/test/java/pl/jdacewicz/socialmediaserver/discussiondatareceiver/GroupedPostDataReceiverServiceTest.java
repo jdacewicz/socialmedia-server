@@ -11,6 +11,7 @@ import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -119,5 +120,21 @@ class GroupedPostDataReceiverServiceTest {
                 .isEmpty());
         assertEquals(1, result.getReactionUsers()
                 .size());
+    }
+
+    @Test
+    void should_return_comments_by_post_id_and_comment_quantity() {
+        //Given
+        var postId = "id";
+        var commentQuantity = 1;
+        var groupedPost = GroupedPost.builder()
+                .discussionId(postId)
+                .comments(Set.of(new Comment(), new Comment()))
+                .build();
+        groupedPostDataReceiverRepositoryTest.save(groupedPost);
+        //When
+        var result = groupedPostDataReceiverService.getCommentsByPostId(postId, commentQuantity);
+        //Then
+        assertEquals(commentQuantity, result.size());
     }
 }

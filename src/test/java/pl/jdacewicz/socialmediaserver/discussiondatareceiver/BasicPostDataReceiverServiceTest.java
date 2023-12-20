@@ -11,6 +11,7 @@ import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -116,5 +117,21 @@ class BasicPostDataReceiverServiceTest {
                 .isEmpty());
         assertEquals(1, result.getReactionUsers()
                 .size());
+    }
+
+    @Test
+    void should_return_comments_by_post_id_and_comment_quantity() {
+        //Given
+        var postId = "id";
+        var commentQuantity = 1;
+        var basicPost = BasicPost.builder()
+                .discussionId(postId)
+                .comments(Set.of(new Comment(), new Comment()))
+                .build();
+        basicPostDataReceiverRepositoryTest.save(basicPost);
+        //When
+        var result = basicPostDataReceiverService.getCommentsByPostId(postId, commentQuantity);
+        //Then
+        assertEquals(commentQuantity, result.size());
     }
 }
