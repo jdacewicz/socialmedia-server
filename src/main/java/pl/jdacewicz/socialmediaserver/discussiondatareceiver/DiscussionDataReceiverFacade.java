@@ -15,6 +15,7 @@ import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUserRequest;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 public class DiscussionDataReceiverFacade {
@@ -54,6 +55,15 @@ public class DiscussionDataReceiverFacade {
         var pageable = PageRequest.of(pageNumber, pageSize);
         var foundPosts = service.getDiscussionsByContentContaining(phrase, pageable);
         return foundPosts.map(discussionMapper::mapToDto);
+    }
+
+    public Set<DiscussionDto> getCommentsByPostId(String postId, String postType, int commentQuantity) {
+        var service = discussionDataReceiverFactoryImpl.getDiscussionDataReceiverService(postType);
+        if (service instanceof PostDataReceiverService<?> postService) {
+            var foundComments = postService.getCommentsByPostId(postId, commentQuantity);
+            return discussionMapper.mapToDto(foundComments);
+        }
+        throw new UnsupportedOperationException();
     }
 
     @Transactional

@@ -14,6 +14,7 @@ import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportRequest;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/posts")
@@ -40,6 +41,12 @@ public class PostDataReceiverRestController {
                                                      @RequestParam int pageNumber,
                                                      @RequestParam int pageSize) {
         return discussionDataReceiverFacade.getPostsByUserId(userId, discussionType, pageNumber, pageSize);
+    }
+
+    @GetMapping("/{id}/comments")
+    public Set<DiscussionDto> getCommentsByBasicPostId(@PathVariable String id,
+                                                       @RequestParam int commentQuantity) {
+        return discussionDataReceiverFacade.getCommentsByPostId(id, discussionType, commentQuantity);
     }
 
     @PostMapping

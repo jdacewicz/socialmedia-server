@@ -17,6 +17,7 @@ import pl.jdacewicz.socialmediaserver.reportdatareceiver.dto.ReportRequest;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/groups")
@@ -58,6 +59,12 @@ public class DataGrouperRestController {
     @GetMapping("/posts")
     public List<DiscussionDto> getRandomGroupedPosts() {
         return discussionDataReceiverFacade.getRandomPosts(discussionType);
+    }
+
+    @GetMapping("/posts/{id}/comments")
+    public Set<DiscussionDto> getCommentsByGroupedPostId(@PathVariable String id,
+                                                         @RequestParam int commentQuantity) {
+        return discussionDataReceiverFacade.getCommentsByPostId(id, discussionType, commentQuantity);
     }
 
     @PostMapping

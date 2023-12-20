@@ -10,6 +10,8 @@ import pl.jdacewicz.socialmediaserver.filemapper.dto.MapRequest;
 import pl.jdacewicz.socialmediaserver.reactioncounter.ReactionCounterFacade;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -20,13 +22,19 @@ class DiscussionMapper {
     private final FileMapperFacade fileMapperFacade;
 
 
-    public List<DiscussionDto> mapToDto(List<? extends Post> foundPosts) {
-        return foundPosts.stream()
+    List<DiscussionDto> mapToDto(List<? extends Post> posts) {
+        return posts.stream()
                 .map(this::mapToDto)
                 .toList();
     }
 
-    public DiscussionDto mapToDto(Discussion<?> discussion) {
+    Set<DiscussionDto> mapToDto(Set<? extends Discussion<?>> discussions) {
+        return discussions.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toSet());
+    }
+
+    DiscussionDto mapToDto(Discussion<?> discussion) {
         var image = fileMapperFacade.mapToFile(new MapRequest(discussion.getImageName(), discussion.getFolderDirectory()));
         var elapsedDateTime = elapsedDateTimeFormatterFacade.formatDateTime(discussion.getCreationDateTime());
         var reactionCounts = reactionCounterFacade.countReactions(discussion.getReactionUsers());

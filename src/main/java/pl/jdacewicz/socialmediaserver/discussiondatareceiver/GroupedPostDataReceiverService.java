@@ -14,6 +14,8 @@ import pl.jdacewicz.socialmediaserver.reactionuser.dto.ReactionUser;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +46,15 @@ class GroupedPostDataReceiverService implements PostDataReceiverService<GroupedP
     @Override
     public Page<GroupedPost> getPostsByCreatorUserId(String userId, Pageable pageable) {
         return groupedPostDataReceiverRepository.findAllByCreator_UserId(userId, pageable);
+    }
+
+    @Override
+    public Set<Comment> getCommentsByPostId(String postId, int commentQuantity) {
+        var post = getDiscussionById(postId);
+        return post.getComments()
+                .stream()
+                .limit(commentQuantity)
+                .collect(Collectors.toSet());
     }
 
     @Override
