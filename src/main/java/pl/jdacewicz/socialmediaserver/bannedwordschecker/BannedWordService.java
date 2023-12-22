@@ -26,6 +26,11 @@ class BannedWordService {
         return bannedWordRepository.findAll(pageable);
     }
 
+    BannedWord getBannedWordByWord(String word) {
+        return bannedWordRepository.findByWord(word)
+                .orElseThrow(UnsupportedOperationException::new);
+    }
+
     BannedWord createBannedWord(String authenticationHeader, BanWordRequest banWordRequest) {
         var loggedUserId = userDataReceiverFacade.getLoggedInUser(authenticationHeader)
                 .getUserId();

@@ -12,17 +12,22 @@ public class BannedWordsCheckerFacade {
     private final BannedWordService bannedWordService;
     private final BannedWordMapper bannedWordMapper;
 
+    public Page<BannedWordDto> getBannedWords(int pageNumber, int pageSize) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var bannedWords = bannedWordService.getBannedWords(pageable);
+        return bannedWords.map(bannedWordMapper::mapToDto);
+    }
+
+    public BannedWordDto getBannedWordByWord(String word) {
+        var bannedWord = bannedWordService.getBannedWordByWord(word);
+        return bannedWordMapper.mapToDto(bannedWord);
+    }
+
     public void checkForBannedWords(String text) {
         var bannedWords = bannedWordService.getAllBannedWords();
         if (BannedWordsChecker.doesTextContainBannedWords(text, bannedWords)) {
             throw new UnsupportedOperationException();
         }
-    }
-
-    public Page<BannedWordDto> getBannedWords(int pageNumber, int pageSize) {
-        var pageable = PageRequest.of(pageNumber, pageSize);
-        var bannedWords = bannedWordService.getBannedWords(pageable);
-        return bannedWords.map(bannedWordMapper::mapToDto);
     }
 
     public BannedWordDto createBannedWord(String authenticationHeader, BanWordRequest banWordRequest) {

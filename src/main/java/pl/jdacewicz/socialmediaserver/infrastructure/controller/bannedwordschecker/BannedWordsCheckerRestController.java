@@ -1,5 +1,7 @@
 package pl.jdacewicz.socialmediaserver.infrastructure.controller.bannedwordschecker;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +22,14 @@ public class BannedWordsCheckerRestController {
         return bannedWordsCheckerFacade.getBannedWords(pageNumber, pageSize);
     }
 
+    @GetMapping("/{word}")
+    public BannedWordDto getBannedWordByWord(@PathVariable @Size(min = 2, max = 22) String word) {
+        return bannedWordsCheckerFacade.getBannedWordByWord(word);
+    }
+
     @PostMapping
     public BannedWordDto createBannedWord(@RequestHeader("Authorization") String authorizationHeader,
-                                          @RequestBody BanWordRequest banWordRequest) {
+                                          @RequestBody @Valid BanWordRequest banWordRequest) {
         return bannedWordsCheckerFacade.createBannedWord(authorizationHeader, banWordRequest);
     }
 
