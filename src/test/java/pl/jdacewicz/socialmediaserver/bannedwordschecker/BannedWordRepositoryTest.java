@@ -23,6 +23,13 @@ class BannedWordRepositoryTest implements BannedWordRepository {
     }
 
     @Override
+    public Optional<BannedWord> findByWord(String word) {
+        return database.stream()
+                .filter(bannedWord -> bannedWord.word().equals(word))
+                .findFirst();
+    }
+
+    @Override
     public <S extends BannedWord> S insert(S entity) {
         return null;
     }
