@@ -9,7 +9,7 @@ import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 import java.util.Set;
 
 @Builder
-public record DiscussionDto(String postId,
+public record DiscussionDto(String discussionId,
                             String content,
                             UserDto creator,
                             File image,

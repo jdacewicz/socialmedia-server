@@ -39,7 +39,7 @@ class DiscussionMapper {
         var elapsedDateTime = elapsedDateTimeFormatterFacade.formatDateTime(discussion.getCreationDateTime());
         var reactionCounts = reactionCounterFacade.countReactions(discussion.getReactionUsers());
         return DiscussionDto.builder()
-                .postId(discussion.getDiscussionId())
+                .discussionId(discussion.getDiscussionId())
                 .content(EmojiParser.parseToUnicode(discussion.getContent()))
                 .creator(discussion.getCreator())
                 .image(image)
