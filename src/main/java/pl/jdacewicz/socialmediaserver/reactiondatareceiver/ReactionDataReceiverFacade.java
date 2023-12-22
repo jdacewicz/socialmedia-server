@@ -46,6 +46,12 @@ public class ReactionDataReceiverFacade {
         return foundReactions.map(reactionMapper::mapToDto);
     }
 
+    public Page<ReactionDto> getReactionsByNameContaining(String name, int pageNumber, int pageSize) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var foundReactions = reactionDataReceiverService.getReactionsByNameContaining(name, pageable);
+        return foundReactions.map(reactionMapper::mapToDto);
+    }
+
     @Transactional
     public ReactionDto createReaction(MultipartFile reactionImage, ReactionRequest reactionRequest) throws IOException {
         var newFileName = fileStorageFacade.generateFilename(reactionImage)

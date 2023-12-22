@@ -36,6 +36,10 @@ class ReactionDataReceiverService {
         return reactionDataReceiverRepository.findByActiveAndArchived(active, archived, pageable);
     }
 
+    Page<Reaction> getReactionsByNameContaining(String name, Pageable pageable) {
+        return reactionDataReceiverRepository.findByNameContaining(name, pageable);
+    }
+
     Reaction createReaction(ReactionRequest reactionRequest, String imageFileName) {
         var reaction = Reaction.builder()
                 .name(reactionRequest.name())

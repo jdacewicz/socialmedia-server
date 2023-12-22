@@ -16,6 +16,8 @@ interface ReactionDataReceiverRepository extends MongoRepository<Reaction, Strin
 
     List<Reaction> findAllByActiveAndArchived(boolean active, boolean archived);
 
+    Page<Reaction> findByNameContaining(String name, Pageable pageable);
+
     @Query("{'reactionId' : ?0}")
     @Update("{'$set': {'name': ?1}}")
     void updateReactionName(String id, String name);
