@@ -18,9 +18,10 @@ public class BannedWordsCheckerFacade {
         return bannedWords.map(bannedWordMapper::mapToDto);
     }
 
-    public BannedWordDto getBannedWordByWord(String word) {
-        var bannedWord = bannedWordService.getBannedWordByWord(word);
-        return bannedWordMapper.mapToDto(bannedWord);
+    public Page<BannedWordDto> getBannedWordByWordContaining(String word, int pageNumber, int pageSize) {
+        var pageable = PageRequest.of(pageNumber, pageSize);
+        var foundBannedWords = bannedWordService.getBannedWordsByWordContaining(word, pageable);
+        return foundBannedWords.map(bannedWordMapper::mapToDto);
     }
 
     public void checkForBannedWords(String text) {

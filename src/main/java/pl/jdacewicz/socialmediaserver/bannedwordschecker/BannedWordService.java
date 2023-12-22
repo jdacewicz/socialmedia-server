@@ -26,9 +26,8 @@ class BannedWordService {
         return bannedWordRepository.findAll(pageable);
     }
 
-    BannedWord getBannedWordByWord(String word) {
-        return bannedWordRepository.findByWord(word)
-                .orElseThrow(UnsupportedOperationException::new);
+    Page<BannedWord> getBannedWordsByWordContaining(String word, Pageable pageable) {
+        return bannedWordRepository.findByWordContaining(word, pageable);
     }
 
     BannedWord createBannedWord(String authenticationHeader, BanWordRequest banWordRequest) {

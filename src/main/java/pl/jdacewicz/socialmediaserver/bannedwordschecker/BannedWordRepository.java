@@ -1,10 +1,10 @@
 package pl.jdacewicz.socialmediaserver.bannedwordschecker;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
-
-import java.util.Optional;
 
 interface BannedWordRepository extends MongoRepository<BannedWord, String> {
 
-    Optional<BannedWord> findByWord(String word);
+    Page<BannedWord> findByWordContaining(String word, Pageable pageable);
 }
