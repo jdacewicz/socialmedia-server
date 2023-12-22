@@ -4,8 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.data.domain.PageImpl;
+import pl.jdacewicz.socialmediaserver.bannedwordschecker.BannedWordsCheckerFacade;
+import pl.jdacewicz.socialmediaserver.bannedwordschecker.dto.BannedWordDto;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.DiscussionDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.discussiondatareceiver.dto.DiscussionDto;
+import pl.jdacewicz.socialmediaserver.reactiondatareceiver.ReactionDataReceiverFacade;
+import pl.jdacewicz.socialmediaserver.reactiondatareceiver.dto.ReactionDto;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.UserDto;
 
@@ -13,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class DefaultSearchStrategyTest {
@@ -27,13 +30,18 @@ class DefaultSearchStrategyTest {
 
     UserDataReceiverFacade userDataReceiverFacade;
     DiscussionDataReceiverFacade discussionDataReceiverFacade;
+    BannedWordsCheckerFacade bannedWordsCheckerFacade;
+    ReactionDataReceiverFacade reactionDataReceiverFacade;
 
 
     @BeforeEach
     void setUp() {
         userDataReceiverFacade = Mockito.mock(UserDataReceiverFacade.class);
         discussionDataReceiverFacade = Mockito.mock(DiscussionDataReceiverFacade.class);
-        defaultSearchStrategy = new DefaultSearchStrategy(userDataReceiverFacade, discussionDataReceiverFacade);
+        bannedWordsCheckerFacade = Mockito.mock(BannedWordsCheckerFacade.class);
+        reactionDataReceiverFacade = Mockito.mock(ReactionDataReceiverFacade.class);
+        defaultSearchStrategy = new DefaultSearchStrategy(userDataReceiverFacade, discussionDataReceiverFacade,
+                bannedWordsCheckerFacade, reactionDataReceiverFacade);
     }
 
     @Test
@@ -52,9 +60,9 @@ class DefaultSearchStrategyTest {
         //When
         var result = defaultSearchStrategy.searchAll(phrase, pageNumber, pageSize);
         //Then
-        assertFalse(result.posts()
+        assertFalse(result.results().get("users")
                 .isEmpty());
-        assertFalse(result.users()
+        assertFalse(result.results().get("posts")
                 .isEmpty());
         verify(discussionDataReceiverFacade, times(1)).getDiscussionsByContentContaining(phrase, dataType, pageNumber, pageSize);
         verify(userDataReceiverFacade, times(1)).getUsersByFirstnamesAndLastnames(Set.of(phrase),
@@ -72,13 +80,10 @@ class DefaultSearchStrategyTest {
         //When
         var result = defaultSearchStrategy.searchUsers(phrase, pageNumber, pageSize);
         //Then
-        assertFalse(result.users()
-                .isEmpty());
-        assertTrue(result.posts()
+        assertFalse(result.results().get("users")
                 .isEmpty());
         verify(userDataReceiverFacade, times(1)).getUsersByFirstnamesAndLastnames(Set.of(phrase),
                 Set.of(phrase), pageNumber, pageSize);
-        verify(discussionDataReceiverFacade, never()).getDiscussionsByContentContaining(phrase, dataType, pageNumber, pageSize);
     }
 
     @Test
@@ -92,11 +97,40 @@ class DefaultSearchStrategyTest {
         //When
         var result = defaultSearchStrategy.searchPosts(phrase, pageNumber, pageSize);
         //Then
-        assertFalse(result.posts()
-                .isEmpty());
-        assertTrue(result.users()
+        assertFalse(result.results().get("posts")
                 .isEmpty());
         verify(discussionDataReceiverFacade, times(1)).getDiscussionsByContentContaining(phrase, dataType, pageNumber, pageSize);
-        verify(userDataReceiverFacade, never()).getUsersByFirstnamesAndLastnames(Set.of(phrase), Set.of(phrase), pageNumber, pageSize);
+    }
+
+    @Test
+    void should_return_search_result_with_banned_words_when_searching_banned_words() {
+        //Given
+        var bannedWord = BannedWordDto.builder()
+                .build();
+        var bannedWords = new PageImpl<>(List.of(bannedWord));
+        when(bannedWordsCheckerFacade.getBannedWordByWordContaining(phrase, pageNumber, pageSize))
+                .thenReturn(bannedWords);
+        //When
+        var result = defaultSearchStrategy.searchBannedWords(phrase, pageNumber, pageSize);
+        //Then
+        assertFalse(result.results().get("bannedWords")
+                .isEmpty());
+        verify(bannedWordsCheckerFacade, times(1)).getBannedWordByWordContaining(phrase, pageNumber, pageSize);
+    }
+
+    @Test
+    void should_return_search_result_with_reactions_when_searching_reactions() {
+        //Given
+        var reaction = ReactionDto.builder()
+                .build();
+        var reactions = new PageImpl<>(List.of(reaction));
+        when(reactionDataReceiverFacade.getReactionsByNameContaining(phrase, pageNumber, pageSize))
+                .thenReturn(reactions);
+        //When
+        var result = defaultSearchStrategy.searchReactions(phrase, pageNumber, pageSize);
+        //Then
+        assertFalse(result.results().get("reactions")
+                .isEmpty());
+        verify(reactionDataReceiverFacade, times(1)).getReactionsByNameContaining(phrase, pageNumber, pageSize);
     }
 }
