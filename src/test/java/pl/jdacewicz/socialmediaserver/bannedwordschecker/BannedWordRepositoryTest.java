@@ -23,13 +23,6 @@ class BannedWordRepositoryTest implements BannedWordRepository {
     }
 
     @Override
-    public Optional<BannedWord> findByWord(String word) {
-        return database.stream()
-                .filter(bannedWord -> bannedWord.word().equals(word))
-                .findFirst();
-    }
-
-    @Override
     public <S extends BannedWord> S insert(S entity) {
         return null;
     }
@@ -136,6 +129,11 @@ class BannedWordRepositoryTest implements BannedWordRepository {
 
     @Override
     public Page<BannedWord> findAll(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<BannedWord> findByWordContaining(String word, Pageable pageable) {
         return null;
     }
 }

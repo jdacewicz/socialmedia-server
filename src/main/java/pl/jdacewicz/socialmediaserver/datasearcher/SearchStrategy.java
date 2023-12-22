@@ -9,4 +9,8 @@ interface SearchStrategy {
     SearchResult searchUsers(String phrase, int pageNumber, int pageSize);
 
     SearchResult searchPosts(String phrase, int pageNumber, int pageSize);
+
+    SearchResult searchBannedWords(String phrase, int pageNumber, int pageSize);
+
+    SearchResult searchReactions(String phrase, int pageNumber, int pageSize);
 }

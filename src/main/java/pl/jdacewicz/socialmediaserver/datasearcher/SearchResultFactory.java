@@ -14,6 +14,8 @@ class SearchResultFactory {
             case ALL -> searchStrategy.searchAll(phrase, pageNumber, pageSize);
             case USERS -> searchStrategy.searchUsers(phrase, pageNumber, pageSize);
             case POSTS -> searchStrategy.searchPosts(phrase, pageNumber, pageSize);
+            case BANNED_WORDS -> searchStrategy.searchBannedWords(phrase, pageNumber, pageSize);
+            case REACTIONS ->  searchStrategy.searchReactions(phrase, pageNumber, pageSize);
         };
     }
 }

@@ -105,6 +105,11 @@ class ReactionDataReceiverRepositoryTest implements ReactionDataReceiverReposito
     }
 
     @Override
+    public Page<Reaction> findByNameContaining(String name, Pageable pageable) {
+        return null;
+    }
+
+    @Override
     public <S extends Reaction> S insert(S entity) {
         return null;
     }

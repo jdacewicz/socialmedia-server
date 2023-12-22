@@ -8,7 +8,6 @@ import pl.jdacewicz.socialmediaserver.userdatareceiver.UserDataReceiverFacade;
 import pl.jdacewicz.socialmediaserver.userdatareceiver.dto.LoggedUserDto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 class BannedWordServiceTest {
@@ -23,30 +22,6 @@ class BannedWordServiceTest {
         userDataReceiverFacade = Mockito.mock(UserDataReceiverFacade.class);
         bannedWordRepositoryTest = new BannedWordRepositoryTest();
         bannedWordService = new BannedWordService(bannedWordRepositoryTest, userDataReceiverFacade);
-    }
-
-    @Test
-    void should_return_banned_word_when_getting_banned_word_by_banned_word() {
-        //Given
-        var word = "word";
-        var bannedWord = BannedWord.builder()
-                .word(word)
-                .build();
-        bannedWordRepositoryTest.save(bannedWord);
-        //When
-        var result = bannedWordService.getBannedWordByWord(word);
-        //Then
-        assertEquals(word, result.word());
-    }
-
-    @Test
-    void should_throw_unsupported_operation_exception_when_getting_banned_word_by_not_banned_word() {
-        //Given
-        var word = "word";
-        //When
-        //Then
-        assertThrows(UnsupportedOperationException.class,
-                () -> bannedWordService.getBannedWordByWord(word));
     }
 
     @Test
