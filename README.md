@@ -31,15 +31,20 @@ Creating this project taught me practial use of modular monolith architecture an
 ## Roadmap
 
 - Customize api error message;
+- Customize Page fields;
 - Implement api authorization;
 
 
 
 ## API Reference
 
+You can interact with the API through HTTP requests.
+
 ### Authentication
 
 #### Register user
+
+Creates new user and return access token.
 
 `
   🟢 POST
@@ -48,19 +53,32 @@ Creating this project taught me practial use of modular monolith architecture an
     /api/auth/register
 `
 
-| Request Part | Type     | Description                |
+| Multipart Request Part | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `profileImage` | `File` | Profile picture |
 | `request` | `RegisterRequest` | **Required**. Register request |
 
-| Register Request Field | Type     | Validation | Description                |
+|Register Request Body | Type     | Validation | Description                |
 | :-------- | :------- | :----- | :------------------------- |
 | `email` | `String` | **Proper Email, Not Blank** | Login |
 | `password` | `String` | **8-24 Characters, Not Blank** | Password |
 | `firstname` | `String` | **2-16 Characters, Not Blank** | Firstname |
 | `lastname` | `String` | **2-16 Characters, Not Blank** | Lastname |
 
+Example response:
+```json
+{
+    "accessToken": {
+        "code": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwaW90cmdyeWZmMDk4QGVtYWlsLmNvbSIsImlhdCI6MTcwNDE5OTg5NiwiZXhwIjoxNzA0Mjg2Mjk2fQ.fqbtrMK4Wpbh9hmsVGDEum3zBmojuc5lu1n8XTCY7PQ",
+        "active": true
+    }
+}
+```
+
+&nbsp;
 #### Authenticate user
+
+Creates and return new access token.
 
 `
   🟢 POST
@@ -78,9 +96,22 @@ Creating this project taught me practial use of modular monolith architecture an
 | `email` | `String` | **Proper Email, 5-32 Characters, Not Blank** | Login |
 | `password` | `String` | **8-24 Characters, Not Blank** | Password |
 
+Example response:
+```json
+{
+    "accessToken": {
+        "code": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwaW90cmdyeWZmMDk4QGVtYWlsLmNvbSIsImlhdCI6MTcwNDE5OTg5NiwiZXhwIjoxNzA0Mjg2Mjk2fQ.fqbtrMK4Wpbh9hmsVGDEum3zBmojuc5lu1n8XTCY7PQ",
+        "active": true
+    }
+}
+```
+
+&nbsp;
 ### Users
 
 #### Get logged user
+
+Returns currently logged user.
 
 `
   🔵 GET
@@ -89,7 +120,21 @@ Creating this project taught me practial use of modular monolith architecture an
     /api/users
 `
 
+Example response:
+```json
+{
+    "userId": "657f0ee069f6415fe42404f9",
+    "fullName": "John Example",
+    "profilePicture": {
+        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+    }
+}
+```
+
+&nbsp;
 #### Get user by id
+
+Returns user with given id.
 
 `
   🟢 POST
@@ -102,7 +147,21 @@ Creating this project taught me practial use of modular monolith architecture an
 | :-------- | :------- | :------------------------- |
 | `id` | `String` | **Required**. User's id |
 
+Example response:
+```json
+{
+    "userId": "657f0ee069f6415fe42404f9",
+    "fullName": "John Example",
+    "profilePicture": {
+        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+    }
+}
+```
+
+&nbsp;
 #### Report user
+
+Creates user report by provided data.
 
 `
   🟢 POST
@@ -127,7 +186,10 @@ Creating this project taught me practial use of modular monolith architecture an
 Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUTE`,
 `DRASTIC_CONTENT`, `ILLEGAL_CONTENT`
 
+&nbsp;
 #### Ban user premanently
+
+Creates permanent ban, updates user status and returns ban response.
 
 `
   🟡 PUT
@@ -148,7 +210,28 @@ Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUT
 | :-------- | :------- | :----- | :------------------------- |
 | `reason` | `String` | **Max 255 Characters, Not Blank** | Reason |
 
+Example response:
+```json
+{
+    "banId": "65940fe67b8df27c849d4f45",
+    "type": "PERMANENT",
+    "from": [
+        2024,
+        1,
+        2,
+        14,
+        30,
+        14,
+        406372000
+    ],
+    "reason": "example reason"
+}
+```
+
+&nbsp;
 #### Ban user temporary
+
+Creates temporary ban, updates user status and returns ban response.
 
 `
   🟡 PUT
@@ -170,7 +253,34 @@ Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUT
 | `to` | `LocalDateTime` | **Not Null** | Date and time of ban rexpiration |
 | `reason` | `String` | **Max 255 Characters, Not Blank** | Reason |
 
+Example response:
+```json
+{
+    "banId": "65940fe67b8df27c849d4f45",
+    "type": "TEMPORARY",
+    "from": [
+        2024,
+        1,
+        2,
+        14,
+        30,
+        14,
+        406372000
+    ],
+    "to": [
+        2025,
+        1,
+        2,
+        14,
+        30,
+        14,
+        406372000
+    ],
+    "reason": "example reason"
+}
+```
 
+&nbsp;
 #### Revoke user bans
 
 `
@@ -184,10 +294,12 @@ Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUT
 | :-------- | :------- | :------------------------- |
 | `id` | `String` | **Required**. User's id |
 
-
+&nbsp;
 ### Posts
 
 #### Get basic post by id
+
+Returns post by given id.
 
 `
   🔵 GET
@@ -200,7 +312,41 @@ Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUT
 | :-------- | :------- | :------------------------- |
 | `id` | `String` | **Required**. Post's id |
 
+Example response:
+```json
+{
+    "discussionId": "657f0f2169f6415fe42404fc",
+    "content": "example content",
+    "creator": {
+        "userId": "657f0ee069f6415fe42404f9",
+        "fullName": "John Example",
+        "profilePicture": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+        }
+    },
+    "image": {
+        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+    }
+    "elapsedDateTime": {
+        "time": "16 days ago"
+    }
+    "reactionCounts": [
+        "reaction": {
+            "reactionId": "657f0f2169f6415fe42404fd",
+            "name": "example name",
+            "image": {
+                "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+            }
+        },
+        "count": 1
+    ] 
+}
+```
+
+&nbsp;
 #### Get random basic posts
+
+Returns 5 random posts marked as basic.
 
 `
   🔵 GET
@@ -209,7 +355,43 @@ Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUT
     /api/posts
 `
 
+Example response:
+```json
+[
+    {
+        "discussionId": "657f0f2169f6415fe42404fc",
+        "content": "example content",
+        "creator": {
+            "userId": "657f0ee069f6415fe42404f9",
+            "fullName": "John Example",
+            "profilePicture": {
+                "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+            }
+        },
+        "image": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+        }
+        "elapsedDateTime": {
+            "time": "16 days ago"
+        }
+        "reactionCounts": [
+            "reaction": {
+                "reactionId": "657f0f2169f6415fe42404fd",
+                "name": "example name",
+                "image": {
+                    "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+                }
+            },
+            "count": 1
+        ] 
+    }
+]
+```
+
+&nbsp;
 #### Get basic posts by user id
+
+Returns page of posts by creator (user) id.
 
 `
   🔵 GET
@@ -227,7 +409,70 @@ Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUT
 | `pageNumber` | `int` | **Required**. Page number of returned posts |
 | `pageSize` | `int` | **Required**. Page size of returned posts |
 
+Example response:
+```json
+{
+    "content": [
+        {
+            "discussionId": "657f0f2169f6415fe42404fc",
+            "content": "example content",
+            "creator": {
+                "userId": "657f0ee069f6415fe42404f9",
+                "fullName": "John Example",
+                "profilePicture": {
+                    "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+                }
+            },
+            "image": {
+                "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+            }
+            "elapsedDateTime": {
+                "time": "16 days ago"
+            }
+            "reactionCounts": [
+                "reaction": {
+                    "reactionId": "657f0f2169f6415fe42404fd",
+                    "name": "example name",
+                    "image": {
+                        "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+                    }
+                },
+                "count": 1
+            ] 
+        }
+    ],
+    "empty": false,
+    "first": true,
+    "last": true,
+    "number": 0,
+    "numberOfElements": 1,
+    "pageable": {
+        "offset": 0,
+        "pageNumber": 0,
+        "pageSize": 5,
+        "paged": true,
+        "sort": {
+            "empty": false,
+            "sorted": false,
+            "unsorted" true
+        },
+        "unpaged": false
+    },
+    "size": 5,
+    "sort": {
+        "empty": false,
+        "sorted": false,
+        "unsorted" true
+    },
+    "totalElements": 1,
+    "totalPages": 1
+}
+```
+
+&nbsp;
 #### Get comments by basic post id
+
+Returns comments of post by post id and comments quantity.
 
 `
   🔵 GET
@@ -244,7 +489,43 @@ Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUT
 | :-------- | :------- | :------------------------- |
 | `commentQuantity` | `int` | **Required**. Quantity of returned comments |
 
+Example response:
+```json
+[
+    {
+        "discussionId": "657f0f2169f6415fe42404fc",
+        "content": "example content",
+        "creator": {
+            "userId": "657f0ee069f6415fe42404f9",
+            "fullName": "John Example",
+            "profilePicture": {
+                "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+            }
+        },
+        "image": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+        }
+        "elapsedDateTime": {
+            "time": "16 days ago"
+        }
+        "reactionCounts": [
+            "reaction": {
+                "reactionId": "657f0f2169f6415fe42404fd",
+                "name": "example name",
+                "image": {
+                    "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+                }
+            },
+            "count": 1
+        ] 
+    }
+]
+```
+
+&nbsp;
 #### Create basic post
+
+Creates and returns basic post.
 
 `
   🟢 POST
@@ -258,11 +539,38 @@ Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUT
 | `postImage` | `File` | **Required**. Post's image |
 | `discussionCreationRequest` | `DiscussionCreationRequest` | **Required**. Request body |
 
-| Creation Request Field | Type     | Validation | Description                |
+| Request Field | Type     | Validation | Description                |
 | :-------- | :------- | :----- | :------------------------- |
 | `content` | `String` | **Max 255 characters, Not Blank** | Content |
 
+Example response:
+```json
+[
+    {
+        "discussionId": "657f0f2169f6415fe42404fc",
+        "content": "example content",
+        "creator": {
+            "userId": "657f0ee069f6415fe42404f9",
+            "fullName": "John Example",
+            "profilePicture": {
+                "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+            }
+        },
+        "image": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+        }
+        "elapsedDateTime": {
+            "time": "just now"
+        }
+        "reactionCounts": [] 
+    }
+]
+```
+
+&nbsp;
 #### Report basic post
+
+Creates basic post report.
 
 `
   🟢 POST
@@ -287,7 +595,10 @@ Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUT
 Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUTE`,
 `DRASTIC_CONTENT`, `ILLEGAL_CONTENT`
 
+&nbsp;
 #### React to basic post
+
+Adds reaction to post.
 
 `
   🟡 PUT
@@ -301,6 +612,40 @@ Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUT
 | `postId` | `String` | **Required**. Post's id |
 | `reactionId` | `String` | **Required**. Reaction's id |
 
+Example response:
+```json
+[
+    {
+        "discussionId": "657f0f2169f6415fe42404fc",
+        "content": "example content",
+        "creator": {
+            "userId": "657f0ee069f6415fe42404f9",
+            "fullName": "John Example",
+            "profilePicture": {
+                "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+            }
+        },
+        "image": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+        }
+        "elapsedDateTime": {
+            "time": "16 days ago"
+        }
+        "reactionCounts": [
+            "reaction": {
+                "reactionId": "657f0f2169f6415fe42404fd",
+                "name": "example name",
+                "image": {
+                    "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+                }
+            },
+            "count": 2
+        ] 
+    }
+]
+```
+
+&nbsp;
 #### Delete basic post
 
 `
