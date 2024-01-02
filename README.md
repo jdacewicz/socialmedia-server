@@ -134,7 +134,7 @@ Example response:
 &nbsp;
 #### Get user by id
 
-Returns user with given id.
+Returns user with id.
 
 `
   🟢 POST
@@ -161,7 +161,7 @@ Example response:
 &nbsp;
 #### Report user
 
-Creates user report by provided data.
+Creates user report..
 
 `
   🟢 POST
@@ -299,7 +299,7 @@ Example response:
 
 #### Get basic post by id
 
-Returns post by given id.
+Returns post with id.
 
 `
   🔵 GET
@@ -326,10 +326,10 @@ Example response:
     },
     "image": {
         "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
-    }
+    },
     "elapsedDateTime": {
         "time": "16 days ago"
-    }
+    },
     "reactionCounts": [
         "reaction": {
             "reactionId": "657f0f2169f6415fe42404fd",
@@ -370,10 +370,10 @@ Example response:
         },
         "image": {
             "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
-        }
+        },
         "elapsedDateTime": {
             "time": "16 days ago"
-        }
+        },
         "reactionCounts": [
             "reaction": {
                 "reactionId": "657f0f2169f6415fe42404fd",
@@ -425,10 +425,10 @@ Example response:
             },
             "image": {
                 "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
-            }
+            },
             "elapsedDateTime": {
                 "time": "16 days ago"
-            }
+            },
             "reactionCounts": [
                 "reaction": {
                     "reactionId": "657f0f2169f6415fe42404fd",
@@ -472,7 +472,7 @@ Example response:
 &nbsp;
 #### Get comments by basic post id
 
-Returns comments of post by post id and comments quantity.
+Returns comments of post with given id limited by comments quantity.
 
 `
   🔵 GET
@@ -504,10 +504,10 @@ Example response:
         },
         "image": {
             "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
-        }
+        },
         "elapsedDateTime": {
             "time": "16 days ago"
-        }
+        },
         "reactionCounts": [
             "reaction": {
                 "reactionId": "657f0f2169f6415fe42404fd",
@@ -558,10 +558,10 @@ Example response:
         },
         "image": {
             "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
-        }
+        },
         "elapsedDateTime": {
             "time": "just now"
-        }
+        },
         "reactionCounts": [] 
     }
 ]
@@ -570,7 +570,7 @@ Example response:
 &nbsp;
 #### Report basic post
 
-Creates basic post report.
+Creates report of basic post with id.
 
 `
   🟢 POST
@@ -627,10 +627,10 @@ Example response:
         },
         "image": {
             "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
-        }
+        },
         "elapsedDateTime": {
             "time": "16 days ago"
-        }
+        },
         "reactionCounts": [
             "reaction": {
                 "reactionId": "657f0f2169f6415fe42404fd",
@@ -648,6 +648,8 @@ Example response:
 &nbsp;
 #### Delete basic post
 
+Deletes basic post with id
+
 `
   🔴 DELETE
 `
@@ -658,6 +660,190 @@ Example response:
 | Path Variable | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `id` | `String` | **Required**. Post's id |
+
+&nbsp;
+### Comments
+
+#### Get comment by id
+
+Returns comment with id.
+
+`
+  🔵 GET
+`
+`
+    /api/comments/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Comment's id |
+
+Example response:
+```json
+{
+    "discussionId": "657f0f2169f6415fe42404fc",
+    "content": "example content",
+    "creator": {
+        "userId": "657f0ee069f6415fe42404f9",
+        "fullName": "John Example",
+        "profilePicture": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+        }
+    },
+    "image": {
+        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+    },
+    "elapsedDateTime": {
+        "time": "16 days ago"
+    },
+    "reactionCounts": [
+        "reaction": {
+            "reactionId": "657f0f2169f6415fe42404fd",
+            "name": "example name",
+            "image": {
+                "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+            }
+        },
+        "count": 1
+    ] 
+}
+```
+
+&nbsp;
+#### Create comment
+
+Comments post.
+
+`
+  🟢 POST
+`
+`
+    /api/comments
+`
+
+| Request Body | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `commentImage` | `File` | **Required**. Comment's image |
+| `commentCreationRequest` | `CommentCreationRequest` | **Required**. Comment request |
+
+| Report Request Field | Type     | Validation | Description                |
+| :-------- | :------- | :----- | :------------------------- |
+| `postId` | `String` | **Not Blank** | Id of post |
+
+Example response:
+```json
+{
+    "discussionId": "657f0f2169f6415fe42404fc",
+    "content": "example content",
+    "creator": {
+        "userId": "657f0ee069f6415fe42404f9",
+        "fullName": "John Example",
+        "profilePicture": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+        }
+    },
+    "image": {
+        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+    },
+    "elapsedDateTime": {
+        "time": "just now"
+    },
+    "reactionCounts": [] 
+}
+```
+
+&nbsp;
+#### Report basic post
+
+Creates report of basic post with id.
+
+`
+  🟢 POST
+`
+`
+    /api/commentss/${id}/report
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Comment's id |
+
+| Request Body | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `request` | `ReportRequest` | **Required**. Report request |
+
+| Report Request Field | Type     | Validation | Description                |
+| :-------- | :------- | :----- | :------------------------- |
+| `reportType` | `String` | **Max 32 Characters, Not Blank** | Type of report |
+| `content` | `String` | **8-24 Characters, Not Blank** | Content |
+
+Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUTE`,
+`DRASTIC_CONTENT`, `ILLEGAL_CONTENT`
+
+&nbsp;
+#### React to comment
+
+Adds reaction to comment.
+
+`
+  🟡 PUT
+`
+`
+    /api/comments/${commentId}/react/${reactionId}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `commentId` | `String` | **Required**. Comment's id |
+| `reactionId` | `String` | **Required**. Reaction's id |
+
+Example response:
+```json
+{
+    "discussionId": "657f0f2169f6415fe42404fc",
+    "content": "example content",
+    "creator": {
+        "userId": "657f0ee069f6415fe42404f9",
+        "fullName": "John Example",
+        "profilePicture": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+        }
+    },
+    "image": {
+        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+    },
+    "elapsedDateTime": {
+        "time": "just now"
+    },
+    "reactionCounts": [
+        "reaction": {
+            "reactionId": "657f0f2169f6415fe42404fd",
+            "name": "example name",
+            "image": {
+                "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+            }
+        },
+        "count": 2
+    ] 
+}
+```
+
+&nbsp;
+#### Delete comment
+
+Deletes comment with id.
+
+`
+  🔴 DELETE
+`
+`
+    /api/comments/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Comment's id |
 
 ## Contributing
 
