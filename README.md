@@ -1109,6 +1109,70 @@ Marks reaction with given id as not archived.
 | :-------- | :------- | :------------------------- |
 | `id` | `String` | **Required**. Reaction's id |
 
+&nbsp;
+### Searcher
+
+#### Search Data
+
+Returns result of search based on provided data.
+
+`
+  🔵 GET
+`
+`
+    /api/search
+`
+| Request Param | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `scope` | `String` | **Required**. Scoped of searched data |
+| `pageNumber` | `int` | **Required**. Page number of returned data |
+| `pageSize` | `int` | **Required**. Page size of returned data |
+| `phrase` | `String` | **Required**. Searched phrase |
+
+Available scopes: `ALL`, `USERS`, `POSTS`, `BANNED_WORDS`, `REACTIONS`
+
+Example response:
+```json
+{
+    "reactions": {
+        "content": [
+            {
+                "reactionId": "657f0ee069f6415fe42404f9",
+                "name": "example name",
+                "image": {
+                    "url": "http://localhost:8081/data/reactions/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+                }
+            }
+        ],
+        "empty": false,
+        "first": true,
+        "last": true,
+        "number": 0,
+        "numberOfElements": 1,
+        "pageable": {
+            "offset": 0,
+            "pageNumber": 0,
+            "pageSize": 5,
+            "paged": true,
+            "sort": {
+                "empty": false,
+                "sorted": false,
+                "unsorted" true
+            },
+            "unpaged": false
+        },
+        "size": 5,
+        "sort": {
+            "empty": false,
+            "sorted": false,
+            "unsorted" true
+        },
+        "totalElements": 1,
+        "totalPages": 1
+    }  
+}
+```
+
 ## Contributing
 
 Contributions are always welcome!
