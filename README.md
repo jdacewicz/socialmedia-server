@@ -570,7 +570,7 @@ Example response:
 &nbsp;
 #### Report basic post
 
-Creates report of basic post with id.
+Creates report of basic post with given id.
 
 `
   🟢 POST
@@ -648,7 +648,7 @@ Example response:
 &nbsp;
 #### Delete basic post
 
-Deletes basic post with id
+Deletes basic post with given id
 
 `
   🔴 DELETE
@@ -666,7 +666,7 @@ Deletes basic post with id
 
 #### Get comment by id
 
-Returns comment with id.
+Returns comment with given id.
 
 `
   🔵 GET
@@ -756,13 +756,13 @@ Example response:
 &nbsp;
 #### Report basic post
 
-Creates report of basic post with id.
+Creates report of basic post with given id.
 
 `
   🟢 POST
 `
 `
-    /api/commentss/${id}/report
+    /api/comments/${id}/report
 `
 
 | Path Variable | Type     | Description                |
@@ -832,7 +832,7 @@ Example response:
 &nbsp;
 #### Delete comment
 
-Deletes comment with id.
+Deletes comment with given id.
 
 `
   🔴 DELETE
@@ -844,6 +844,270 @@ Deletes comment with id.
 | Path Variable | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `id` | `String` | **Required**. Comment's id |
+
+&nbsp;
+### Reactions
+
+#### Get reaction by id
+
+Returns reaction with given id.
+
+`
+  🔵 GET
+`
+`
+    /api/reactions/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Reaction's id |
+
+Example response:
+```json
+{
+    "reactionId": "657f0ee069f6415fe42404f9",
+    "name": "example name",
+    "image": {
+        "url": "http://localhost:8081/data/reactions/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+    }
+}
+```
+
+&nbsp;
+#### Get reactions by active
+
+Returns page of reactions by active.
+
+`
+  🔵 GET
+`
+`
+    /api/reactions
+`
+
+| Request Param | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `active` | `boolean` | **Required**. Is reaction active |
+| `pageNumber` | `int` | **Required**. Page number of returned reactions |
+| `pageSize` | `int` | **Required**. Page size of returned reactions |
+
+Example response:
+```json
+{
+    "content": [
+        {
+            "reactionId": "657f0ee069f6415fe42404f9",
+            "name": "example name",
+            "image": {
+                "url": "http://localhost:8081/data/reactions/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+            }
+        }
+    ],
+    "empty": false,
+    "first": true,
+    "last": true,
+    "number": 0,
+    "numberOfElements": 1,
+    "pageable": {
+        "offset": 0,
+        "pageNumber": 0,
+        "pageSize": 5,
+        "paged": true,
+        "sort": {
+            "empty": false,
+            "sorted": false,
+            "unsorted" true
+        },
+        "unpaged": false
+    },
+    "size": 5,
+    "sort": {
+        "empty": false,
+        "sorted": false,
+        "unsorted" true
+    },
+    "totalElements": 1,
+    "totalPages": 1
+}
+```
+
+&nbsp;
+#### Get archived reactions
+
+Returns page of archived reactions.
+
+`
+  🔵 GET
+`
+`
+    /api/reactions/archived
+`
+| Request Param | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `pageNumber` | `int` | **Required**. Page number of returned reactions |
+| `pageSize` | `int` | **Required**. Page size of returned reactions |
+
+Example response:
+```json
+{
+    "content": [
+        {
+            "reactionId": "657f0ee069f6415fe42404f9",
+            "name": "example name",
+            "image": {
+                "url": "http://localhost:8081/data/reactions/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+            }
+        }
+    ],
+    "empty": false,
+    "first": true,
+    "last": true,
+    "number": 0,
+    "numberOfElements": 1,
+    "pageable": {
+        "offset": 0,
+        "pageNumber": 0,
+        "pageSize": 5,
+        "paged": true,
+        "sort": {
+            "empty": false,
+            "sorted": false,
+            "unsorted" true
+        },
+        "unpaged": false
+    },
+    "size": 5,
+    "sort": {
+        "empty": false,
+        "sorted": false,
+        "unsorted" true
+    },
+    "totalElements": 1,
+    "totalPages": 1
+}
+```
+
+&nbsp;
+#### Create reactions
+
+Creates and returns new reaction.
+
+`
+  🟢 POST
+`
+`
+    /api/reactions
+`
+
+| Request Body | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `reactionImage` | `File` | **Required**. Reaction's image |
+| `reactionRequest` | `ReactionRequest` | **Required**. Reaction creation request |
+
+| Reaction Request Field | Type     | Validation | Description                |
+| :-------- | :------- | :----- | :------------------------- |
+| `name` | `String` | **2-32 Characters, Not Blank** | Name of reaction |
+
+Example response:
+```json
+{
+    "reactionId": "657f0ee069f6415fe42404f9",
+    "name": "example name",
+    "image": {
+        "url": "http://localhost:8081/data/reactions/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+    }
+}
+```
+
+&nbsp;
+#### Update reaction
+
+Updates reaction with given id.
+
+`
+  🟡 PUT
+`
+`
+    /api/reactions/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Reaction's id |
+
+| Request Body | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `reactionImage` | `File` | **Required**. New reaction's image |
+| `reactionUpdateRequest` | `ReactionUpdateRequest` | **Required**. Reaction update request |
+
+| Reaction Request Field | Type     | Validation | Description                |
+| :-------- | :------- | :----- | :------------------------- |
+| `name` | `String` | **2-32 Characters, Not Blank** | New name of reaction |
+
+&nbsp;
+#### Activate reaction by id
+
+Marks reaction with given id as active.
+
+`
+  🟡 PUT
+`
+`
+    /api/reactions/${id}/activate
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Reaction's id |
+
+&nbsp;
+#### Deactivate reaction by id
+
+Marks reaction with given id as deactive.
+
+`
+  🟡 PUT
+`
+`
+    /api/reactions/${id}/deactivate
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Reaction's id |
+
+&nbsp;
+#### Archive reaction by id
+
+Marks reaction with given id as archived.
+
+`
+  🟡 PUT
+`
+`
+    /api/reactions/${id}/archive
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Reaction's id |
+
+&nbsp;
+#### Unarchive reaction by id
+
+Marks reaction with given id as not archived.
+
+`
+  🟡 PUT
+`
+`
+    /api/reactions/${id}/unarchive
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Reaction's id |
 
 ## Contributing
 
