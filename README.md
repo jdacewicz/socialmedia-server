@@ -283,6 +283,8 @@ Example response:
 &nbsp;
 #### Revoke user bans
 
+Updates user status and revokes all bans.
+
 `
   🟡 PUT
 `
@@ -1110,7 +1112,7 @@ Marks reaction with given id as not archived.
 | `id` | `String` | **Required**. Reaction's id |
 
 &nbsp;
-### Searcher
+### Searchs
 
 #### Search Data
 
@@ -1172,6 +1174,85 @@ Example response:
     }  
 }
 ```
+
+&nbsp;
+### Reports
+
+#### Get reports
+
+Returns reports based on provied data.
+
+`
+  🔵 GET
+`
+`
+    /api/reports
+`
+| Request Param | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `dataType` | `String` | **Required**. Reported type of data |
+| `pageNumber` | `int` | **Required**. Page number of returned data |
+| `pageSize` | `int` | **Required**. Page size of returned data |
+
+Data types: `USER`, `POST` and `COMMENT`.
+
+Example response:
+```json
+{
+    "reactions": {
+        "content": [
+            {
+                "reportId": "657f0ee069f6415fe42404f9",
+                "reportType": "SPAM",
+                "reportDataType": "POST",
+                "reportedDataId": "657f0f2169f6415fe42404fc",
+                "content": "example content"
+            }
+        ],
+        "empty": false,
+        "first": true,
+        "last": true,
+        "number": 0,
+        "numberOfElements": 1,
+        "pageable": {
+            "offset": 0,
+            "pageNumber": 0,
+            "pageSize": 5,
+            "paged": true,
+            "sort": {
+                "empty": false,
+                "sorted": false,
+                "unsorted" true
+            },
+            "unpaged": false
+        },
+        "size": 5,
+        "sort": {
+            "empty": false,
+            "sorted": false,
+            "unsorted" true
+        },
+        "totalElements": 1,
+        "totalPages": 1
+    }  
+}
+```
+
+&nbsp;
+#### Delete report
+
+Deletes report with given id.
+
+`
+  🔴 DELETE
+`
+`
+    /api/reports/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Report's id |
 
 ## Contributing
 
