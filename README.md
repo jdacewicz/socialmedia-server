@@ -1254,6 +1254,107 @@ Deletes report with given id.
 | :-------- | :------- | :------------------------- |
 | `id` | `String` | **Required**. Report's id |
 
+&nbsp;
+### Banned Words
+
+#### Get banned words
+
+Returns banned words based on provied data.
+
+`
+  🔵 GET
+`
+`
+    /api/banned-words
+`
+| Request Param | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `pageNumber` | `int` | **Required**. Page number of returned data |
+| `pageSize` | `int` | **Required**. Page size of returned data |
+
+Example response:
+```json
+{
+    "reactions": {
+        "content": [
+            {
+                "wordId": "657f0ee069f6415fe42404f9",
+                "word": "example word"
+            }
+        ],
+        "empty": false,
+        "first": true,
+        "last": true,
+        "number": 0,
+        "numberOfElements": 1,
+        "pageable": {
+            "offset": 0,
+            "pageNumber": 0,
+            "pageSize": 5,
+            "paged": true,
+            "sort": {
+                "empty": false,
+                "sorted": false,
+                "unsorted" true
+            },
+            "unpaged": false
+        },
+        "size": 5,
+        "sort": {
+            "empty": false,
+            "sorted": false,
+            "unsorted" true
+        },
+        "totalElements": 1,
+        "totalPages": 1
+    }  
+}
+```
+
+&nbsp;
+#### Ban word
+
+Creates and returns banned word.
+
+`
+  🟢 POST
+`
+`
+    /api/banned-words
+`
+
+| Request Body | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `BanWordRequest` | `BanWordRequest` | **Required**. Ban word request |
+
+| Reaction Request Field | Type     | Validation | Description                |
+| :-------- | :------- | :----- | :------------------------- |
+| `word` | `String` | **2-22 Characters, Not Blank** | Banned word |
+
+Example response:
+```json
+{
+    "wordId": "657f0ee069f6415fe42404f9",
+    "word": "example word"
+}
+```
+
+&nbsp;
+### Delete banned word
+
+Deletes banned word with given id.
+
+`
+  🔴 DELETE
+`
+`
+    /api/banned-words/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Word's id |
+
 ## Contributing
 
 Contributions are always welcome!
