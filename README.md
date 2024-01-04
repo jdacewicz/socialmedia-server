@@ -161,7 +161,7 @@ Example response:
 &nbsp;
 #### Report user
 
-Creates user report..
+Creates user report.
 
 `
   🟢 POST
@@ -456,7 +456,7 @@ Example response:
         "sort": {
             "empty": false,
             "sorted": false,
-            "unsorted" true
+            "unsorted": true
         },
         "unpaged": false
     },
@@ -464,7 +464,7 @@ Example response:
     "sort": {
         "empty": false,
         "sorted": false,
-        "unsorted" true
+        "unsorted": true
     },
     "totalElements": 1,
     "totalPages": 1
@@ -919,7 +919,7 @@ Example response:
         "sort": {
             "empty": false,
             "sorted": false,
-            "unsorted" true
+            "unsorted": true
         },
         "unpaged": false
     },
@@ -927,7 +927,7 @@ Example response:
     "sort": {
         "empty": false,
         "sorted": false,
-        "unsorted" true
+        "unsorted": true
     },
     "totalElements": 1,
     "totalPages": 1
@@ -975,7 +975,7 @@ Example response:
         "sort": {
             "empty": false,
             "sorted": false,
-            "unsorted" true
+            "unsorted": true
         },
         "unpaged": false
     },
@@ -983,7 +983,7 @@ Example response:
     "sort": {
         "empty": false,
         "sorted": false,
-        "unsorted" true
+        "unsorted": true
     },
     "totalElements": 1,
     "totalPages": 1
@@ -1159,7 +1159,7 @@ Example response:
             "sort": {
                 "empty": false,
                 "sorted": false,
-                "unsorted" true
+                "unsorted": true
             },
             "unpaged": false
         },
@@ -1167,7 +1167,7 @@ Example response:
         "sort": {
             "empty": false,
             "sorted": false,
-            "unsorted" true
+            "unsorted": true
         },
         "totalElements": 1,
         "totalPages": 1
@@ -1222,7 +1222,7 @@ Example response:
             "sort": {
                 "empty": false,
                 "sorted": false,
-                "unsorted" true
+                "unsorted": true
             },
             "unpaged": false
         },
@@ -1230,7 +1230,7 @@ Example response:
         "sort": {
             "empty": false,
             "sorted": false,
-            "unsorted" true
+            "unsorted": true
         },
         "totalElements": 1,
         "totalPages": 1
@@ -1295,7 +1295,7 @@ Example response:
             "sort": {
                 "empty": false,
                 "sorted": false,
-                "unsorted" true
+                "unsorted": true
             },
             "unpaged": false
         },
@@ -1303,7 +1303,7 @@ Example response:
         "sort": {
             "empty": false,
             "sorted": false,
-            "unsorted" true
+            "unsorted": true
         },
         "totalElements": 1,
         "totalPages": 1
@@ -1340,7 +1340,7 @@ Example response:
 ```
 
 &nbsp;
-### Delete banned word
+#### Delete banned word
 
 Deletes banned word with given id.
 
@@ -1354,6 +1354,20 @@ Deletes banned word with given id.
 | Path Variable | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `id` | `String` | **Required**. Word's id |
+
+&nbsp;
+### Bans
+
+#### Check Temporary Bans Expiration
+
+Checks expiration and updates status of all users with temporary bans.
+
+`
+  🟡 PUT
+`
+`
+    /api/bans/check
+`
 
 ## Contributing
 
