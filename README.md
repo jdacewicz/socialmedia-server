@@ -1,17 +1,17 @@
 
 # Socialmedia-server
 
-Social media Spring Boot aplication that allows users to share texts/photos, discuss with other users, react and much more.
+Social media application that allows users to share texts/photos, interact with other users, react and more.
 
 
 ## Lessons Learned
 
-Creating this project taught me practial use of modular monolith architecture and MongoDB.
+Creating this project introtuced me to the practial use of modular monolith architecture and MongoDB.
 
 
 ## Tech Stack
 
-**Server:** Java 17, Spring Boot 3.1.4, MongoDB
+Java 17, Spring Boot 3.1.4, MongoDB
 
 
 ## Features
@@ -19,6 +19,7 @@ Creating this project taught me practial use of modular monolith architecture an
 - Register/login to accounts;
 - Post texts/photos;
 - Comment posts;
+- Group posts;
 - React to posts/comments;
 - Report posts/comments/users;
 - Ban temporary/permanently users;
@@ -33,6 +34,7 @@ Creating this project taught me practial use of modular monolith architecture an
 - Customize api error message;
 - Customize Page fields;
 - Implement api authorization;
+- Dockerize project;
 
 
 
@@ -547,30 +549,28 @@ Creates and returns basic post.
 
 Example response:
 ```json
-[
-    {
-        "discussionId": "657f0f2169f6415fe42404fc",
-        "content": "example content",
-        "creator": {
-            "userId": "657f0ee069f6415fe42404f9",
-            "fullName": "John Example",
-            "profilePicture": {
-                "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
-            }
-        },
-        "image": {
-            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
-        },
-        "elapsedDateTime": {
-            "time": "just now"
-        },
-        "reactionCounts": [] 
-    }
-]
+{
+    "discussionId": "657f0f2169f6415fe42404fc",
+    "content": "example content",
+    "creator": {
+        "userId": "657f0ee069f6415fe42404f9",
+        "fullName": "John Example",
+        "profilePicture": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+        }
+    },
+    "image": {
+        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+    },
+    "elapsedDateTime": {
+        "time": "just now"
+    },
+    "reactionCounts": [] 
+}
 ```
 
 &nbsp;
-#### Report basic post
+#### Report basic post by id
 
 Creates report of basic post with given id.
 
@@ -616,39 +616,37 @@ Adds reaction to post.
 
 Example response:
 ```json
-[
-    {
-        "discussionId": "657f0f2169f6415fe42404fc",
-        "content": "example content",
-        "creator": {
-            "userId": "657f0ee069f6415fe42404f9",
-            "fullName": "John Example",
-            "profilePicture": {
-                "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+{
+    "discussionId": "657f0f2169f6415fe42404fc",
+    "content": "example content",
+    "creator": {
+        "userId": "657f0ee069f6415fe42404f9",
+        "fullName": "John Example",
+        "profilePicture": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+        }
+    },
+    "image": {
+        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+    },
+    "elapsedDateTime": {
+        "time": "16 days ago"
+    },
+    "reactionCounts": [
+        "reaction": {
+            "reactionId": "657f0f2169f6415fe42404fd",
+            "name": "example name",
+            "image": {
+                "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
             }
         },
-        "image": {
-            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
-        },
-        "elapsedDateTime": {
-            "time": "16 days ago"
-        },
-        "reactionCounts": [
-            "reaction": {
-                "reactionId": "657f0f2169f6415fe42404fd",
-                "name": "example name",
-                "image": {
-                    "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
-                }
-            },
-            "count": 2
-        ] 
-    }
-]
+        "count": 2
+    ] 
+}
 ```
 
 &nbsp;
-#### Delete basic post
+#### Delete basic post by id
 
 Deletes basic post with given id
 
@@ -756,9 +754,9 @@ Example response:
 ```
 
 &nbsp;
-#### Report basic post
+#### Report comment by id
 
-Creates report of basic post with given id.
+Creates report of comment with given id.
 
 `
   🟢 POST
@@ -832,7 +830,7 @@ Example response:
 ```
 
 &nbsp;
-#### Delete comment
+#### Delete comment by id
 
 Deletes comment with given id.
 
@@ -1023,7 +1021,7 @@ Example response:
 ```
 
 &nbsp;
-#### Update reaction
+#### Update reaction by id
 
 Updates reaction with given id.
 
@@ -1239,7 +1237,7 @@ Example response:
 ```
 
 &nbsp;
-#### Delete report
+#### Delete report by id
 
 Deletes report with given id.
 
@@ -1340,7 +1338,7 @@ Example response:
 ```
 
 &nbsp;
-#### Delete banned word
+#### Delete banned word by id
 
 Deletes banned word with given id.
 
@@ -1368,6 +1366,519 @@ Checks expiration and updates status of all users with temporary bans.
 `
     /api/bans/check
 `
+
+&nbsp;
+### Groups
+
+#### Get group by id
+
+Returns group with given id.
+
+`
+  🔵 GET
+`
+`
+    /api/groups/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Group's id |
+
+| Request Param | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `type` | `String` | **Required**. Type of group |
+
+Group types: `POST`.
+
+Example response:
+```json
+{
+    "groupId": "6597c3f56253bc2b6608a267",
+    "name": "example name",
+    "image": {
+        "url": "http://localhost:8081/data/groups/post-groups/6597c3f56253bc2b6608a267/x4nTxtfmlG89PKpD.png"
+    }
+}
+```
+
+&nbsp;
+#### Get grouped post by id
+
+Returns post from group by post's id.
+
+`
+  🔵 GET
+`
+`
+    /api/groups/posts/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Post's id |
+
+Example response:
+```json
+{
+    "discussionId": "657f0f2169f6415fe42404fc",
+    "content": "example content",
+    "creator": {
+        "userId": "657f0ee069f6415fe42404f9",
+        "fullName": "John Example",
+        "profilePicture": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+        }
+    },
+    "image": {
+        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+    },
+    "elapsedDateTime": {
+        "time": "16 days ago"
+    },
+    "reactionCounts": [
+        "reaction": {
+            "reactionId": "657f0f2169f6415fe42404fd",
+            "name": "example name",
+            "image": {
+                "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+            }
+        },
+        "count": 1
+    ] 
+}
+```
+&nbsp;
+#### Get groups by participant id
+
+Returns groups where user with given id is part of.
+
+`
+  🔵 GET
+`
+`
+    /api/groups/participants/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Participant's id |
+
+| Request Param | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `type` | `String` | **Required**. Type of group |
+| `pageNumber` | `int` | **Required**. Page number of returned data |
+| `pageSize` | `int` | **Required**. Page size of returned data |
+
+Group types: `POST`.
+
+Example response:
+```json
+{
+    "reactions": {
+        "content": [
+            {
+                "groupId": "6597c3f56253bc2b6608a267",
+                "name": "example name",
+                "image": {
+                    "url": "http://localhost:8081/data/groups/post-groups/6597c3f56253bc2b6608a267/x4nTxtfmlG89PKpD.png"
+                }
+            }
+        ],
+        "empty": false,
+        "first": true,
+        "last": true,
+        "number": 0,
+        "numberOfElements": 1,
+        "pageable": {
+            "offset": 0,
+            "pageNumber": 0,
+            "pageSize": 5,
+            "paged": true,
+            "sort": {
+                "empty": false,
+                "sorted": false,
+                "unsorted": true
+            },
+            "unpaged": false
+        },
+        "size": 5,
+        "sort": {
+            "empty": false,
+            "sorted": false,
+            "unsorted": true
+        },
+        "totalElements": 1,
+        "totalPages": 1
+    }  
+}
+```
+&nbsp;
+#### Get grouped posts by creator id
+
+Returns grouped posts with given creator's (user) id.
+
+`
+  🔵 GET
+`
+`
+    /api/groups/users/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Creator's id |
+
+| Request Param | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `pageNumber` | `int` | **Required**. Page number of returned data |
+| `pageSize` | `int` | **Required**. Page size of returned data |
+
+Example response:
+```json
+{
+    "reactions": {
+        "content": [
+            {
+                "discussionId": "657f0f2169f6415fe42404fc",
+                "content": "example content",
+                "creator": {
+                    "userId": "657f0ee069f6415fe42404f9",
+                    "fullName": "John Example",
+                    "profilePicture": {
+                        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+                    }
+                },
+                "image": {
+                    "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+                },
+                "elapsedDateTime": {
+                    "time": "16 days ago"
+                },
+                "reactionCounts": [
+                    "reaction": {
+                        "reactionId": "657f0f2169f6415fe42404fd",
+                        "name": "example name",
+                        "image": {
+                            "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+                        }
+                    },
+                    "count": 1
+                ] 
+            }
+        ],
+        "empty": false,
+        "first": true,
+        "last": true,
+        "number": 0,
+        "numberOfElements": 1,
+        "pageable": {
+            "offset": 0,
+            "pageNumber": 0,
+            "pageSize": 5,
+            "paged": true,
+            "sort": {
+                "empty": false,
+                "sorted": false,
+                "unsorted": true
+            },
+            "unpaged": false
+        },
+        "size": 5,
+        "sort": {
+            "empty": false,
+            "sorted": false,
+            "unsorted": true
+        },
+        "totalElements": 1,
+        "totalPages": 1
+    }  
+}
+```
+
+&nbsp;
+#### Get random grouped posts
+
+Returns 5 random grouped posts.
+
+`
+  🔵 GET
+`
+`
+    /api/groups/posts
+`
+
+Example response:
+```json
+[
+    {
+        "discussionId": "657f0f2169f6415fe42404fc",
+        "content": "example content",
+        "creator": {
+            "userId": "657f0ee069f6415fe42404f9",
+            "fullName": "John Example",
+            "profilePicture": {
+                "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+            }
+        },
+        "image": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+        },
+        "elapsedDateTime": {
+            "time": "16 days ago"
+        },
+        "reactionCounts": [
+            "reaction": {
+                "reactionId": "657f0f2169f6415fe42404fd",
+                "name": "example name",
+                "image": {
+                    "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+                }
+            },
+            "count": 1
+        ] 
+    }
+]
+```
+
+&nbsp;
+#### Get comments by grouped post id
+
+Returns comments of grouped post with given id limited by comments quantity.
+
+`
+  🔵 GET
+`
+`
+    /api/groups/posts/${id}/comments
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Grouped post's id |
+
+Example response:
+```json
+[
+    {
+        "discussionId": "657f0f2169f6415fe42404fc",
+        "content": "example content",
+        "creator": {
+            "userId": "657f0ee069f6415fe42404f9",
+            "fullName": "John Example",
+            "profilePicture": {
+                "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+            }
+        },
+        "image": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+        },
+        "elapsedDateTime": {
+            "time": "16 days ago"
+        },
+        "reactionCounts": [
+            "reaction": {
+                "reactionId": "657f0f2169f6415fe42404fd",
+                "name": "example name",
+                "image": {
+                    "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+                }
+            },
+            "count": 1
+        ] 
+    }
+]
+```
+
+&nbsp;
+#### Create group
+
+Creates and returns group.
+
+`
+  🟢 POST
+`
+`
+    /api/groups
+`
+
+| Request Param | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `type` | `String` | **Required**. Type of created group |
+
+| Request Part | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `groupImage` | `File` | **Required**. Group's image |
+| `groupRequest` | `GroupRequest` | **Required**. Request body |
+
+| Request Field | Type     | Validation | Description                |
+| :-------- | :------- | :----- | :------------------------- |
+| `name` | `String` | **Max 32 characters, Not Blank** | Name |
+
+Group types: `POST`.
+
+Example response:
+```json
+{
+    "groupId": "6597c3f56253bc2b6608a267",
+    "name": "example name",
+    "image": {
+        "url": "http://localhost:8081/data/groups/post-groups/6597c3f56253bc2b6608a267/x4nTxtfmlG89PKpD.png"
+    }
+}
+```
+
+&nbsp;
+#### Create grouped post
+
+Creates and returns grouped post.
+
+`
+  🟢 POST
+`
+`
+    /api/groups/posts
+`
+
+| Request Part | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `postImage` | `File` | **Required**. Post's image |
+| `groupedPostCreationRequest` | `GroupedPostCreationRequest` | **Required**. Request body |
+
+| Request Field | Type     | Validation | Description                |
+| :-------- | :------- | :----- | :------------------------- |
+| `groupId` | `String` | **Not Blank** | Id of groups which post belong to |
+| `content` | `String` | **Max 255 characters, Not Blank** | Content |
+
+Example response:
+```json
+{
+    "discussionId": "657f0f2169f6415fe42404fc",
+    "content": "example content",
+    "creator": {
+        "userId": "657f0ee069f6415fe42404f9",
+        "fullName": "John Example",
+        "profilePicture": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+        }
+    },
+    "image": {
+        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+    },
+    "elapsedDateTime": {
+        "time": "just now"
+    },
+    "reactionCounts": [] 
+}
+```
+
+&nbsp;
+#### Report grouped post by id
+
+Creates report of grouped post with given id.
+
+`
+  🟢 POST
+`
+`
+    /api/groups/posts/${id}/report
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Post's id |
+
+| Request Body | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `request` | `ReportRequest` | **Required**. Report request |
+
+| Report Request Field | Type     | Validation | Description                |
+| :-------- | :------- | :----- | :------------------------- |
+| `reportType` | `String` | **Max 32 Characters, Not Blank** | Type of report |
+| `content` | `String` | **8-24 Characters, Not Blank** | Content |
+
+Report Types: `NUDITY`, `SPAM`, `FAKE_NEWS`, `TERRORISM`, `SELF_HARM`, `PRESECUTE`,
+`DRASTIC_CONTENT`, `ILLEGAL_CONTENT`
+
+&nbsp;
+#### React to grouped post
+
+Adds reaction to grouped post.
+
+`
+  🟡 PUT
+`
+`
+    /api/groups/posts/${postId}/react/${reactionId}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `postId` | `String` | **Required**. Post's id |
+| `reactionId` | `String` | **Required**. Reaction's id |
+
+Example response:
+```json
+{
+    "discussionId": "657f0f2169f6415fe42404fc",
+    "content": "example content",
+    "creator": {
+        "userId": "657f0ee069f6415fe42404f9",
+        "fullName": "John Example",
+        "profilePicture": {
+            "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/kXtEE6Sihz6dZBKG.jpg"
+        }
+    },
+    "image": {
+        "url": "http://localhost:8081/data/users/657f0ee069f6415fe42404f9/657f0f2169f6415fe42404fc/J5jvJpcYWz5YilMk.jpg"
+    },
+    "elapsedDateTime": {
+        "time": "16 days ago"
+    },
+    "reactionCounts": [
+        "reaction": {
+            "reactionId": "657f0f2169f6415fe42404fd",
+            "name": "example name",
+            "image": {
+                "url": "http://localhost:8081/data/reactions/657f0f2169f6415fe42404fd/J5jvJpcYWz5YilMk.jpg"
+            }
+        },
+        "count": 2
+    ] 
+}
+```
+&nbsp;
+#### Delete group by id
+
+Deletes group with given id.
+
+`
+  🔴 DELETE
+`
+`
+    /api/groups/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Group's id |
+
+&nbsp;
+#### Delete grouped post by id
+
+Deletes grouped post with given id.
+
+`
+  🔴 DELETE
+`
+`
+    /api/groups/posts/${id}
+`
+
+| Path Variable | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `String` | **Required**. Grouped post's id |
+
 
 ## Contributing
 
