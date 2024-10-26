@@ -1,7 +1,7 @@
 
-# Socialmedia-server
+# SocialSync Server
 
-Social media application that allows users to share texts/photos, interact with other users, react and more.
+A server-side application for a social media platform that allows users to share text and photos, interact with others, react, and more.
 
 
 ## Lessons Learned
@@ -27,15 +27,6 @@ Java 17, Spring Boot 3.1.4, MongoDB
 - Search users/posts/banned-words/reactions;
 - Mangage users/banned-words/reactions/reports;
 - View posts/comments/users/banned-words/reactions/reports/groups;
-
-
-## Roadmap
-
-- Customize api error message;
-- Customize Page fields;
-- Implement api authorization;
-- Dockerize project;
-
 
 
 ## API Reference
